@@ -105,7 +105,7 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice="hf_beta", cap_y=None, wor
         if cap_y: caption(cv, s.caption, cap_y)
         p.stdin.write(cv.raw())
     p.stdin.close(); p.wait()
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-i", wav, "-c:v", "copy", "-c:a", "aac", "-b:a", "160k",
-                    "-ar", "48000", "-shortest", "-movflags", "+faststart", out], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-i", wav, "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1:LRA=11",
+                    "-c:a", "aac", "-b:a", "192k", "-ac", "2", "-ar", "48000", "-shortest", "-movflags", "+faststart", out], check=True)
     os.remove(vid)
     return total
