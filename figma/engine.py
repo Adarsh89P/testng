@@ -10,10 +10,16 @@ M = os.path.join(os.path.dirname(__file__), "..", "assets", "models")
 _K = None
 
 
-def tts(text, voice="hf_beta", speed=1.05):
+VOICE = "af_heart"          # default narrator: English female (Kokoro)
+LANGS = {"h": "hi", "a": "en-us", "b": "en-gb"}
+
+
+def tts(text, voice=VOICE, speed=None):
     global _K
     if _K is None: _K = Kokoro(f"{M}/kokoro-v1.0.onnx", f"{M}/voices-v1.0.bin")
-    s, sr = _K.create(text, voice=voice, speed=speed, lang="hi")
+    lang = LANGS.get(voice[0], "en-us")
+    speed = speed or (1.05 if lang == "hi" else 1.0)
+    s, sr = _K.create(text, voice=voice, speed=speed, lang=lang)
     return s.astype(np.float32)
 
 
@@ -74,7 +80,7 @@ def load_bed(path, n, xfade=1.5):
     return out[:n]
 
 
-def duck(bed, vo, under_db=-16, gap_db=-9, win=0.25):
+def duck(bed, vo, under_db=-23, gap_db=-14, win=0.25):
     """Scale the bed relative to voice loudness: quieter while the narrator talks, a bit up in gaps."""
     k = max(1, int(SR * win)); env = np.sqrt(np.convolve(vo ** 2, np.ones(k) / k, "same"))
     active = np.clip(env / (env.max() * 0.25 + 1e-9), 0, 1)
@@ -107,7 +113,7 @@ def caption(cv, s, y, size=36):
         cv.text(x, y + i * size * 1.3, ln, (0.85, 0.85, 0.88))
 
 
-def render(scenes, out, W=1080, H=1920, FPS=30, voice="hf_beta", cap_y=None, workdir=None, bgm=BGM_DEFAULT):
+def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=BGM_DEFAULT):
     workdir = workdir or os.path.dirname(out)
     os.makedirs(workdir, exist_ok=True)
     voices = [tts(s.spoken, voice) if s.spoken else np.zeros(1, np.float32) for s in scenes]

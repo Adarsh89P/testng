@@ -127,4 +127,4 @@ SCENES = [
 
 if __name__ == "__main__":
     out = sys.argv[1]
-    print("duration", round(render(SCENES, out, W, H, cap_y=1810), 1), "s")
+    print("duration", round(render(SCENES, out, W, H, cap_y=1810, voice="hf_beta"), 1), "s")
