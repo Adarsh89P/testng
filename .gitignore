@@ -5,3 +5,4 @@ output/
 *.wav
 *.mp3
 __pycache__/
+!assets/audio/*.mp3

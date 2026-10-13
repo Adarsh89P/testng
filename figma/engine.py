@@ -5,6 +5,7 @@ from kokoro_onnx import Kokoro
 from dots import *
 
 SR = 24000
+BGM_DEFAULT = os.path.join(os.path.dirname(__file__), "..", "assets", "audio", "bgm_default.mp3")
 M = os.path.join(os.path.dirname(__file__), "..", "assets", "models")
 _K = None
 
@@ -60,6 +61,30 @@ def pad_music(dur, seed=3):
     return out
 
 
+def load_bed(path, n, xfade=1.5):
+    """Decode the background track to mono SR and loop it (with crossfade) to n samples."""
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-ac", "1", "-ar", str(SR), "-f", "f32le", "-"],
+                         capture_output=True, check=True).stdout
+    bed = np.frombuffer(raw, np.float32).copy()
+    out, xf = bed.copy(), int(SR * xfade)
+    while len(out) < n:
+        ramp = np.linspace(0, 1, xf, dtype=np.float32)
+        out[-xf:] = out[-xf:] * (1 - ramp) + bed[:xf] * ramp
+        out = np.concatenate([out, bed[xf:]])
+    return out[:n]
+
+
+def duck(bed, vo, under_db=-16, gap_db=-9, win=0.25):
+    """Scale the bed relative to voice loudness: quieter while the narrator talks, a bit up in gaps."""
+    k = max(1, int(SR * win)); env = np.sqrt(np.convolve(vo ** 2, np.ones(k) / k, "same"))
+    active = np.clip(env / (env.max() * 0.25 + 1e-9), 0, 1)
+    active = np.convolve(active, np.ones(k) / k, "same")          # smooth the gain changes
+    vo_rms = np.sqrt(np.mean(vo[vo != 0] ** 2)) if np.any(vo) else 0.1
+    bed_rms = np.sqrt(np.mean(bed ** 2)) + 1e-9
+    g_db = gap_db + (under_db - gap_db) * active
+    return bed / bed_rms * vo_rms * 10 ** (g_db / 20)
+
+
 def mix_into(buf, clip, at, gain=1.0):
     i = int(at * SR)
     if i >= len(buf): return
@@ -82,23 +107,27 @@ def caption(cv, s, y, size=36):
         cv.text(x, y + i * size * 1.3, ln, (0.85, 0.85, 0.88))
 
 
-def render(scenes, out, W=1080, H=1920, FPS=30, voice="hf_beta", cap_y=None, workdir=None):
+def render(scenes, out, W=1080, H=1920, FPS=30, voice="hf_beta", cap_y=None, workdir=None, bgm=BGM_DEFAULT):
     workdir = workdir or os.path.dirname(out)
     os.makedirs(workdir, exist_ok=True)
     voices = [tts(s.spoken, voice) if s.spoken else np.zeros(1, np.float32) for s in scenes]
     durs = [max(len(v) / SR + s.pad + s.hold, s.min_dur) for v, s in zip(voices, scenes)]
     total = sum(durs) + 0.8
     audio = np.zeros(int(SR * total) + SR, np.float32)
+    vo_bus = np.zeros_like(audio)
     starts, t0 = [], 0.25
     for v, d, s in zip(voices, durs, scenes):
-        starts.append(t0); mix_into(audio, v, t0 + 0.1)
+        starts.append(t0); mix_into(audio, v, t0 + 0.1); mix_into(vo_bus, v, t0 + 0.1)
         if s.whoosh: mix_into(audio, whoosh(), max(0, t0 - 0.15), 0.5)
         for c in s.clicks: mix_into(audio, mouse_click(), t0 + c, 0.7)
         for a, b in s.type_spans:
             tt = t0 + a
             while tt < t0 + b: mix_into(audio, click(), tt, 0.5); tt += random.uniform(0.045, 0.085)
         t0 += d
-    audio += pad_music(len(audio) / SR)[:len(audio)]
+    if bgm and os.path.exists(bgm):
+        audio += duck(load_bed(bgm, len(audio)), vo_bus)
+    else:
+        audio += pad_music(len(audio) / SR)[:len(audio)]
     fade = int(SR * 0.6); audio[-fade:] *= np.linspace(1, 0, fade)
     audio /= max(1e-6, np.abs(audio).max()) / 0.95
     wav = os.path.join(workdir, "_audio.wav"); sf.write(wav, audio, SR)
