@@ -67,40 +67,65 @@ def steps(c, x, y, t, t0, gap=58, names=("Order placed", "Preparing", "Rider ass
             c.line(x, yy + 8, x, yy + gap - 8, GREEN if i < lit - 1 else (0.3, 0.3, 0.33), 2)
         c.c.set_source_rgba(*(GREEN if on else (0.3, 0.3, 0.33)), 1); c.c.arc(x, yy, 7, 0, 6.3); c.c.fill()
         if on and i == lit - 1: c.glow(x, yy, 26, 0.6)
-        c.font(SANS, size, on); c.text(x + 22, yy + 8, n, DOT if on else DIM)
+        c.font(SANS, size, True); c.text(x + 20, yy + 8, n, DOT if on else (0.55, 0.55, 0.58))
     return lit
 
 
 def person(c, cx, cy, name, s=0.8):
-    c.person(cx, cy, s); c.pill(cx, cy + 92 * s, name, size=22)
+    c.person(cx, cy, s); c.pill(cx, cy + 96 * s, name, size=30)
 
 
 def split_labels(c, left, right, active):
     for lab, x, on in [(left, W * 0.27, active == 0), (right, W * 0.73, active == 1)]:
-        c.font(SANS, 54, True); c.text(x - c.text_w(lab) / 2, 330, lab, DOT if on or active is None else DIM)
+        c.font(SANS, 76, True); c.text(x - c.text_w(lab) / 2, 340, lab, DOT if on or active is None else DIM)
     for yy in range(400, 1500, 14): c._dot(W / 2, yy, 1.3, DIM, 0.8)
+
+
+DAY, TOTAL = 1, 45
+
+
+def series_badge(cv, day=DAY, total=TOTAL):
+    """Persistent series branding: DAY xx/45 pill + 45-dot progress row (drawn on top of every scene)."""
+    white_pill(cv, W / 2, 120, f"DAY {day:02d}/{total} · UX LAWS", 30)
+    x0, x1 = 120, W - 120
+    for i in range(total):
+        x = x0 + (x1 - x0) * i / (total - 1)
+        on = i < day
+        cv._dot(x, 182, 5.5 if on else 3.2, (1, 1, 1) if on else (0.35, 0.35, 0.38), 1)
+        if on and i == day - 1: cv.glow(x, 182, 22, 0.8)
+
+
+def with_badge(scenes):
+    for sc in scenes:
+        def mk(fn):
+            def d(cv, t, dur, st):
+                fn(cv, t, dur, st); series_badge(cv)
+            return d
+        sc.draw = mk(sc.draw)
+    return scenes
 
 
 # ------------------------------------------------------------------ 1. hook
 def s1(cv, t, d, st):
     def world(c):
         swarm(c, t, 60, 1150, 960, 450, n=140, a=0.45)
-        mono_label(c, "UX designer ho?", 640, DOT, 40, chars=int(t * 14))
-        if t > 1.4: dot_text(c, "LABOR ILLUSION", 104, W / 2, 860, ease(1 - (t - 1.4) / 0.9))
-        if t > 2.6: mono_label(c, "kya hai?", 1010, DIM, 40, chars=int((t - 2.6) * 14))
+        mono_label(c, "45 days · 45 UX laws", 420, (0.82, 0.82, 0.85), 40, chars=int(t * 16))
+        if t > 1.8: mono_label(c, "UX designer ho?", 640, DOT, 60, chars=int((t - 1.8) * 14))
+        if t > 3.2: dot_text(c, "LABOR ILLUSION", 104, W / 2, 860, ease(1 - (t - 3.2) / 0.9))
+        if t > 4.4: mono_label(c, "kya hai?", 1020, DOT, 60, chars=int((t - 4.4) * 14))
     stage.compose(cv, t, d, world, FULL, form=0.0, seed=1)
 
 
 # ------------------------------------------------------------------ 2. story
 def s2(cv, t, d, st):
     def world(c):
-        mono_label(c, "Friday · 9:47 PM", 300, DIM, 30, chars=int(t * 18))
+        mono_label(c, "Friday · 9:47 PM", 300, (0.82, 0.82, 0.85), 44, chars=int(t * 18))
         phone(c, W / 2, 820, 230, 430)
         c.line(W / 2, 1040, W / 2, 1210)
         person(c, W / 2, 1270, "Rohan")
-        if t > 2.2: c.pill(W / 2 + 230, 700, "order: biryani", size=22, fam=MONO)
-        if t > 3.2: c.pill(W / 2 + 230, 770, "eta: 30 min", size=22, fam=MONO)
-        if t > 4.2: white_pill(c, W / 2, 1480, "live app: zomato", 24)
+        if t > 2.2: c.pill(W / 2 + 250, 690, "order: biryani", size=32, fam=MONO)
+        if t > 3.2: c.pill(W / 2 + 250, 780, "eta: 30 min", size=32, fam=MONO)
+        if t > 4.2: white_pill(c, W / 2, 1480, "live app: zomato", 36)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.25), (1.0, ANCHOR, 1.25), (2.4, ANCHOR, 1.0)), seed=2)
 
 
@@ -110,13 +135,13 @@ def s3(cv, t, d, st):
         split_labels(c, "App A", "App B", None if t < 1.0 else (0 if t < 3.8 else 1))
         lx, rx, cy = W * 0.27, W * 0.73, 820
         x, y = phone(c, lx, cy, 200, 380, stripes=False)
-        c.font(SANS, 20, True); c.text(lx - c.text_w("Order placed") / 2, cy - 30, "Order placed", DOT)
+        c.font(SANS, 27, True); c.text(lx - c.text_w("Order placed") / 2, cy - 34, "Order placed", DOT)
         spinner(c, lx, cy + 40, t)
         x, y = phone(c, rx, cy, 200, 380, stripes=False)
         mini_map(c, rx, cy - 30, 160, 230, min(1, t / (d + 2)))
-        c.font(SANS, 18, True); c.text(rx - 62, cy + 140, "2.1 km away", DOT)
-        for xx in (lx, rx): c.pill(xx, cy + 250, "wait: 30 min", size=22, fam=MONO)
-        if t > 5.2: white_pill(c, W / 2, 1380, "same wait. alag feeling?", 24)
+        c.font(SANS, 26, True); c.text(rx - c.text_w("2.1 km away") / 2, cy + 150, "2.1 km away", DOT)
+        for xx in (lx, rx): c.pill(xx, cy + 255, "wait: 30 min", size=30, fam=MONO)
+        if t > 5.2: white_pill(c, W / 2, 1400, "same wait. alag feeling?", 36)
     stage.compose(cv, t, d, world, FULL, seed=3)
 
 
@@ -128,7 +153,7 @@ def s4(cv, t, d, st):
         split_labels(c, "App A", "App B", 0)
         lx, cy = W * 0.27, 820
         phone(c, lx, cy, 200, 380, stripes=False)
-        c.font(SANS, 20, True); c.text(lx - c.text_w("Order placed") / 2, cy - 30, "Order placed", DOT)
+        c.font(SANS, 27, True); c.text(lx - c.text_w("Order placed") / 2, cy - 34, "Order placed", DOT)
         spinner(c, lx, cy + 40, t)
         for o in OPENS: ring(c, lx, cy, t, o)
         c.line(lx, cy + 200, lx, cy + 330)
@@ -136,9 +161,9 @@ def s4(cv, t, d, st):
         if n: c.glow(lx, cy + 360, 60 + 6 * n, 0.25 + 0.05 * n)
         for i in range(min(n, 5)):
             ang = -2.4 + i * 0.55
-            c.pill(lx + math.cos(ang) * 150, cy + 380 + math.sin(ang) * 120, "?", size=26, fam=MONO, col=BAD)
-        c.pill(lx, cy - 260, f"app khola: {n} baar", size=22, fam=MONO, col=BAD if n > 3 else DOT)
-        if t > 4.8: white_pill(c, lx, cy + 560, "30 min = 1 ghanta jaisa", 22)
+            c.pill(lx + math.cos(ang) * 150, cy + 380 + math.sin(ang) * 120, "?", size=36, fam=MONO, col=BAD)
+        c.pill(lx + 40, cy - 270, f"app khola: {n} baar", size=32, fam=MONO, col=BAD if n > 3 else DOT)
+        if t > 4.8: white_pill(c, lx + 90, cy + 570, "30 min = 1 ghanta jaisa", 32)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.6, (W * 0.27 + 90, 1020), 1.45), (d - 0.6, (W * 0.27 + 90, 1020), 1.45)),
                   punch=0.04 * sum(max(0, 1 - abs(t - o) / 0.1) for o in OPENS), seed=4)
 
@@ -150,11 +175,11 @@ def s5(cv, t, d, st):
         rx, cy = W * 0.73, 820
         phone(c, rx, cy, 200, 380, stripes=False)
         mini_map(c, rx, cy - 70, 160, 150, min(1, 0.3 + t / 10))
-        steps(c, rx - 72, cy + 40, t, 0.6, gap=34, size=15)
+        steps(c, rx - 80, cy + 30, t, 0.6, gap=38, size=19)
         c.line(rx, cy + 200, rx, cy + 330)
         person(c, rx, cy + 390, "Rohan")
-        if t > 2.0: c.pill(rx - 210, cy + 380, "calm", size=24, fam=MONO, col=GREEN)
-        if t > 4.6: white_pill(c, rx, cy + 560, "wait chhota lagta hai", 22)
+        if t > 2.0: c.pill(rx - 220, cy + 380, "calm", size=34, fam=MONO, col=GREEN)
+        if t > 4.6: white_pill(c, rx - 90, cy + 570, "wait chhota lagta hai", 32)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.6, (W * 0.73 - 90, 980), 1.5), (d - 0.6, (W * 0.73 - 90, 980), 1.5)), seed=5)
 
 
@@ -162,12 +187,12 @@ def s5(cv, t, d, st):
 def s6(cv, t, d, st):
     def world(c):
         swarm(c, t, 60, 1250, 960, 420, n=120, a=0.35)
-        c.pill(W / 2, 650, "UX LAW", size=24, fam=MONO, col=(0.02, 0.02, 0.03), bg=(0.95, 0.95, 0.96), bold=True)
+        c.pill(W / 2, 640, "UX LAW", size=34, fam=MONO, col=(0.02, 0.02, 0.03), bg=(0.95, 0.95, 0.96), bold=True)
         dot_text(c, "LABOR ILLUSION", 104, W / 2, 790, ease(1 - t / 0.9))
         l1, l2 = "kaam hota dikhe =", "wait chhota + value zyada"
         n = int(max(0, t - 1.0) * 20)
-        mono_label(c, l1, 930, DOT, 34, chars=n); mono_label(c, l2, 985, GREEN, 34, chars=max(0, n - len(l1)))
-        if t > 3.6: c.pill(W / 2, 1110, "Buell & Norton · Harvard Business School · 2011", size=20, fam=MONO)
+        mono_label(c, l1, 940, DOT, 44, chars=n); mono_label(c, l2, 1010, GREEN, 44, chars=max(0, n - len(l1)))
+        if t > 3.6: c.pill(W / 2, 1140, "Buell & Norton · Harvard Business School · 2011", size=24, fam=MONO)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.15), (d, ANCHOR, 1.0)), seed=6)
 
 
@@ -175,13 +200,13 @@ def s6(cv, t, d, st):
 L7 = ["order received", "food is being prepared", "rider is on the way", "arriving in 9 min"]
 def s7(cv, t, d, st):
     def world(c):
-        mono_label(c, "live app · zomato", 300, DIM, 30)
+        mono_label(c, "live app · zomato", 300, (0.82, 0.82, 0.85), 44)
         cx, cy = W / 2, 900
         phone(c, cx, cy, 300, 560, stripes=False)
         mini_map(c, cx, cy - 110, 240, 230, min(1, 0.4 + t / 12))
-        lit = steps(c, cx - 110, cy + 60, t, 0.5, gap=46, names=tuple(L7), size=19)
+        lit = steps(c, cx - 130, cy + 50, t, 0.5, gap=52, names=tuple(L7), size=22)
         for i in range(min(lit, 4)):
-            c.pill(cx + 300, cy + 60 + i * 46, ["update", "update", "live", "eta"][i], size=18, fam=MONO, col=GREEN)
+            c.pill(cx + 300, cy + 50 + i * 52, ["update", "update", "live", "eta"][i], size=26, fam=MONO, col=GREEN)
     stage.compose(cv, t, d, world, K((0, (W / 2, 900), 1.0), (1.0, (W / 2, 980), 1.35), (d, (W / 2, 980), 1.35)), seed=7)
 
 
@@ -191,15 +216,16 @@ def s8(cv, t, d, st):
         split_labels(c, "DON'T", "DO", None if t < 1.2 else (0 if t < 2.6 else 1))
         lx, rx, cy = W * 0.27, W * 0.73, 820
         phone(c, lx, cy, 200, 380, stripes=False); spinner(c, lx, cy, t)
-        c.pill(lx, cy + 250, "khaali spinner", size=22, fam=MONO, col=BAD)
-        phone(c, rx, cy, 200, 380, stripes=False); steps(c, rx - 72, cy - 60, t, 0.8, gap=40, size=15)
-        c.pill(rx, cy + 250, "progress dikhao", size=22, fam=MONO, col=GREEN)
-        if t > 4.0: white_pill(c, W / 2, 1380, "follow · next UX law", 26)
+        c.pill(lx, cy + 255, "khaali spinner", size=30, fam=MONO, col=BAD)
+        phone(c, rx, cy, 200, 380, stripes=False); steps(c, rx - 80, cy - 70, t, 0.8, gap=44, size=19)
+        c.pill(rx, cy + 255, "progress dikhao", size=30, fam=MONO, col=GREEN)
+        if t > 3.6: white_pill(c, W / 2, 1400, "kal · Day 2: Hick's Law", 38)
+        if t > 4.6: c.pill(W / 2, 1490, "follow for all 45", size=30, fam=MONO)
     stage.compose(cv, t, d, world, FULL, brk=0.0, seed=8)
 
 
 SCENES = [
-    Scene("यू एक्स डिज़ाइनर हो? तो बताओ, लेबर इल्यूज़न क्या है?", "", s1, min_dur=4.6, whoosh=True),
+    Scene("पैंतालीस दिन, पैंतालीस यू एक्स लॉज़। डे वन। यू एक्स डिज़ाइनर हो? तो बताओ, लेबर इल्यूज़न क्या है?", "", s1, min_dur=6.6, whoosh=True),
     Scene("चलो समझते हैं, हमारे लाइव ऐप ज़ोमैटो से। फ्राइडे रात, नौ बजकर सैंतालीस मिनट। रोहन ने बिरयानी ऑर्डर की। डिलीवरी, तीस मिनट।",
           "", s2, min_dur=6.0, whoosh=True),
     Scene("अब दो ऐप्स सोचो। दोनों में इंतज़ार तीस मिनट। ऐप ए में सिर्फ लिखा है, ऑर्डर प्लेस्ड। ऐप बी में राइडर मैप पर चलता दिखता है।",
@@ -212,9 +238,9 @@ SCENES = [
           "", s6, min_dur=8.0, whoosh=True),
     Scene("इसीलिए ज़ोमैटो में हर स्टेप का अपडेट आता है, और राइडर लाइव दिखता है।",
           "", s7, min_dur=5.5, whoosh=True),
-    Scene("तो अगली बार डिज़ाइन में खाली स्पिनर मत दिखाओ, प्रोग्रेस दिखाओ। अगला यूएक्स लॉ जानने के लिए फॉलो करो।",
+    Scene("तो अगली बार डिज़ाइन में खाली स्पिनर मत दिखाओ, प्रोग्रेस दिखाओ। कल, डे टू में, हिक्स लॉ। पैंतालीस दिन के लिए फॉलो करो।",
           "", s8, min_dur=6.0, whoosh=True),
 ]
 
 if __name__ == "__main__":
-    print("duration", round(render(SCENES, sys.argv[1], W, H, cap_y=None, voice="bf_emma", lang="hi"), 1), "s")
+    print("duration", round(render(with_badge(SCENES), sys.argv[1], W, H, cap_y=None, voice="bf_emma", lang="hi"), 1), "s")
