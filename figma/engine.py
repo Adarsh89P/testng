@@ -18,15 +18,24 @@ def tts(text, voice="hf_beta", speed=1.05):
 
 class Scene:
     """spoken: Devanagari for TTS. caption: Roman Hinglish. draw(cv, t, dur, st). type_spans: [(t0,t1)] for clicks."""
-    def __init__(self, spoken, caption, draw, pad=0.6, min_dur=0, type_spans=(), whoosh=False, hold=0.0):
+    def __init__(self, spoken, caption, draw, pad=0.6, min_dur=0, type_spans=(), whoosh=False, hold=0.0, clicks=()):
         self.spoken, self.caption, self.draw = spoken, caption, draw
         self.pad, self.min_dur, self.type_spans, self.whoosh, self.hold = pad, min_dur, list(type_spans), whoosh, hold
+        self.clicks = list(clicks)
 
 
 # ------------------------------------------------------------------ audio synth
 def click(n=0.018):
     t = np.arange(int(SR * n)) / SR
     return (np.random.randn(len(t)) * np.exp(-t * 400) * 0.25).astype(np.float32)
+
+
+def mouse_click():
+    """Short two-part mouse click: sharp tick + soft body."""
+    t = np.arange(int(SR * 0.04)) / SR
+    tick = np.random.randn(len(t)) * np.exp(-t * 900) * 0.6
+    body = np.sin(2 * np.pi * 1800 * t) * np.exp(-t * 300) * 0.25
+    return (tick + body).astype(np.float32)
 
 
 def whoosh(d=0.45):
@@ -82,6 +91,7 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice="hf_beta", cap_y=None, wor
     for v, d, s in zip(voices, durs, scenes):
         starts.append(t0); mix_into(audio, v, t0 + 0.1)
         if s.whoosh: mix_into(audio, whoosh(), max(0, t0 - 0.15), 0.5)
+        for c in s.clicks: mix_into(audio, mouse_click(), t0 + c, 0.7)
         for a, b in s.type_spans:
             tt = t0 + a
             while tt < t0 + b: mix_into(audio, click(), tt, 0.5); tt += random.uniform(0.045, 0.085)

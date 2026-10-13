@@ -155,3 +155,46 @@ def ease(t):
 
 def lerp(a, b, t):
     return a + (b - a) * t
+
+
+# ------------------------------------------------------------------ particle fx (from reference reel)
+import random as _r
+
+
+def sample_rrect(x, y, w, h, n, seed=1):
+    """Points spread along a rounded-rect outline + a little fill (source shape for dissolve)."""
+    g = _r.Random(seed); pts = []
+    for i in range(n):
+        if i % 3 == 0:
+            pts.append((x + g.random() * w, y + g.random() * h))
+        else:
+            s = g.random() * 2 * (w + h)
+            pts.append((x + s, y) if s < w else (x + w, y + s - w) if s < w + h else
+                       (x + w - (s - w - h), y + h) if s < 2 * w + h else (x, y + h - (s - 2 * w - h)))
+    return pts
+
+
+def dissolve(cv, pts, k, seed=2, drift=(0, -60), spread=140, r=1.8):
+    """k 0..1: shape breaks into dust that drifts and fades (the 'crash' effect)."""
+    if k <= 0:
+        for x, y in pts: cv._dot(x, y, r, DOT, 1.0)
+        return
+    g = _r.Random(seed)
+    for x, y in pts:
+        a = g.uniform(0, 6.283); d = g.uniform(0.3, 1.0) * spread * k
+        jx, jy = math.cos(a) * d + drift[0] * k, math.sin(a) * d + drift[1] * k * g.uniform(0.5, 1.5)
+        cv._dot(x + jx, y + jy, r * (1 - 0.4 * k), DOT, max(0.0, 1 - k * g.uniform(0.8, 1.3)))
+
+
+def swarm(cv, t, x, y, w, h, n=300, seed=4, r=1.5, a=1.0):
+    """Drifting particle field (users / requests)."""
+    g = _r.Random(seed)
+    for _ in range(n):
+        px, py = g.random(), g.random(); vx, vy = g.uniform(-0.05, 0.05), g.uniform(-0.05, 0.05)
+        ph = g.uniform(0, 6.28)
+        xx = x + ((px + vx * t) % 1.0) * w; yy = y + ((py + vy * t) % 1.0) * h
+        cv._dot(xx, yy, r, DOT, a * (0.4 + 0.6 * abs(math.sin(t * 1.5 + ph))))
+
+
+def white_pill(cv, cx, cy, s, size=28):
+    return cv.pill(cx, cy, s, size=size, fam=MONO, col=(0.02, 0.02, 0.03), bg=(0.95, 0.95, 0.96), bold=True)
