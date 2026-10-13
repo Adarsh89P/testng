@@ -75,6 +75,8 @@ def caption(cv, s, y, size=36):
         if cv.text_w(cur + " " + w) > cv.w - 140 and cur: lines.append(cur); cur = w
         else: cur = (cur + " " + w).strip()
     lines.append(cur)
+    # dark band so captions stay readable over zoomed-in content
+    cv.c.set_source_rgba(*BG, 0.88); cv.c.rectangle(0, y - size * 1.2, cv.w, size * 1.3 * len(lines) + size * 0.9); cv.c.fill()
     for i, ln in enumerate(lines):
         x = cv.w / 2 - cv.text_w(ln) / 2
         cv.text(x, y + i * size * 1.3, ln, (0.85, 0.85, 0.88))
