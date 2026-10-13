@@ -18,10 +18,13 @@ echo "== fonts (Google Fonts)"
 for f in ofl/poppins/Poppins-Bold.ttf ofl/poppins/Poppins-ExtraBold.ttf ofl/poppins/Poppins-Black.ttf \
          ofl/anton/Anton-Regular.ttf ofl/bebasneue/BebasNeue-Regular.ttf \
          ofl/mukta/Mukta-Bold.ttf ofl/mukta/Mukta-ExtraBold.ttf ofl/hind/Hind-Bold.ttf \
-         "ofl/baloo2/Baloo2%5Bwght%5D.ttf" "ofl/montserrat/Montserrat%5Bwght%5D.ttf"; do
+         "ofl/baloo2/Baloo2%5Bwght%5D.ttf" "ofl/montserrat/Montserrat%5Bwght%5D.ttf" \
+         "ofl/jetbrainsmono/JetBrainsMono%5Bwght%5D.ttf" "ofl/inter/Inter%5Bopsz,wght%5D.ttf"; do
   n="$(basename "$f" | sed 's/%5B/[/;s/%5D/]/')"
   [ -s "$FONTS/$n" ] || curl -sSfL -o "$FONTS/$n" "https://raw.githubusercontent.com/google/fonts/main/$f"
 done
+# pycairo finds Inter / JetBrains Mono by family name, so register them with fontconfig
+mkdir -p ~/.fonts && cp "$FONTS"/*.ttf ~/.fonts/ && fc-cache -f >/dev/null
 
 echo "== Kokoro offline TTS model (Hindi voices: hf_alpha hf_beta hm_omega hm_psi)"
 for f in kokoro-v1.0.onnx voices-v1.0.bin; do
