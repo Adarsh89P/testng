@@ -1,0 +1,13 @@
+numpy
+pillow
+moviepy
+pydub
+audioop-lts
+soundfile
+imageio-ffmpeg
+opencv-python-headless
+kokoro-onnx
+rembg
+onnxruntime
+fonttools
+requests
