@@ -10,14 +10,15 @@ M = os.path.join(os.path.dirname(__file__), "..", "assets", "models")
 _K = None
 
 
-VOICE = "af_heart"          # default narrator: English female (Kokoro)
+VOICE = "bf_emma"           # default narrator: Kokoro bf_emma
+DEFAULT_LANG = "hi"         # ...speaking Hindi (set None to follow the voice's own language)
 LANGS = {"h": "hi", "a": "en-us", "b": "en-gb"}
 
 
-def tts(text, voice=VOICE, speed=None):
+def tts(text, voice=VOICE, speed=None, lang=None):
     global _K
     if _K is None: _K = Kokoro(f"{M}/kokoro-v1.0.onnx", f"{M}/voices-v1.0.bin")
-    lang = LANGS.get(voice[0], "en-us")
+    lang = lang or DEFAULT_LANG or LANGS.get(voice[0], "en-us")
     speed = speed or (1.05 if lang == "hi" else 1.0)
     s, sr = _K.create(text, voice=voice, speed=speed, lang=lang)
     return s.astype(np.float32)
@@ -113,10 +114,10 @@ def caption(cv, s, y, size=36):
         cv.text(x, y + i * size * 1.3, ln, (0.85, 0.85, 0.88))
 
 
-def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=BGM_DEFAULT):
+def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=None, lang=None):
     workdir = workdir or os.path.dirname(out)
     os.makedirs(workdir, exist_ok=True)
-    voices = [tts(s.spoken, voice) if s.spoken else np.zeros(1, np.float32) for s in scenes]
+    voices = [tts(s.spoken, voice, lang=lang) if s.spoken else np.zeros(1, np.float32) for s in scenes]
     durs = [max(len(v) / SR + s.pad + s.hold, s.min_dur) for v, s in zip(voices, scenes)]
     total = sum(durs) + 0.8
     audio = np.zeros(int(SR * total) + SR, np.float32)
@@ -130,10 +131,11 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir
             tt = t0 + a
             while tt < t0 + b: mix_into(audio, click(), tt, 0.5); tt += random.uniform(0.045, 0.085)
         t0 += d
-    if bgm and os.path.exists(bgm):
-        audio += duck(load_bed(bgm, len(audio)), vo_bus)
-    else:
+    # bgm: None = no background (default), "synth" = generated pad, or a file path (e.g. BGM_DEFAULT) ducked under voice
+    if bgm == "synth":
         audio += pad_music(len(audio) / SR)[:len(audio)]
+    elif bgm and os.path.exists(bgm):
+        audio += duck(load_bed(bgm, len(audio)), vo_bus)
     fade = int(SR * 0.6); audio[-fade:] *= np.linspace(1, 0, fade)
     audio /= max(1e-6, np.abs(audio).max()) / 0.95
     wav = os.path.join(workdir, "_audio.wav"); sf.write(wav, audio, SR)

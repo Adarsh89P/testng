@@ -87,7 +87,7 @@ def s1(cv, t, d, st):
         swarm(c, t, 60, 1150, 960, 450, n=140, a=0.45)
         mono_label(c, "UX designer ho?", 640, DOT, 40, chars=int(t * 14))
         if t > 1.4: dot_text(c, "LABOR ILLUSION", 104, W / 2, 860, ease(1 - (t - 1.4) / 0.9))
-        if t > 2.6: mono_label(c, "what is it?", 1010, DIM, 40, chars=int((t - 2.6) * 14))
+        if t > 2.6: mono_label(c, "kya hai?", 1010, DIM, 40, chars=int((t - 2.6) * 14))
     stage.compose(cv, t, d, world, FULL, form=0.0, seed=1)
 
 
@@ -116,7 +116,7 @@ def s3(cv, t, d, st):
         mini_map(c, rx, cy - 30, 160, 230, min(1, t / (d + 2)))
         c.font(SANS, 18, True); c.text(rx - 62, cy + 140, "2.1 km away", DOT)
         for xx in (lx, rx): c.pill(xx, cy + 250, "wait: 30 min", size=22, fam=MONO)
-        if t > 5.2: white_pill(c, W / 2, 1380, "same wait. different feeling?", 24)
+        if t > 5.2: white_pill(c, W / 2, 1380, "same wait. alag feeling?", 24)
     stage.compose(cv, t, d, world, FULL, seed=3)
 
 
@@ -137,8 +137,8 @@ def s4(cv, t, d, st):
         for i in range(min(n, 5)):
             ang = -2.4 + i * 0.55
             c.pill(lx + math.cos(ang) * 150, cy + 380 + math.sin(ang) * 120, "?", size=26, fam=MONO, col=BAD)
-        c.pill(lx, cy - 260, f"app opened: {n}x", size=22, fam=MONO, col=BAD if n > 3 else DOT)
-        if t > 4.8: white_pill(c, lx, cy + 560, "30 min feels like 1 hour", 22)
+        c.pill(lx, cy - 260, f"app khola: {n} baar", size=22, fam=MONO, col=BAD if n > 3 else DOT)
+        if t > 4.8: white_pill(c, lx, cy + 560, "30 min = 1 ghanta jaisa", 22)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.6, (W * 0.27 + 90, 1020), 1.45), (d - 0.6, (W * 0.27 + 90, 1020), 1.45)),
                   punch=0.04 * sum(max(0, 1 - abs(t - o) / 0.1) for o in OPENS), seed=4)
 
@@ -154,7 +154,7 @@ def s5(cv, t, d, st):
         c.line(rx, cy + 200, rx, cy + 330)
         person(c, rx, cy + 390, "Rohan")
         if t > 2.0: c.pill(rx - 210, cy + 380, "calm", size=24, fam=MONO, col=GREEN)
-        if t > 4.6: white_pill(c, rx, cy + 560, "the wait feels shorter", 22)
+        if t > 4.6: white_pill(c, rx, cy + 560, "wait chhota lagta hai", 22)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.6, (W * 0.73 - 90, 980), 1.5), (d - 0.6, (W * 0.73 - 90, 980), 1.5)), seed=5)
 
 
@@ -164,7 +164,7 @@ def s6(cv, t, d, st):
         swarm(c, t, 60, 1250, 960, 420, n=120, a=0.35)
         c.pill(W / 2, 650, "UX LAW", size=24, fam=MONO, col=(0.02, 0.02, 0.03), bg=(0.95, 0.95, 0.96), bold=True)
         dot_text(c, "LABOR ILLUSION", 104, W / 2, 790, ease(1 - t / 0.9))
-        l1, l2 = "see the work happening =", "shorter wait + more value"
+        l1, l2 = "kaam hota dikhe =", "wait chhota + value zyada"
         n = int(max(0, t - 1.0) * 20)
         mono_label(c, l1, 930, DOT, 34, chars=n); mono_label(c, l2, 985, GREEN, 34, chars=max(0, n - len(l1)))
         if t > 3.6: c.pill(W / 2, 1110, "Buell & Norton · Harvard Business School · 2011", size=20, fam=MONO)
@@ -191,30 +191,30 @@ def s8(cv, t, d, st):
         split_labels(c, "DON'T", "DO", None if t < 1.2 else (0 if t < 2.6 else 1))
         lx, rx, cy = W * 0.27, W * 0.73, 820
         phone(c, lx, cy, 200, 380, stripes=False); spinner(c, lx, cy, t)
-        c.pill(lx, cy + 250, "empty spinner", size=22, fam=MONO, col=BAD)
+        c.pill(lx, cy + 250, "khaali spinner", size=22, fam=MONO, col=BAD)
         phone(c, rx, cy, 200, 380, stripes=False); steps(c, rx - 72, cy - 60, t, 0.8, gap=40, size=15)
-        c.pill(rx, cy + 250, "show progress", size=22, fam=MONO, col=GREEN)
+        c.pill(rx, cy + 250, "progress dikhao", size=22, fam=MONO, col=GREEN)
         if t > 4.0: white_pill(c, W / 2, 1380, "follow · next UX law", 26)
     stage.compose(cv, t, d, world, FULL, brk=0.0, seed=8)
 
 
 SCENES = [
-    Scene("Are you a UX designer? Then tell me... what is the Labor Illusion?", "", s1, min_dur=4.6, whoosh=True),
-    Scene("Let's understand it with an app we all use: Zomato. Friday night, nine forty seven. Rohan orders a biryani. Delivery time: thirty minutes.",
+    Scene("यू एक्स डिज़ाइनर हो? तो बताओ, लेबर इल्यूज़न क्या है?", "", s1, min_dur=4.6, whoosh=True),
+    Scene("चलो समझते हैं, हमारे लाइव ऐप ज़ोमैटो से। फ्राइडे रात, नौ बजकर सैंतालीस मिनट। रोहन ने बिरयानी ऑर्डर की। डिलीवरी, तीस मिनट।",
           "", s2, min_dur=6.0, whoosh=True),
-    Scene("Now imagine two apps. Both have the same thirty minute wait. App A only says: order placed. App B shows the rider moving on the map.",
+    Scene("अब दो ऐप्स सोचो। दोनों में इंतज़ार तीस मिनट। ऐप ए में सिर्फ लिखा है, ऑर्डर प्लेस्ड। ऐप बी में राइडर मैप पर चलता दिखता है।",
           "", s3, min_dur=7.0, whoosh=True),
-    Scene("In App A, Rohan keeps opening the app. Nothing changes. Thirty minutes start to feel like an hour.",
+    Scene("ऐप ए में रोहन बार बार ऐप खोलता है। कुछ बदलता ही नहीं। तीस मिनट, एक घंटे जैसे लगते हैं।",
           "", s4, min_dur=6.0, clicks=OPENS),
-    Scene("In App B, it's the same thirty minutes. But every step is visible. The food is being prepared. The rider is on the way. Rohan stays calm.",
+    Scene("ऐप बी में वही तीस मिनट, पर हर स्टेप दिखता है। खाना बन रहा है, राइडर निकल गया। रोहन शांत है।",
           "", s5, min_dur=6.0, whoosh=True),
-    Scene("That is the Labor Illusion. Research from Harvard Business School found that when people can see the work happening, waiting feels easier, and they value the service more.",
+    Scene("यही है लेबर इल्यूज़न। हार्वर्ड बिज़नेस स्कूल की रिसर्च कहती है, जब यूज़र को काम होता दिखता है, तो इंतज़ार कम खलता है, और वो सर्विस को ज़्यादा वैल्यू देता है।",
           "", s6, min_dur=8.0, whoosh=True),
-    Scene("That's why Zomato shows you every step, and the rider, live on the map.",
+    Scene("इसीलिए ज़ोमैटो में हर स्टेप का अपडेट आता है, और राइडर लाइव दिखता है।",
           "", s7, min_dur=5.5, whoosh=True),
-    Scene("So next time, don't show an empty spinner. Show progress. Follow for the next UX law.",
+    Scene("तो अगली बार डिज़ाइन में खाली स्पिनर मत दिखाओ, प्रोग्रेस दिखाओ। अगला यूएक्स लॉ जानने के लिए फॉलो करो।",
           "", s8, min_dur=6.0, whoosh=True),
 ]
 
 if __name__ == "__main__":
-    print("duration", round(render(SCENES, sys.argv[1], W, H, cap_y=None, voice="af_heart"), 1), "s")
+    print("duration", round(render(SCENES, sys.argv[1], W, H, cap_y=None, voice="bf_emma", lang="hi"), 1), "s")
