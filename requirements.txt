@@ -10,4 +10,5 @@ kokoro-onnx
 rembg
 onnxruntime
 fonttools
+pycairo
 requests

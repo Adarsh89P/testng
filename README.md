@@ -21,3 +21,8 @@ Installs ffmpeg, Devanagari + display fonts, Python libs, the offline Kokoro TTS
 ## Network limits in this environment
 Blocked by egress policy: Microsoft Edge TTS, Hugging Face, Pexels, Pixabay, ElevenLabs, OpenAI.
 GitHub and PyPI work. Stock footage/music must come from the user, connectors, or be generated.
+
+## Carried over from chat 1 ("Youtubeautomation")
+- `reference/make_short1_from_chat1.py`: early version of the stickman Short renderer, recovered from the old transcript
+  (pycairo vector frames piped to ffmpeg at 1080x1920/30fps; numpy-generated music and SFX; Kokoro voice `am_michael`).
+  Its later engines (`engine*.py`, `long_engine.py`) were never pushed and are lost.
