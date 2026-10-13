@@ -243,4 +243,4 @@ SCENES = [
 ]
 
 if __name__ == "__main__":
-    print("duration", round(render(with_badge(SCENES), sys.argv[1], W, H, cap_y=None, voice="bf_emma", lang="hi"), 1), "s")
+    print("duration", round(render(with_badge(SCENES), sys.argv[1], W, H, cap_y=None, voice="hf_beta", lang="hi"), 1), "s")

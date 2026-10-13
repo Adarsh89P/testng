@@ -10,16 +10,36 @@ M = os.path.join(os.path.dirname(__file__), "..", "assets", "models")
 _K = None
 
 
-VOICE = "bf_emma"           # default narrator: Kokoro bf_emma
+VOICE = "hf_beta"           # default narrator: Kokoro hf_beta (native Hindi female)
 DEFAULT_LANG = "hi"         # ...speaking Hindi (set None to follow the voice's own language)
 LANGS = {"h": "hi", "a": "en-us", "b": "en-gb"}
+NATURAL = True              # phrase-by-phrase synthesis with human-like, slightly varied pauses
+
+
+def natural_tts(text, voice, speed, lang):
+    """Split at phrase boundaries and rejoin with varied pauses, so delivery breathes like a person talking."""
+    import re
+    parts = [p for p in re.split(r"(?<=[,।?!.])\s+", text.strip()) if p]
+    rng = random.Random(hash(text) & 0xFFFF)
+    out = []
+    for i, p in enumerate(parts):
+        s, sr = _K.create(p, voice=voice, speed=speed * rng.uniform(0.97, 1.03), lang=lang)
+        s = np.trim_zeros(s.astype(np.float32), "fb")
+        out.append(s)
+        if i < len(parts) - 1:
+            end = p[-1]
+            gap = {"?": 0.42, "!": 0.36, "।": 0.34, ".": 0.34}.get(end, 0.17) * rng.uniform(0.85, 1.2)
+            out.append(np.zeros(int(sr * gap), np.float32))
+    return np.concatenate(out)
 
 
 def tts(text, voice=VOICE, speed=None, lang=None):
     global _K
     if _K is None: _K = Kokoro(f"{M}/kokoro-v1.0.onnx", f"{M}/voices-v1.0.bin")
     lang = lang or DEFAULT_LANG or LANGS.get(voice[0], "en-us")
-    speed = speed or (1.05 if lang == "hi" else 1.0)
+    speed = speed or (0.97 if lang == "hi" else 1.0)
+    if NATURAL:
+        return natural_tts(text, voice, speed, lang)
     s, sr = _K.create(text, voice=voice, speed=speed, lang=lang)
     return s.astype(np.float32)
 
@@ -114,6 +134,12 @@ def caption(cv, s, y, size=36):
         cv.text(x, y + i * size * 1.3, ln, (0.85, 0.85, 0.88))
 
 
+# warmth, de-harsh, gentle compression, very light room so the voice sounds less dry/robotic
+VOICE_FX = ("highpass=f=75,equalizer=f=180:t=q:w=1.2:g=2.5,equalizer=f=3200:t=q:w=1.5:g=1.5,"
+            "equalizer=f=7000:t=q:w=2:g=-4,acompressor=threshold=-20dB:ratio=2.5:attack=8:release=120,"
+            "aecho=0.85:0.6:22|37:0.06|0.04")
+
+
 def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=None, lang=None):
     workdir = workdir or os.path.dirname(out)
     os.makedirs(workdir, exist_ok=True)
@@ -154,7 +180,7 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir
         if cap_y: caption(cv, s.caption, cap_y)
         p.stdin.write(cv.raw())
     p.stdin.close(); p.wait()
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-i", wav, "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1:LRA=11",
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-i", wav, "-c:v", "copy", "-af", VOICE_FX + ",loudnorm=I=-14:TP=-1:LRA=11",
                     "-c:a", "aac", "-b:a", "192k", "-ac", "2", "-ar", "48000", "-shortest", "-movflags", "+faststart", out], check=True)
     os.remove(vid)
     return total
