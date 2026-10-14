@@ -20,6 +20,11 @@
   --warn: #9a5c00;
   --warn-soft: #fbf0dc;
   --hl: #fff0a3;
+  --page: #ffffff;
+  --shadow: rgba(20, 30, 50, 0.18);
+  --mark: rgba(255, 205, 0, 0.30);
+  --mark-line: #d49b00;
+  --mark-del: rgba(220, 40, 40, 0.14);
   --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -29,14 +34,14 @@
   :root:not([data-theme="light"]) {
     --paper: #0f131a; --sheet: #161b24; --ink: #e5e9f0; --muted: #98a2b5; --rule: #2a3242;
     --accent: #84a2ff; --accent-soft: #1c2742; --pen: #ff7b70; --pen-soft: #3a1d1c;
-    --ok: #55c78e; --ok-soft: #15301f; --warn: #f0b552; --warn-soft: #33270f; --hl: #4d4520;
+    --ok: #55c78e; --ok-soft: #15301f; --warn: #f0b552; --warn-soft: #33270f; --hl: #4d4520; --shadow: rgba(0, 0, 0, 0.6);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #0f131a; --sheet: #161b24; --ink: #e5e9f0; --muted: #98a2b5; --rule: #2a3242;
   --accent: #84a2ff; --accent-soft: #1c2742; --pen: #ff7b70; --pen-soft: #3a1d1c;
-  --ok: #55c78e; --ok-soft: #15301f; --warn: #f0b552; --warn-soft: #33270f; --hl: #4d4520;
+  --ok: #55c78e; --ok-soft: #15301f; --warn: #f0b552; --warn-soft: #33270f; --hl: #4d4520; --shadow: rgba(0, 0, 0, 0.6);
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -81,6 +86,20 @@ textarea.jd { min-height: 170px; font-size: 13.5px; }
 .atsbar select { font-weight: 500; background: var(--sheet); }
 .atsbar .who { font-size: 13px; color: var(--muted); min-width: 0; }
 @media (max-width: 720px) { .atsbar { grid-template-columns: minmax(0, 1fr); } }
+
+/* Preview */
+.seg { display: flex; gap: 2px; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 2px; }
+.seg button { font: 500 12.5px var(--f-body); border: 0; background: transparent; color: var(--muted); padding: 5px 11px; border-radius: 4px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--sheet); color: var(--ink); box-shadow: 0 0 0 1px var(--rule); }
+.pvbody { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 12px; min-height: 360px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; min-width: 0; }
+.pvbody.busy { opacity: 0.6; }
+.pv-page { position: relative; background: var(--page); box-shadow: 0 1px 4px var(--shadow); margin: 0 auto; max-width: 100%; }
+.pv-page canvas { display: block; max-width: 100%; height: auto; }
+.pv-mark { position: absolute; background: var(--mark); border-bottom: 2px solid var(--mark-line); pointer-events: none; }
+.pv-mark.del { background: var(--mark-del); border-bottom-color: var(--pen); }
+.pv-docx { background: var(--page); color: #111; overflow: hidden; }
+.pv-empty { margin: auto; color: var(--muted); font-size: 13.5px; text-align: center; max-width: 34ch; }
+@media (min-width: 901px) { .pv { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 76px); max-height: calc(100vh - 96px); } .pvbody { overflow: auto; flex: 1; } }
 
 /* Score */
 .score { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
@@ -230,6 +249,22 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
       </div>
 
       <div class="stack">
+        <div class="panel pv" id="pvPanel">
+          <div class="row between">
+            <h2>Preview</h2>
+            <div class="seg" role="group" aria-label="Preview version">
+              <button id="pvNew" aria-pressed="true">Updated</button>
+              <button id="pvOld" aria-pressed="false">Original</button>
+            </div>
+          </div>
+          <p class="note" id="pvStatus" aria-live="polite"></p>
+          <div class="pvbody" id="pvBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="stack">
         <div class="panel">
           <div class="row between"><h2 id="scoreTitle">ATS score</h2><span class="tag blue" id="scoreTag"></span></div>
           <div class="score">
@@ -250,6 +285,8 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
           <ul class="tips" id="tips"></ul>
           <p class="note">Vendors don't publish their scoring. Each profile is built from vendor documentation and what recruiters report, and every employer configures its system differently, so treat the score as a guide.</p>
         </div>
+      </div>
+      <div class="stack">
         <div class="panel">
           <div class="row between"><h2>Keyword match</h2><span class="slopcount" id="kwCount"></span></div>
           <div id="kwBody"></div>
@@ -1027,6 +1064,7 @@ function renderScan() {
   renderCompare(base);
   renderDownloads();
   $('exampleTag').hidden = cv !== EXAMPLE_CV;
+  schedulePreview();
   save();
 }
 
@@ -1124,6 +1162,7 @@ const LIB = {
   pdfw: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
   pdf: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
   jszip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+  docxpv: 'https://cdn.jsdelivr.net/npm/docx-preview@0.3.5/dist/docx-preview.min.js',
   pdflib: 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js'
 };
 const loaded = {};
@@ -1517,7 +1556,7 @@ const MUL = (a, b) => [a[0] * b[0] + a[1] * b[2], a[0] * b[1] + a[1] * b[3], a[2
 const fmtN = v => (Math.round(v * 1000) / 1000).toString();
 const FALLBACK_CH = { '’': "'", '‘': "'", '“': '"', '”': '"', '–': '-', '—': '-', '•': '-', ' ': ' ', "'": '’', '"': '”', '-': '–' };
 
-async function patchPdf(buf, oldText, newText, srcLines) {
+async function patchPdf(buf, oldText, newText, srcLines, opts = {}) {
   await needPdfLib();
   const { PDFDocument, PDFName, PDFArray, PDFDict, PDFRef, PDFNumber, PDFRawStream, decodePDFRawStream, StandardFonts } = window.PDFLib;
   let doc;
@@ -1727,6 +1766,7 @@ async function patchPdf(buf, oldText, newText, srcLines) {
     for (let i = oSrc.length - 1, next = null; i >= 0; i--) { if (oSrc[i] && !/\s/.test(oldT[i])) next = oSrc[i]; if (!oSrc[i]) oSrc[i] = next; }
     if (!newText.trim()) {
       for (let j = lineStart; j <= lineEnd; j++) { cand[j].del = true; touched.add(cand[j].u + ':' + cand[j].op); }
+      marks.push({ page: line.page, y: line.y, size: cand[lineStart].size, x0: cand[lineStart].x0, x1: cand[lineEnd].x1, del: true });
       return true;
     }
     // align old and new words; new characters inherit the style of their neighbours
@@ -1822,6 +1862,7 @@ async function patchPdf(buf, oldText, newText, srcLines) {
       comp = -(compDev / anchor.sc) * 1000 / (anchor.Tfs * anchor.Th);
     }
     delSet.forEach(r => { r.del = true; touched.add(r.u + ':' + r.op); });
+    marks.push({ page: line.page, y: line.y, size: anchor.size, x0: start, x1: Math.max(start + newW * s, start + 4) });
     if (runs.length || comp !== null) {
       (anchor[where] = anchor[where] || []).push({ runs, tz: s < 1 ? anchor.Th * 100 * s : null, comp });
       touched.add(anchor.u + ':' + anchor.op);
@@ -1829,6 +1870,7 @@ async function patchPdf(buf, oldText, newText, srcLines) {
     return true;
   }
   const pageRight = p => pages[p - 1].getWidth() - 18;
+  const marks = [];
   let removed = 0;
   const usedStdChars = new Set();
 
@@ -1915,13 +1957,13 @@ async function patchPdf(buf, oldText, newText, srcLines) {
   const bytes = await doc.save();
   // check the result the way an ATS would: extract the text again
   let verified = null;
-  try {
+  if (opts.verify !== false) try {
     const back = await readPdf(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
     const have = new Set(back.lines.map(l => l.text.replace(/\s/g, '')));
     const want = ops.filter(o => o.t === 'mod').map(o => newL[o.j].replace(/\s/g, ''));
     verified = { ok: want.filter(w => have.has(w)).length, of: want.length };
   } catch (e) {}
-  return { blob: new Blob([bytes], { type: 'application/pdf' }), applied, failed, verified, usedStd: [...usedStdChars], notes: removed ? [`${removed} removed line${removed > 1 ? 's leave' : ' leaves'} a blank gap, because a PDF can't move the lines below up. If a bullet was drawn as a shape rather than a character, it stays behind; rewrite the line instead of deleting it, or delete it in your source file.`] : [] };
+  return { blob: new Blob([bytes], { type: 'application/pdf' }), applied, failed, verified, marks, usedStd: [...usedStdChars], notes: removed ? [`${removed} removed line${removed > 1 ? 's leave' : ' leaves'} a blank gap, because a PDF can't move the lines below up. If a bullet was drawn as a shape rather than a character, it stays behind; rewrite the line instead of deleting it, or delete it in your source file.`] : [] };
 }
 
 /* Splits plain CV text into blocks for the rebuilt Word and PDF files */
@@ -2083,6 +2125,126 @@ $('dlButtons').addEventListener('click', async e => {
   } catch (err) { toast.textContent = `Couldn't build the file: ${err.message}`; toast.classList.add('err'); }
   btn.disabled = false;
 });
+
+/* =====================================================================
+   SIDE PREVIEW: renders the exact file the main download button gives you
+   ===================================================================== */
+let pvMode = 'new', pvTimer = null, pvSeq = 0;
+function schedulePreview(delay = 700) { clearTimeout(pvTimer); pvTimer = setTimeout(renderPreview, delay); }
+function setPvMode(m) {
+  pvMode = m;
+  $('pvNew').setAttribute('aria-pressed', String(m === 'new'));
+  $('pvOld').setAttribute('aria-pressed', String(m === 'old'));
+  schedulePreview(0);
+}
+$('pvNew').addEventListener('click', () => setPvMode('new'));
+$('pvOld').addEventListener('click', () => setPvMode('old'));
+
+async function previewFile() {
+  const cv = resumeEl.value;
+  if (SRC && SRC.type === 'pdf') {
+    if (pvMode === 'old') return { type: 'pdf', blob: new Blob([SRC.buf.slice(0)]), note: `Your uploaded PDF, unchanged.` };
+    const r = await patchPdf(SRC.buf, SRC.text, desiredOriginal(cv), SRC.lines, { verify: false });
+    return { type: 'pdf', blob: r.blob, marks: r.marks, info: r };
+  }
+  if (SRC && SRC.type === 'docx') {
+    if (pvMode === 'old') return { type: 'docx', blob: new Blob([SRC.buf.slice(0)]), note: 'Your uploaded Word file, unchanged.' };
+    const r = await patchDocx(SRC.buf, SRC.text, desiredOriginal(cv));
+    return { type: 'docx', blob: r.blob, info: r };
+  }
+  if (pvMode === 'old') return { type: 'pdf', blob: await buildPdf(toBlocks(cv)), note: 'Your text before fixes, in the clean layout.' };
+  return { type: 'pdf', blob: await buildPdf(toBlocks(finalText(cv))), note: 'Clean-layout PDF built from your text. Upload your own DOCX or PDF to preview it in its own format.' };
+}
+
+async function drawPdf(blob, host, marks) {
+  await needPdfJs();
+  const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise;
+  const W = Math.max(240, host.clientWidth - 26);
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const pagesOut = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page = await pdf.getPage(p);
+    const scale = W / page.getViewport({ scale: 1 }).width;
+    const vp = page.getViewport({ scale });
+    const wrap = document.createElement('div');
+    wrap.className = 'pv-page';
+    wrap.style.width = vp.width + 'px';
+    wrap.style.height = vp.height + 'px';
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(vp.width * dpr); canvas.height = Math.round(vp.height * dpr);
+    canvas.style.width = vp.width + 'px'; canvas.style.height = vp.height + 'px';
+    canvas.setAttribute('aria-label', `Page ${p}`);
+    wrap.appendChild(canvas);
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport({ scale: scale * dpr }) }).promise;
+    (marks || []).filter(m => m.page === p).forEach(m => {
+      const [ax, ay] = vp.convertToViewportPoint(m.x0 - 1, m.y + m.size * 0.92);
+      const [bx, by] = vp.convertToViewportPoint(m.x1 + 1, m.y - m.size * 0.28);
+      const d = document.createElement('div');
+      d.className = 'pv-mark' + (m.del ? ' del' : '');
+      d.style.left = Math.min(ax, bx) + 'px'; d.style.top = Math.min(ay, by) + 'px';
+      d.style.width = Math.abs(bx - ax) + 'px'; d.style.height = Math.abs(by - ay) + 'px';
+      d.title = m.del ? 'Removed line' : 'Changed text';
+      wrap.appendChild(d);
+    });
+    pagesOut.push(wrap);
+  }
+  host.replaceChildren(...pagesOut);
+  return pdf.numPages;
+}
+
+async function drawDocx(blob, host) {
+  await needZip();
+  if (!window.docx || !window.docx.renderAsync) await loadScript(LIB.docxpv);
+  const stage = document.createElement('div');
+  stage.className = 'pv-docx';
+  stage.style.position = 'absolute'; stage.style.visibility = 'hidden'; stage.style.left = '-9999px';
+  document.body.appendChild(stage);
+  try {
+    await window.docx.renderAsync(blob, stage, stage, { className: 'docxpv', inWrapper: false, breakPages: true, ignoreLastRenderedPageBreak: true, renderHeaders: true, renderFooters: true });
+    const sec = stage.querySelector('section.docxpv') || stage.firstElementChild;
+    const pageW = sec ? sec.offsetWidth : 794;
+    const W = Math.max(240, host.clientWidth - 26);
+    const z = Math.min(1, W / pageW);
+    stage.style.cssText = '';
+    stage.style.zoom = z;
+    stage.style.width = pageW + 'px';
+    stage.style.margin = '0 auto';
+    stage.querySelectorAll('section.docxpv').forEach(x => { x.style.boxShadow = '0 1px 4px var(--shadow)'; x.style.marginBottom = '14px'; });
+    host.replaceChildren(stage);
+  } catch (e) { stage.remove(); throw e; }
+}
+
+async function renderPreview() {
+  if ($('view-scan').hidden) return;
+  const host = $('pvBody'), status = $('pvStatus');
+  if (!resumeEl.value.trim()) { host.innerHTML = '<p class="pv-empty">Upload or paste a CV to see the file you’ll download.</p>'; status.textContent = ''; return; }
+  const seq = ++pvSeq;
+  host.classList.add('busy');
+  status.textContent = 'Updating preview…';
+  try {
+    const f = await previewFile();
+    if (seq !== pvSeq) return;
+    let pagesN = null;
+    if (f.type === 'pdf') pagesN = await drawPdf(f.blob, host, pvMode === 'new' ? f.marks : null);
+    else await drawDocx(f.blob, host);
+    if (seq !== pvSeq) return;
+    let msg = f.note || '';
+    if (!msg && f.info) {
+      const n = f.info.applied;
+      msg = n ? `This is the file you’ll download: ${n} line${n === 1 ? '' : 's'} changed${f.type === 'pdf' ? ' (highlighted)' : ''}, everything else as uploaded.` : 'No changes yet. Edit the CV text or keep fixes switched on, and they show up here.';
+      if (f.info.failed && f.info.failed.length) msg += ` ${f.info.failed.length} change${f.info.failed.length === 1 ? '' : 's'} can’t be applied; details appear when you download.`;
+    }
+    if (pagesN > 1) msg += ` ${pagesN} pages.`;
+    if (f.type === 'docx') msg += ' Drawn in the browser, so Word itself may show bullets and spacing slightly differently.';
+    status.textContent = msg.trim();
+  } catch (err) {
+    if (seq !== pvSeq) return;
+    status.textContent = `Preview unavailable: ${err.message}`;
+    host.innerHTML = '<p class="pv-empty">The preview couldn’t be drawn here, but downloads still work.</p>';
+  } finally { if (seq === pvSeq) host.classList.remove('busy'); }
+}
+let pvW = 0;
+new ResizeObserver(() => { const w = $('pvBody').clientWidth; if (Math.abs(w - pvW) > 30) { pvW = w; schedulePreview(250); } }).observe($('pvBody'));
 
 /* ---------- Clipboard ---------- */
 function copyText(text, toastEl, fallbackEl) {
@@ -2310,7 +2472,7 @@ function selectTab(name) {
   ['scan', 'build'].forEach(n => { $('tab-' + n).setAttribute('aria-selected', String(n === name)); $('view-' + n).hidden = n !== name; });
   try { localStorage.setItem('plaincv-tab', name); } catch (e) {}
 }
-$('tab-scan').addEventListener('click', () => selectTab('scan'));
+$('tab-scan').addEventListener('click', () => { selectTab('scan'); schedulePreview(0); });
 $('tab-build').addEventListener('click', () => selectTab('build'));
 
 let st;

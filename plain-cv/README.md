@@ -18,6 +18,9 @@ Vendors don't publish their scoring. Profiles are built from vendor documentatio
 - Keyword match against a job description; click a missing keyword to add it to your Skills line.
 - Red-pen proof of AI-sounding filler (swap / cut / flag). Every fix can be changed or replaced with your own wording.
 
+## Side preview
+Next to the CV editor, a live preview renders the exact file the main download gives you, page by page, with an Updated / Original toggle. In PDFs the changed lines are highlighted. Word files are drawn with docx-preview, so Word itself may differ slightly in bullets and spacing.
+
 ## Download in your own format
 Edit any word or line in the CV box (or use the slop fixes and keyword chips). The download is **your uploaded file with only that text changed**; it is never rebuilt.
 
@@ -32,5 +35,5 @@ Form-based builder with live slop marking, per-ATS tips, and Word/PDF/TXT downlo
 - `app.html`: page source (published as an artifact; no doctype wrapper)
 - `index.html`: the same page as a standalone HTML document
 
-Libraries load on demand from cdnjs: pdf.js 3.11.174, JSZip 3.10.1, pdf-lib 1.17.1.
+Libraries load on demand from cdnjs: pdf.js 3.11.174, JSZip 3.10.1, pdf-lib 1.17.1, and docx-preview 0.3.5 from jsDelivr.
 To extend the slop list edit `SLOP_DEF`; to add an ATS add a `P(...)` line to `PROFILES`.
