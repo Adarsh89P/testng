@@ -67,6 +67,7 @@ def avatar(cv, cx, cy, r, path, k=1.0):
     c = cv.c; c.save(); c.arc(cx, cy, r, 0, 6.2832); c.clip()
     c.translate(cx - img.get_width() * s / 2, cy - img.get_height() * s / 2); c.scale(s, s)
     c.set_source_surface(img, 0, 0); c.paint_with_alpha(k); c.restore()
+NEXT_LABEL = "kal · Day {day:02d}"
 OUTRO_VOICE = "ऐसे और यू एक्स लॉज़ के लिए, डिज़ाइन विद राखी को फॉलो करो।"
 
 
@@ -117,7 +118,7 @@ def outro_frame(cv, t, day, brand, handle, tap_at=1.5, photo=None):
             q = max(0, (t - tap_at) / 0.35)
             cv.c.set_source_rgba(1, 1, 1, 0.45 * (1 - q)); cv.c.arc(cx + 40, 1235, 20 + 50 * q, 0, 6.3); cv.c.fill()
         cv._dot(tx, ty, 16, (1, 1, 1), 0.9)
-    if t > tap_at + 0.4: white_pill(cv, cx, 1400, "follow karo · kal Day %02d" % (day + 1), 34)
+    if t > tap_at + 0.4: white_pill(cv, cx, 1400, NEXT_LABEL.format(day=day + 1), 34)
     badge(cv, day)
 
 
@@ -198,8 +199,11 @@ def main():
     ap.add_argument("--photo", default=None, help="profile photo (png/jpg) for the outro avatar")
     ap.add_argument("--watermark", default=WATERMARK)
     ap.add_argument("--cc", default=None, help="JSON phrase cues for the source video (from cc_build.py)")
+    ap.add_argument("--cut-at", type=float, default=None, help="end the source here (e.g. drop its own follow CTA)")
+    ap.add_argument("--hide-box", default=None, help="x,y,w,h area to blank in the source's last 0.6 s (old CTA pill)")
     a = ap.parse_args()
-    global INTRO
+    global INTRO, NEXT_LABEL
+    NEXT_LABEL = "kal · Day {day:02d}: " + a.next
     if a.photo and not a.photo.lower().endswith(".png"):
         png = os.path.join(tempfile.mkdtemp(), "avatar.png")
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", a.photo, png], check=True); a.photo = png
@@ -212,6 +216,11 @@ def main():
     orig = subprocess.run(["ffmpeg", "-v", "error", "-i", a.inp, "-vn", "-ac", "2", "-ar", "48000", "-f", "f32le", "-"],
                           capture_output=True, check=True).stdout
     orig = np.frombuffer(orig, np.float32).reshape(-1, 2)
+    if a.cut_at:
+        a.cut_at = round(a.cut_at * FPS) / FPS
+        orig = orig[:int(48000 * a.cut_at)].copy(); fl = int(48000 * 0.06)
+        orig[-fl:] *= np.linspace(1, 0, fl)[:, None]
+        dur = a.cut_at
     vo = None; intro_vo_len = 0.0; outro_vo_len = 0.0
     if not a.no_intro_voice:
         # same engine/voice/speed as the original narration, no extra processing, so it sounds continuous
@@ -262,7 +271,8 @@ def main():
             ip = [(d.format(day_hi=DAYS_HI.get(a.day, str(a.day))), r.format(day=a.day)) for d, r in INTRO_PHRASES]
             cues += timed(ip, 0.35, intro_vo_len, slen)
         src = json.load(open(a.cc))
-        cues += [{"t0": c["t0"] + INTRO, "t1": c["t1"] + INTRO, "text": c["text"]} for c in src]
+        src = [c for c in src if not a.cut_at or c["t0"] < a.cut_at - 0.05]
+        cues += [{"t0": c["t0"] + INTRO, "t1": min(c["t1"], a.cut_at or 1e9) + INTRO, "text": c["text"]} for c in src]
         if outro_vo_len:
             cues += timed(OUTRO_PHRASES, INTRO + nfr / FPS + 0.3, outro_vo_len, slen)
     last_src_cue = max([c["t1"] for c in cues if c["t0"] < INTRO + nfr / FPS], default=0)
@@ -278,12 +288,15 @@ def main():
     while True:
         raw = dec.stdout.read(fsz)
         if len(raw) < fsz: break
+        if f >= nfr: break
         buf = bytearray(raw); fr = Wrap(buf); t = f / FPS
+        if a.hide_box and dur - t < 0.6:
+            hx, hy, hw, hh = map(float, a.hide_box.split(",")); fr.c.set_source_rgb(*BG); fr.c.rectangle(hx, hy, hw, hh); fr.c.fill()
         badge(fr, a.day)
-        if dur - t < 3.0 and INTRO + t > last_src_cue + 0.2: end_card(fr, dur - t, a.day, a.next)
+        if not a.cut_at and dur - t < 3.0 and INTRO + t > last_src_cue + 0.2: end_card(fr, dur - t, a.day, a.next)
         watermark(fr, a.watermark); cc_draw(fr, INTRO + t, cues)
         fr.surf.flush(); enc.stdin.write(bytes(buf)); f += 1
-    dec.wait()
+    dec.stdout.close(); dec.kill(); dec.wait()      # source may be cut early: stop the decoder instead of waiting on it
     while f < nfr:                       # keep video frame count equal to the padded audio
         enc.stdin.write(bytes(buf)); f += 1
     for g in range(int(round(OUTRO * FPS))):
