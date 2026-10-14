@@ -5,7 +5,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <style>
-/* Layout: an editor's desk. Manuscript inputs on the left, the report on the right, the red-pen proof and clean copy full width below. */
+/* Layout: an editor's desk. An ATS selector bar on top, manuscript inputs left, the report right, the red-pen proof, clean copy and downloads full width below. */
 :root {
   --paper: #f3f5f8;
   --sheet: #ffffff;
@@ -43,48 +43,67 @@
 * { box-sizing: border-box; }
 body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
 .wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
-header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding-block: 28px 18px; border-bottom: 1px solid var(--rule); }
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding-block: 28px 18px; }
 h1 { font-family: var(--f-display); font-size: clamp(28px, 4vw, 40px); line-height: 1.05; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
 h1 .strike { text-decoration: line-through; text-decoration-color: var(--pen); text-decoration-thickness: 3px; color: var(--muted); font-weight: 600; }
-.lede { margin: 6px 0 0; color: var(--muted); max-width: 60ch; }
+.lede { margin: 6px 0 0; color: var(--muted); max-width: 62ch; }
 .tabs { display: flex; gap: 4px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 4px; }
 .tabs button { font: 500 14px var(--f-body); border: 0; background: transparent; color: var(--muted); padding: 8px 16px; border-radius: 5px; cursor: pointer; }
 .tabs button[aria-selected="true"] { background: var(--accent); color: var(--sheet); }
-.tabs button:focus-visible, .btn:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible, .chipbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 h2 { font-family: var(--f-display); font-size: 20px; margin: 0; letter-spacing: -0.005em; }
-h3 { font: 600 13px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0; }
+h3 { font: 600 12.5px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0; }
 .panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 18px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
-.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 20px; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; }
 @media (max-width: 900px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
 .stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .row.between { justify-content: space-between; }
 label.lbl { font: 500 13px var(--f-body); color: var(--muted); display: block; margin-bottom: 4px; }
-textarea, input[type="text"] { width: 100%; font: 14px/1.5 var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; }
+textarea, input[type="text"], select { width: 100%; font: 14px/1.5 var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 9px 12px; }
 textarea { resize: vertical; }
 textarea.resume { min-height: 340px; font-family: var(--f-mono); font-size: 13px; }
 textarea.jd { min-height: 170px; font-size: 13.5px; }
-.btn { font: 500 13.5px var(--f-body); border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); padding: 7px 13px; border-radius: 6px; cursor: pointer; }
+.btn { font: 500 13.5px var(--f-body); border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); padding: 7px 13px; border-radius: 6px; cursor: pointer; text-align: left; }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--sheet); }
 .btn.pen { color: var(--pen); border-color: var(--pen); }
 .btn.small { padding: 4px 9px; font-size: 12.5px; }
-.note { font-size: 13px; color: var(--muted); }
-.example-tag { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; background: var(--warn-soft); color: var(--warn); padding: 3px 8px; border-radius: 4px; }
+.btn[disabled] { opacity: 0.55; cursor: progress; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+.tag { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; background: var(--warn-soft); color: var(--warn); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.tag.blue { background: var(--accent-soft); color: var(--accent); }
 .file-label { position: relative; overflow: hidden; }
 .file-label input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* ATS bar */
+.atsbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-block: 1px solid var(--rule); padding-block: 12px; display: grid; grid-template-columns: auto minmax(0, 340px) minmax(0, 1fr); gap: 8px 14px; align-items: center; }
+.atsbar label { font: 600 12.5px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.atsbar select { font-weight: 500; background: var(--sheet); }
+.atsbar .who { font-size: 13px; color: var(--muted); min-width: 0; }
+@media (max-width: 720px) { .atsbar { grid-template-columns: minmax(0, 1fr); } }
 
 /* Score */
 .score { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
 .ring { width: 128px; height: 128px; }
 .ring text { font-family: var(--f-display); fill: var(--ink); }
 .ring .sub { font-family: var(--f-mono); font-size: 10px; fill: var(--muted); letter-spacing: 0.05em; }
-.bars { display: grid; gap: 8px; min-width: 0; }
+.bars { display: grid; gap: 7px; min-width: 0; }
 .bar { display: grid; grid-template-columns: 9.5em minmax(0, 1fr) 3em; gap: 8px; align-items: center; font-size: 13px; }
 .bar .track { height: 6px; background: var(--paper); border-radius: 3px; overflow: hidden; border: 1px solid var(--rule); }
 .bar .fill { height: 100%; background: var(--accent); }
 .bar .val { font: 500 12.5px var(--f-mono); text-align: right; font-variant-numeric: tabular-nums; }
+.bar.off { opacity: 0.45; }
 @media (max-width: 460px) { .score { grid-template-columns: minmax(0, 1fr); justify-items: center; } .bars { width: 100%; } }
+.projected { font-size: 13.5px; padding: 8px 12px; border-radius: 6px; background: var(--ok-soft); color: var(--ok); }
+.projected b { font-family: var(--f-mono); }
+
+/* Profile card */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.fact { border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; min-width: 0; }
+.fact span { display: block; font: 500 11px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.fact b { font-weight: 600; font-size: 13.5px; }
+ul.tips { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 13.5px; }
 
 /* Checks */
 .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
@@ -99,35 +118,51 @@ textarea.jd { min-height: 170px; font-size: 13.5px; }
 
 /* Keywords */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { font: 500 12.5px var(--f-mono); padding: 3px 9px; border-radius: 4px; border: 1px solid var(--rule); }
+.chip, .chipbtn { font: 500 12.5px var(--f-mono); padding: 3px 9px; border-radius: 4px; border: 1px solid var(--rule); }
 .chip.hit { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
-.chip.miss { background: var(--pen-soft); color: var(--pen); border-color: transparent; }
-.chip small { opacity: 0.75; margin-left: 4px; }
+.chip.part { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.chipbtn { background: var(--pen-soft); color: var(--pen); border-color: transparent; cursor: pointer; }
+.chipbtn[aria-pressed="true"] { background: var(--accent); color: var(--sheet); }
+.chip small, .chipbtn small { opacity: 0.75; margin-left: 4px; }
 
 /* Red pen proof */
 .proof { font-family: var(--f-doc); font-size: 15px; line-height: 1.75; white-space: pre-wrap; word-wrap: break-word; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; max-height: 560px; overflow: auto; }
 .proof del { color: var(--pen); text-decoration-thickness: 1.5px; }
 .proof ins { text-decoration: none; font: italic 600 0.82em var(--f-body); color: var(--accent); vertical-align: 0.45em; margin-left: 2px; }
 .proof mark { background: var(--hl); color: inherit; border-bottom: 2px solid var(--warn); padding: 0 1px; cursor: help; }
+.proof .kept { border-bottom: 2px dotted var(--muted); }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); }
 .legend span { display: inline-flex; gap: 6px; align-items: center; }
 .legend del { color: var(--pen); }
 .legend ins { text-decoration: none; color: var(--accent); font-style: italic; font-weight: 600; }
 .legend mark { background: var(--hl); color: var(--ink); border-bottom: 2px solid var(--warn); }
 .tbl-wrap { overflow-x: auto; }
-table.slop { width: 100%; border-collapse: collapse; font-size: 13px; }
-table.slop th { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); }
-table.slop td { padding: 7px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
-table.slop td.n { font-family: var(--f-mono); text-align: right; font-variant-numeric: tabular-nums; }
+table.t { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.t th { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+table.t td { padding: 7px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.t td.n { font-family: var(--f-mono); text-align: right; font-variant-numeric: tabular-nums; }
+table.t input[type="text"] { padding: 5px 8px; font-size: 13px; min-width: 150px; }
+table.t .tip { display: block; color: var(--muted); font-size: 12.5px; }
+table.cmp tr { cursor: pointer; }
+table.cmp tr.sel td { background: var(--accent-soft); }
+table.cmp .mini { height: 6px; background: var(--paper); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; min-width: 80px; }
+table.cmp .mini i { display: block; height: 100%; background: var(--accent); }
 .kind { font: 500 11px var(--f-mono); padding: 2px 6px; border-radius: 3px; white-space: nowrap; }
 .kind.swap { background: var(--accent-soft); color: var(--accent); }
 .kind.cut { background: var(--pen-soft); color: var(--pen); }
 .kind.flag { background: var(--warn-soft); color: var(--warn); }
 pre.clean { font-family: var(--f-mono); font-size: 13px; white-space: pre-wrap; word-wrap: break-word; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; margin: 0; max-height: 520px; overflow: auto; }
-.toast { font-size: 13px; color: var(--ok); min-height: 1.2em; }
+.toast { font-size: 13px; color: var(--ok); min-height: 1.2em; margin: 0; }
+.toast.err { color: var(--pen); }
+.dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+.dl .btn { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; }
+.dl .btn b { font-weight: 600; }
+.dl .btn span { font-size: 12.5px; color: var(--muted); }
+.dl .btn.primary span { color: var(--sheet); opacity: 0.85; }
+details.more summary { cursor: pointer; font-weight: 500; }
 
 /* Builder */
-.bgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 20px; align-items: start; }
+.bgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; align-items: start; }
 @media (max-width: 960px) { .bgrid { grid-template-columns: minmax(0, 1fr); } }
 .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .fields .full { grid-column: 1 / -1; }
@@ -136,7 +171,7 @@ fieldset { border: 1px solid var(--rule); border-radius: 6px; padding: 12px; mar
 legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 0 6px; }
 .entry { border-top: 1px dashed var(--rule); padding-top: 10px; display: grid; gap: 10px; }
 .entry:first-of-type { border-top: 0; padding-top: 0; }
-.cv { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: clamp(18px, 4vw, 40px); font-family: var(--f-doc); font-size: 14.5px; line-height: 1.5; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.cv { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: clamp(18px, 4vw, 40px); font-family: var(--f-doc); font-size: 14.5px; line-height: 1.5; }
 .cv .nm { font: 600 24px var(--f-doc); margin: 0; }
 .cv .tt { margin: 2px 0 4px; font-size: 15px; }
 .cv .ct { font-size: 13px; color: var(--muted); word-break: break-word; }
@@ -150,20 +185,26 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
 .slopcount { font: 500 13px var(--f-mono); }
 .slopcount.zero { color: var(--ok); }
 .slopcount.some { color: var(--pen); }
-@media (prefers-reduced-motion: no-preference) { .bar .fill { transition: width 0.4s ease; } }
+@media (prefers-reduced-motion: no-preference) { .bar .fill, table.cmp .mini i { transition: width 0.4s ease; } }
 </style>
 
 <div class="wrap">
   <header class="top">
     <div>
       <h1>Plain CV <span class="strike">Spearheaded</span> Scanner</h1>
-      <p class="lede">Score a CV the way an ATS reads it, match it against a job description, and strike out the AI-sounding filler that recruiters skim past.</p>
+      <p class="lede">Pick the ATS the employer uses, score your CV the way that system reads it, strike out AI-sounding filler, and download the fixed CV in Word or PDF.</p>
     </div>
     <div class="tabs" role="tablist">
       <button role="tab" id="tab-scan" aria-selected="true" aria-controls="view-scan">Scan a CV</button>
       <button role="tab" id="tab-build" aria-selected="false" aria-controls="view-build">Build a CV</button>
     </div>
   </header>
+
+  <div class="atsbar">
+    <label for="ats">Scan as</label>
+    <select id="ats"></select>
+    <div class="who" id="atsWho"></div>
+  </div>
 
   <!-- SCAN VIEW -->
   <section id="view-scan" role="tabpanel" aria-labelledby="tab-scan">
@@ -172,26 +213,26 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
         <div class="panel">
           <div class="row between">
             <h2>Your CV</h2>
-            <span class="example-tag" id="exampleTag">Example loaded</span>
+            <span class="tag" id="exampleTag">Example loaded</span>
           </div>
           <div class="row">
             <label class="btn file-label">Upload PDF, DOCX or TXT<input type="file" id="file" accept=".pdf,.docx,.txt,.md,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
             <button class="btn" id="loadExample">Load example</button>
             <button class="btn" id="clearAll">Clear</button>
           </div>
-          <p class="note" id="fileNote">Or paste the text. Everything runs in your browser; nothing is uploaded anywhere.</p>
+          <p class="note" id="fileNote">Or paste the text. Everything runs in your browser; nothing is uploaded anywhere. Upload a DOCX if you want to download it back with its original layout.</p>
           <textarea class="resume" id="resume" spellcheck="false" aria-label="CV text"></textarea>
         </div>
         <div class="panel">
           <h2>Job description</h2>
-          <p class="note">Paste the posting to get a keyword match. Leave empty to check the CV on its own.</p>
+          <p class="note">Paste the posting to get a keyword match and knockout checks. Leave empty to check the CV on its own.</p>
           <textarea class="jd" id="jd" aria-label="Job description"></textarea>
         </div>
       </div>
 
       <div class="stack">
         <div class="panel">
-          <h2>ATS score</h2>
+          <div class="row between"><h2 id="scoreTitle">ATS score</h2><span class="tag blue" id="scoreTag"></span></div>
           <div class="score">
             <svg class="ring" viewBox="0 0 128 128" role="img" aria-label="ATS score">
               <circle cx="64" cy="64" r="52" fill="none" stroke="var(--rule)" stroke-width="10"></circle>
@@ -201,17 +242,32 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
             </svg>
             <div class="bars" id="bars"></div>
           </div>
+          <p class="projected" id="projected" hidden></p>
           <p class="note" id="scoreNote"></p>
         </div>
-        <div class="panel" id="kwPanel">
+        <div class="panel">
+          <h2 id="profTitle">How this ATS reads your CV</h2>
+          <div class="facts" id="facts"></div>
+          <ul class="tips" id="tips"></ul>
+          <p class="note">Vendors don't publish their scoring. Each profile is built from vendor documentation and what recruiters report, and every employer configures its system differently, so treat the score as a guide.</p>
+        </div>
+        <div class="panel">
           <div class="row between"><h2>Keyword match</h2><span class="slopcount" id="kwCount"></span></div>
           <div id="kwBody"></div>
         </div>
         <div class="panel">
-          <h2>Parse and format checks</h2>
+          <h2>Parse, format and knockout checks</h2>
           <ul class="checks" id="checks"></ul>
         </div>
       </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <details class="more" id="cmpBox">
+        <summary>Compare this CV across all <span id="atsCount"></span> ATS profiles</summary>
+        <p class="note" style="margin-top:8px">Click a row to scan as that system.</p>
+        <div class="tbl-wrap"><table class="t cmp" id="cmpTable"></table></div>
+      </details>
     </div>
 
     <div class="panel" style="margin-top:16px">
@@ -225,8 +281,9 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
         <span><mark>passionate about</mark> rewrite with proof (hover for a tip)</span>
       </div>
       <div class="proof" id="proof"></div>
+      <p class="note">Change any fix below. Type your own wording into “Replace with” for highlighted phrases; it goes into the clean copy and every download, including the original-layout Word file.</p>
       <div class="tbl-wrap">
-        <table class="slop" id="slopTable"></table>
+        <table class="t" id="slopTable"></table>
       </div>
     </div>
 
@@ -235,12 +292,18 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
         <h2>Clean copy</h2>
         <div class="row">
           <button class="btn" id="copyClean">Copy clean text</button>
-          <button class="btn primary" id="useClean">Replace my CV with this</button>
+          <button class="btn" id="useClean">Replace my CV with this</button>
         </div>
       </div>
-      <p class="note">Swaps and cuts are applied automatically. Highlighted phrases stay as they are because only you know the real numbers to put there.</p>
-      <div class="toast" id="cleanToast" aria-live="polite"></div>
+      <p class="toast" id="cleanToast" aria-live="polite"></p>
       <pre class="clean" id="clean"></pre>
+    </div>
+
+    <div class="panel" style="margin-top:16px" id="dlPanel">
+      <div class="row between"><h2>Download</h2><span class="tag blue" id="dlTag"></span></div>
+      <p class="note" id="dlNote"></p>
+      <div class="dl" id="dlButtons"></div>
+      <p class="toast" id="dlToast" aria-live="polite"></p>
     </div>
   </section>
 
@@ -249,15 +312,23 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
     <div class="bgrid">
       <div class="panel" id="builderForm"></div>
       <div class="stack">
+        <div class="panel">
+          <div class="row between"><h2 id="bProfTitle">Tips for this ATS</h2><span class="tag blue" id="bFmt"></span></div>
+          <ul class="tips" id="bTips"></ul>
+        </div>
         <div class="row between">
           <span class="slopcount" id="bSlop"></span>
           <div class="row">
             <button class="btn pen" id="bClean">Clean all fields</button>
-            <button class="btn" id="bCopy">Copy as text</button>
             <button class="btn primary" id="bScan">Scan this CV</button>
           </div>
         </div>
-        <div class="toast" id="bToast" aria-live="polite"></div>
+        <div class="dl">
+          <button class="btn" id="bDocx"><b>Word (.docx)</b><span>Editable, best for most ATS</span></button>
+          <button class="btn" id="bPdf"><b>PDF</b><span>Fixed layout, text-based</span></button>
+          <button class="btn" id="bTxt"><b>Plain text (.txt)</b><span>For pasting into forms</span></button>
+        </div>
+        <p class="toast" id="bToast" aria-live="polite"></p>
         <article class="cv" id="cvPreview" aria-label="CV preview"></article>
       </div>
     </div>
@@ -268,10 +339,125 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
 (() => {
 'use strict';
 
-/* ---------- AI slop dictionary ----------
-   swap: replace with a plain word
-   cut:  delete, it carries no information
-   flag: needs a rewrite with real facts */
+/* =====================================================================
+   ATS PROFILES
+   match:  exact    literal keyword search, no synonyms
+           stem     keyword search that handles plurals and word forms
+           semantic AI matching: synonyms and related skills get credit
+           human    recruiters read most CVs; scorecards over ranking
+   parse:  strict | standard | modern     how easily layouts break it
+   knock:  high | med | low               how heavily screening questions filter
+   fmt:    docx | pdf | either            safest file to upload
+   ===================================================================== */
+const G = {
+  gen: 'General', ent: 'Enterprise ATS (global)', tech: 'Tech companies and startups', smb: 'Small and mid-size business',
+  agency: 'Staffing and recruiting agencies', in: 'India: company ATS', inp: 'India: job portals and recruiter search',
+  eu: 'UK, Europe and Australia', plat: 'Job platforms (global)', gov: 'Public sector'
+};
+const P = (id, name, g, match, parse, knock, fmt, ai, who, tips) => ({ id, name, g, match, parse, knock, fmt, ai, who, tips, india: g === 'in' || g === 'inp' });
+const PROFILES = [
+  P('generic', 'Not sure / generic ATS', 'gen', 'stem', 'standard', 'med', 'either', '', 'Use this when you don’t know which system the employer runs.',
+    ['A single column, standard headings and the posting’s own keywords work in almost every system.', 'Upload Word (.docx) when the form accepts it; it parses most reliably across systems.']),
+
+  P('workday', 'Workday Recruiting', 'ent', 'semantic', 'standard', 'high', 'docx', 'HiredScore AI grading in some setups', 'Large enterprises, banks, Fortune 500 companies and global MNCs, including many in India.',
+    ['Every employer runs its own Workday site, so you create a separate account for each company.', 'Workday autofills the form from your CV and often splits dates and job titles wrongly. Check every field before you submit.', 'Employers that switch on HiredScore get applicants graded against the requirements, so make each required skill easy to find.', 'Screening questions on work authorisation, notice period and years of experience are usually hard filters.']),
+  P('taleo', 'Oracle Taleo', 'ent', 'exact', 'strict', 'high', 'docx', '', 'Older enterprise, government and healthcare setups.',
+    ['Recruiters search with literal keywords, so copy the exact wording from the posting ("Selenium WebDriver", not "web automation").', 'Taleo’s parser struggles with headers, footers, tables and text boxes. Keep everything in the main body.', 'Fill in every form field even when it repeats your CV; recruiters filter on those fields.']),
+  P('oraclerc', 'Oracle Recruiting Cloud', 'ent', 'semantic', 'standard', 'high', 'docx', 'AI best-match recommendations available', 'Enterprises that moved off Taleo onto Oracle Cloud HCM.',
+    ['Matching considers skills and titles from your profile, so keep job titles conventional.', 'Expect knockout questions; answers are scored before a recruiter sees you.']),
+  P('successfactors', 'SAP SuccessFactors Recruiting', 'ent', 'stem', 'strict', 'high', 'docx', '', 'Manufacturing, pharma, FMCG and many European and Indian MNCs.',
+    ['Parsing leans on standard section names. Use Experience, Education and Skills exactly.', 'Applications often include long forms and pre-screening questions with required answers.']),
+  P('icims', 'iCIMS', 'ent', 'stem', 'standard', 'med', 'docx', 'AI candidate matching available', 'US enterprises, healthcare, retail and financial services.',
+    ['Recruiters search the iCIMS database by keyword and job title, often months after you apply.', 'Keep a skills section that lists tools by their common names.']),
+  P('smartrecruiters', 'SmartRecruiters', 'ent', 'semantic', 'modern', 'med', 'either', 'AI match scoring available', 'Global mid-to-large companies.',
+    ['Match scores compare your profile to the posting, so mirror its required skills and title.', 'The parser handles PDFs well; single-column still reads best.']),
+  P('jobvite', 'Jobvite (Employ)', 'ent', 'stem', 'standard', 'med', 'either', '', 'Mid-size and large US companies.',
+    ['Recruiters rely on keyword search and filters on location and experience.']),
+  P('avature', 'Avature', 'ent', 'stem', 'standard', 'med', 'docx', '', 'Large global employers and graduate programmes.',
+    ['Each employer configures its own forms; keep CV and form answers consistent.']),
+  P('phenom', 'Phenom', 'ent', 'semantic', 'modern', 'med', 'either', 'AI skills matching and job recommendations', 'Large employers with candidate portals.',
+    ['Phenom recommends jobs from your skills, so a complete skills list helps you surface for more roles.']),
+  P('eightfold', 'Eightfold AI', 'ent', 'semantic', 'modern', 'med', 'either', 'Infers skills from your whole career history', 'Large tech, finance and government employers.',
+    ['Eightfold infers related skills from what you did, so describing the work matters as much as listing tools.', 'Career progression and tenure affect ranking; keep dates complete.']),
+  P('cornerstone', 'Cornerstone Recruiting', 'ent', 'stem', 'standard', 'med', 'docx', '', 'Mid-to-large employers that also use Cornerstone for learning.', ['Standard headings and plain formatting parse best.']),
+  P('ukg', 'UKG Pro Recruiting', 'ent', 'stem', 'standard', 'med', 'docx', '', 'US mid-to-large employers, retail and hospitality.', ['Screening questions are common for hourly and shift roles.']),
+  P('dayforce', 'Dayforce Recruiting', 'ent', 'stem', 'standard', 'med', 'docx', '', 'Mid-to-large employers in North America and the UK.', ['Keep dates in one format; tenure is read from them.']),
+  P('adp', 'ADP Workforce Now Recruitment', 'ent', 'exact', 'strict', 'med', 'docx', '', 'US small and mid-size employers on ADP payroll.', ['Parsing is basic. Plain Word file, no columns, no tables.']),
+  P('paycom', 'Paycom', 'ent', 'exact', 'standard', 'med', 'docx', '', 'US mid-size employers.', ['Recruiters filter on keywords and screening answers.']),
+  P('paylocity', 'Paylocity', 'ent', 'exact', 'standard', 'med', 'docx', '', 'US mid-size employers.', ['Keep it simple: one column, standard headings.']),
+  P('beamery', 'Beamery', 'ent', 'semantic', 'modern', 'low', 'either', 'Talent CRM with skills matching', 'Large employers building talent pools.', ['Beamery keeps you in talent pools; a complete skills list gets you matched to future roles.']),
+
+  P('greenhouse', 'Greenhouse', 'tech', 'human', 'modern', 'low', 'either', 'Optional AI features; no automatic ranking by default', 'Tech companies, startups and scale-ups worldwide, including Indian product startups.',
+    ['A recruiter usually reads every CV, so write for a person: clear, specific and short.', 'Interviewers score you on a scorecard built from the job requirements, so make each requirement easy to spot.', 'Custom application questions can auto-reject, so answer them carefully.', 'Referrals are flagged in the system and usually reviewed first.']),
+  P('lever', 'Lever (Employ)', 'tech', 'human', 'modern', 'low', 'either', '', 'Tech companies and startups.',
+    ['Lever builds a profile from your CV and recruiters search it by keyword, so the posting’s terms still matter.', 'Add LinkedIn and GitHub links; recruiters open them.']),
+  P('ashby', 'Ashby', 'tech', 'human', 'modern', 'low', 'either', 'AI-assisted screening available', 'Fast-growing tech startups.', ['Some teams use AI-assisted review against the requirements; state each requirement plainly with evidence.']),
+  P('gem', 'Gem', 'tech', 'human', 'modern', 'low', 'either', '', 'Tech companies that source heavily.', ['Recruiters often find you through outreach; your LinkedIn and CV should tell the same story.']),
+  P('workable', 'Workable', 'tech', 'semantic', 'modern', 'med', 'either', 'AI recommended-candidate scoring', 'Small and mid-size companies worldwide.', ['Workable ranks applicants against the posting; mirror its skills and title.', 'Screening questions can be set to disqualify automatically.']),
+  P('rippling', 'Rippling Recruiting', 'tech', 'stem', 'modern', 'low', 'either', '', 'Startups and mid-size companies.', ['Plain, single-column CVs parse cleanly.']),
+  P('teamtailor', 'Teamtailor', 'tech', 'human', 'modern', 'low', 'either', '', 'European startups and employer-brand-focused companies.', ['Often a human screens first; a short, specific CV beats a long one.']),
+  P('recruitee', 'Recruitee (Tellent)', 'tech', 'human', 'modern', 'low', 'either', '', 'European small and mid-size companies.', ['Recruiters review in pipelines; clear achievements matter more than keyword density.']),
+  P('personio', 'Personio Recruiting', 'tech', 'human', 'modern', 'low', 'either', '', 'European small and mid-size companies.', ['Follow local conventions: in Germany a photo is common, in the UK and Netherlands leave it off.']),
+  P('pinpoint', 'Pinpoint', 'tech', 'human', 'modern', 'low', 'either', '', 'Mid-size companies in the UK and US.', ['Hiring teams review and score directly; write for a reader.']),
+
+  P('bamboohr', 'BambooHR', 'smb', 'human', 'standard', 'low', 'either', '', 'Small and mid-size companies.', ['The hiring manager often reads your CV directly. Keep it to one or two pages.']),
+  P('jazzhr', 'JazzHR', 'smb', 'stem', 'standard', 'med', 'docx', '', 'US small businesses.', ['Employers can set screening questions that disqualify automatically.']),
+  P('breezy', 'Breezy HR', 'smb', 'stem', 'modern', 'med', 'either', '', 'Small and mid-size companies.', ['Questionnaires and keyword filters are common; answer every question.']),
+  P('manatal', 'Manatal', 'smb', 'semantic', 'modern', 'low', 'either', 'AI candidate recommendations', 'Agencies and SMEs, popular in Asia and India.', ['AI recommendations favour profiles with clear titles and complete skills.']),
+
+  P('bullhorn', 'Bullhorn', 'agency', 'exact', 'standard', 'low', 'docx', '', 'Staffing agencies worldwide.',
+    ['Agencies search their database with Boolean keyword queries long after you apply, so name every tool you use.', 'Send Word: agency recruiters often reformat your CV before sending it to clients.']),
+  P('jobdiva', 'JobDiva', 'agency', 'exact', 'standard', 'low', 'docx', '', 'IT staffing firms in the US.', ['Keyword search drives everything; include versions and acronyms ("CI/CD", "AWS").']),
+  P('ceipal', 'Ceipal', 'agency', 'stem', 'standard', 'low', 'docx', 'AI matching available', 'IT staffing firms in the US and India.', ['Recruiters submit your CV to clients quickly; keep a Word copy ready and dates complete.']),
+  P('recruitcrm', 'Recruit CRM', 'agency', 'stem', 'modern', 'low', 'docx', '', 'Recruitment agencies worldwide, including India.', ['Agencies search by skill and location; list your current city and preferred locations.']),
+  P('vincere', 'Vincere', 'agency', 'exact', 'standard', 'low', 'docx', '', 'Recruitment agencies in the UK and APAC.', ['Boolean keyword search; name tools and certifications exactly.']),
+  P('jobadder', 'JobAdder', 'agency', 'stem', 'modern', 'low', 'docx', '', 'Recruitment agencies in Australia and the UK.', ['Agencies reformat CVs; Word is the safest upload.']),
+
+  P('darwinbox', 'Darwinbox', 'in', 'stem', 'standard', 'med', 'docx', '', 'Indian enterprises, conglomerates and startups.',
+    ['Forms usually ask for current CTC, expected CTC and notice period, and recruiters filter on them.', 'Keep designation and dates identical between the form and the CV.']),
+  P('keka', 'Keka Hire', 'in', 'stem', 'modern', 'med', 'either', '', 'Indian startups and mid-size companies.', ['Recruiters filter by experience, notice period and location before reading.']),
+  P('zoho', 'Zoho Recruit', 'in', 'stem', 'standard', 'med', 'docx', 'Zia AI matching available', 'Indian and global SMEs and staffing agencies.', ['Zoho parses Word best; check auto-filled fields if the form shows them.']),
+  P('peoplestrong', 'PeopleStrong', 'in', 'stem', 'standard', 'med', 'docx', '', 'Large Indian employers and MNCs in India.', ['Expect long forms; consistency between form and CV matters.']),
+  P('turbohire', 'TurboHire', 'in', 'semantic', 'modern', 'med', 'either', 'AI screening and candidate scoring', 'Indian enterprises and IT services.', ['AI scoring rewards a clear match to the job’s must-have skills; put them in your bullets, not only the skills list.']),
+  P('skillate', 'Skillate', 'in', 'semantic', 'modern', 'med', 'either', 'AI resume matching', 'Indian enterprises.', ['Skills inferred from your experience bullets count; describe what you used each tool for.']),
+  P('zimyo', 'Zimyo', 'in', 'stem', 'standard', 'low', 'either', '', 'Indian SMEs.', ['Plain formatting and standard headings parse best.']),
+  P('hirepro', 'HirePro', 'in', 'stem', 'standard', 'high', 'either', '', 'Mass and campus hiring, mainly IT services.', ['Volume hiring uses hard cut-offs on percentages, graduation year and backlogs.', 'Put 10th, 12th and graduation scores in Education.']),
+  P('superset', 'Superset (campus placements)', 'in', 'human', 'modern', 'high', 'pdf', '', 'College placement drives.', ['Recruiters filter on CGPA, branch and graduation year first.', 'One page; projects and internships carry the most weight.']),
+
+  P('naukri', 'Naukri (Resdex and Naukri RMS)', 'inp', 'exact', 'standard', 'med', 'docx', '', 'Most Indian private-sector hiring.',
+    ['Recruiters search Resdex with keywords, then filter by experience, CTC, notice period and location.', 'Your Naukri headline and Key Skills field matter as much as the CV file. Copy your main keywords there.', 'Update your profile every week or two; recently active profiles show up higher in recruiter search.']),
+  P('foundit', 'foundit (formerly Monster India)', 'inp', 'exact', 'standard', 'med', 'docx', '', 'Indian, Middle East and South-East Asian hiring.', ['Keyword search plus filters on experience and location; fill the profile completely.']),
+  P('iimjobs', 'iimjobs and hirist', 'inp', 'exact', 'standard', 'med', 'docx', '', 'Management roles (iimjobs) and tech roles (hirist) in India.', ['Recruiters search by keyword and filter on experience bands and CTC.']),
+  P('instahyre', 'Instahyre', 'inp', 'semantic', 'modern', 'low', 'either', 'Matches your profile to openings', 'Indian tech hiring.', ['Matching uses your profile skills and experience; keep them current.']),
+
+  P('tribepad', 'Tribepad', 'eu', 'stem', 'standard', 'med', 'docx', '', 'UK employers and public sector.', ['UK convention: no photo, no date of birth.']),
+  P('oleeo', 'Oleeo', 'eu', 'exact', 'strict', 'high', 'docx', '', 'UK graduate schemes and public sector, including Civil Service Jobs.', ['Civil Service applications score behaviour statements separately; use the STAR format they ask for.', 'Screening questions and sift criteria are strict.']),
+  P('pageup', 'PageUp', 'eu', 'stem', 'standard', 'high', 'docx', '', 'Universities and large employers in Australia, the UK and Asia.', ['Selection criteria questions often matter more than the CV; answer each one.']),
+  P('applied', 'Applied', 'eu', 'human', 'modern', 'med', 'either', '', 'UK employers using anonymised hiring.', ['Applied hides CV details and scores answers to work-sample questions, so the questions count more than the CV.']),
+
+  P('linkedin', 'LinkedIn Easy Apply and Recruiter', 'plat', 'semantic', 'modern', 'med', 'pdf', 'Skills match against the posting', 'Any company posting on LinkedIn.', ['Recruiters see your profile next to the CV; keep titles and dates identical.', 'Fill the Skills section on your profile; LinkedIn compares it with the posting.']),
+  P('indeed', 'Indeed Apply', 'plat', 'semantic', 'modern', 'med', 'either', 'Screener questions and match signals', 'Companies posting on Indeed worldwide.', ['Screener questions set by the employer can filter you out instantly.']),
+
+  P('usajobs', 'USAJOBS (USA Staffing)', 'gov', 'exact', 'strict', 'high', 'pdf', '', 'US federal jobs.', ['Each qualification in the announcement must appear in your experience, with dates and hours per week.', 'Follow the page limit stated in the announcement.'])
+];
+const PMAP = Object.fromEntries(PROFILES.map(p => [p.id, p]));
+const MATCH_TXT = { exact: 'Exact keywords', stem: 'Keywords + word forms', semantic: 'AI / semantic', human: 'Mostly human review' };
+const PARSE_TXT = { strict: 'Strict, breaks easily', standard: 'Standard', modern: 'Modern, tolerant' };
+const KNOCK_TXT = { high: 'Heavy', med: 'Common', low: 'Light' };
+const FMT_TXT = { docx: 'Word (.docx)', pdf: 'PDF', either: 'Word or PDF' };
+const WEIGHTS = {
+  exact:    { kw: .45, struct: .15, contact: .08, impact: .10, parse: .12, plain: .05, knock: .05 },
+  stem:     { kw: .38, struct: .15, contact: .08, impact: .15, parse: .10, plain: .08, knock: .06 },
+  semantic: { kw: .32, struct: .10, contact: .08, impact: .20, parse: .08, plain: .14, knock: .08 },
+  human:    { kw: .18, struct: .10, contact: .08, impact: .28, parse: .06, plain: .24, knock: .06 }
+};
+const KNOCK_MULT = { high: 1.6, med: 1, low: 0.5 };
+const PARSE_MULT = { strict: 1.5, standard: 1, modern: 0.55 };
+
+/* =====================================================================
+   AI SLOP DICTIONARY
+   swap: replace with a plain word | cut: delete | flag: rewrite with facts
+   ===================================================================== */
 const SLOP_DEF = [
   ['spearheaded','swap','led'],['spearheading','swap','leading'],['spearheads','swap','leads'],['spearhead','swap','lead'],
   ['leveraged','swap','used'],['leveraging','swap','using'],['leverages','swap','uses'],
@@ -298,7 +484,7 @@ const SLOP_DEF = [
   ['dynamic','cut'],['hardworking','cut'],['seasoned','cut'],['multifaceted','cut'],['holistic','cut'],['transformative','cut'],
   ['cutting-edge','cut'],['state-of-the-art','cut'],['best-in-class','cut'],['world-class','cut'],['ever-evolving','cut'],['ever-changing','cut'],
   ['furthermore,','cut'],['moreover,','cut'],['additionally,','cut'],['notably,','cut'],
-  [/in today['’]s (?:fast[\s-]paced|ever[\s-]evolving|digital|competitive|rapidly changing)[^,.\n]*[,.]?[ \t]*/gi,'cut',null,null,"in today's fast-paced ..."],
+  [/in today['’]s (?:fast[\s-]paced|ever[\s-]evolving|digital|competitive|rapidly changing)[^,.\n]*[,.]?/gi,'cut',null,null,"in today's fast-paced ..."],
   ['passionate about','flag',null,'Show it instead: name a project, contribution or result.'],
   ['passionate','flag',null,'Show it instead: name a project, contribution or result.'],
   ['detail-oriented','flag',null,'Every CV says this. Prove it with a catch, e.g. "found 40 defects before UAT".'],
@@ -330,7 +516,6 @@ const SLOP_DEF = [
   ['delve','flag',null,'AI tell. Use "study" or "look at".'],['delves','flag',null,'AI tell. Use "studies" or "looks at".'],
   ['not only','flag',null,'"Not only X but also Y" is a common AI pattern. Write two plain statements.']
 ];
-
 function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 const SLOP = SLOP_DEF.map(([p, type, rep, note, label]) => {
   if (p instanceof RegExp) return { re: p, type, rep, note, label };
@@ -339,7 +524,9 @@ const SLOP = SLOP_DEF.map(([p, type, rep, note, label]) => {
   return { re, type, rep, note: note || (type === 'cut' ? 'Adds no information. Cut it.' : 'Plain word reads better.'), label: p };
 });
 
+const slopCache = new Map();
 function findSlop(text) {
+  if (slopCache.has(text)) return slopCache.get(text);
   const found = [];
   for (const entry of SLOP) {
     entry.re.lastIndex = 0;
@@ -353,86 +540,135 @@ function findSlop(text) {
   const out = [];
   let end = -1;
   for (const f of found) { if (f.s >= end) { out.push(f); end = f.e; } }
+  if (slopCache.size > 200) slopCache.clear();
+  slopCache.set(text, out);
   return out;
 }
-
 function matchCase(src, rep) {
+  if (!rep) return rep;
   if (src.length > 1 && src === src.toUpperCase() && /[A-Z]/.test(src)) return rep.toUpperCase();
   if (/^[A-Z]/.test(src)) return rep.charAt(0).toUpperCase() + rep.slice(1);
   return rep;
 }
-
 function article(art, next) {
   const w = next.toLowerCase();
-  const an = /^[aeiou]/.test(w) && !/^(?:uni|use|usu|uti|eu|one|once)/.test(w) || /^(?:hour|honest|honou?r)/.test(w);
+  const an = (/^[aeiou]/.test(w) && !/^(?:uni|use|usu|uti|eu|one|once)/.test(w)) || /^(?:hour|honest|honou?r)/.test(w);
   const r = an ? 'an' : 'a';
-  return art[0] === art[0].toUpperCase() ? r.charAt(0).toUpperCase() + r.slice(1) : r;
+  return /^[A-Z]/.test(art) ? r.charAt(0).toUpperCase() + r.slice(1) : r;
 }
 
-const CUT = '\u0000';
-function cleanText(text) {
-  const matches = findSlop(text);
-  let out = '', i = 0;
-  for (const m of matches) {
-    out += text.slice(i, m.s);
-    if (m.entry.type === 'swap') out += matchCase(m.text, m.entry.rep);
-    else if (m.entry.type === 'cut') out += CUT;
-    else out += m.text;
-    i = m.e;
+/* Per-phrase choices the user makes in the slop table. Key: matched text, lower case. */
+let OV = {};
+function defaultChoice(m) {
+  if (m.entry.type === 'swap') return { apply: true, text: m.entry.rep };
+  if (m.entry.type === 'cut') return { apply: true, text: '' };
+  return { apply: false, text: m.text };
+}
+function choice(m) { return OV[m.text.toLowerCase()] || defaultChoice(m); }
+
+/* Turns a text into a list of non-overlapping character edits {s, e, rep}.
+   Used for the clean copy, and per paragraph for the original Word file. */
+const BULLET_CH = '-•*·▪◦–►✓';
+function planEdits(text) {
+  const raw = [];
+  for (const m of findSlop(text)) {
+    const c = choice(m);
+    if (!c.apply || c.text === m.text) continue;
+    raw.push({ s: m.s, e: m.e, rep: c.text.trim() === '' ? null : matchCase(m.text, c.text) });
   }
-  out += text.slice(i);
-  // merge runs of cuts like "highly motivated, results-driven"
-  out = out.replace(/\u0000(?:[ \t,]*(?:and[ \t]+)?\u0000)+/g, CUT);
-  // fix "a" / "an" in front of a cut adjective
-  out = out.replace(/\b(a|an)([ \t]+)\u0000[ \t]*(?:and[ \t]+)?(?=([A-Za-z]+))/gi, (m, art, sp, nx) => article(art, nx) + ' ');
-  // drop a comma that trailed the cut word when nothing meaningful precedes it
-  out = out.replace(/(^|[^\n]*?)(\S?)([ \t]*)\u0000[ \t]*(,?)/gm, (m, pre, last, sp, comma) => {
-    const prevWord = (pre + last).trim().split(/\s+/).pop() || '';
-    const dropComma = !prevWord || /,$/.test(prevWord) || /^(?:a|an|the|[-•*·▪◦])$/i.test(prevWord);
-    return pre + last + sp + (comma && !dropComma ? ',' : '');
-  });
-  // em-dashes between words become commas (dates like "2022 — Present" are left alone)
-  out = out.replace(/(?<=[A-Za-z,)])[ \t]*—[ \t]*(?=[a-z])/g, ', ');
-  const origLines = text.split('\n');
-  return out.split('\n').map((line, idx) => {
-    let l = line.replace(/(\S)[ \t]{2,}/g, '$1 ').replace(/[ \t]+([,.;:])/g, '$1').replace(/,{2,}/g, ',').replace(/[ \t]+$/, '');
-    l = l.replace(/^([ \t]*(?:[-•*·▪◦–][ \t]+)?)[ \t]*,?[ \t]*/, '$1');
-    const orig = origLines[idx] || '';
-    const origFirst = (orig.match(/[A-Za-z]/) || [''])[0];
-    if (origFirst && origFirst === origFirst.toUpperCase()) {
-      l = l.replace(/^([ \t]*(?:[-•*·▪◦–][ \t]+)?)([a-z])/, (m, p, c) => p + c.toUpperCase());
+  const dash = /(?<=[A-Za-z,)])[ \t]*—[ \t]*(?=[a-z])/g;
+  let d;
+  while ((d = dash.exec(text))) raw.push({ s: d.index, e: d.index + d[0].length, rep: ', ' });
+  raw.sort((a, b) => a.s - b.s);
+  // merge "results-driven and highly motivated" into one cut
+  const ed = [];
+  for (const r of raw) {
+    const p = ed[ed.length - 1];
+    if (p && p.rep === null && r.rep === null && /^[ \t,]*(?:and[ \t]+)?$/i.test(text.slice(p.e, r.s))) { p.e = r.e; continue; }
+    if (p && r.s < p.e) continue;
+    ed.push({ ...r });
+  }
+  for (let i = 0; i < ed.length; i++) {
+    const c = ed[i];
+    if (c.rep !== null) continue;
+    const prevEnd = i ? ed[i - 1].e : 0;
+    const nextStart = i + 1 < ed.length ? ed[i + 1].s : text.length;
+    const lineStart = text.lastIndexOf('\n', c.s - 1) + 1;
+    const before = text.slice(lineStart, c.s);
+    const prevWord = before.trim().split(/\s+/).pop() || '';
+    const atStart = new RegExp('^[ \\t]*(?:[' + escRe(BULLET_CH) + '][ \\t]*)?$').test(before) || /[.!?:][ \t]*$/.test(before);
+    let s = c.s, e = c.e, rep = '';
+    const isSp = ch => ch === ' ' || ch === '\t';
+    if (text[e] === ',' && (atStart || /^(?:a|an|the)$/i.test(prevWord) || /,$/.test(prevWord))) e++;
+    const e0 = e;
+    while (e < nextStart && isSp(text[e])) e++;
+    if (e === e0 && text[e] !== ',') while (s > Math.max(prevEnd, lineStart) && isSp(text[s - 1])) s--;
+    const am = s === c.s ? before.match(/(?:^|[^A-Za-z])(a|an)([ \t]+)$/i) : null;
+    const nextWord = (text.slice(e).match(/^[A-Za-z]+/) || [''])[0];
+    if (am && nextWord) {
+      const artStart = c.s - am[2].length - am[1].length;
+      if (artStart >= prevEnd) { s = artStart; rep = article(am[1], nextWord) + ' '; }
     }
-    l = l.replace(/([.!?][ \t]+)([a-z])/g, (m, p, c) => p + c.toUpperCase());
-    return l;
-  }).join('\n');
+    if (atStart && /[a-z]/.test(text[e] || '')) {
+      if (i + 1 < ed.length && ed[i + 1].s === e) { const n = ed[i + 1]; if (n.rep) n.rep = n.rep.charAt(0).toUpperCase() + n.rep.slice(1); }
+      else { rep += text[e].toUpperCase(); e++; }
+    }
+    c.s = s; c.e = e; c.rep = rep;
+  }
+  return ed;
 }
-
-function esc(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-
-function proofHTML(text, matches) {
+function applyEdits(text, edits) {
   let out = '', i = 0;
-  for (const m of matches) {
+  for (const e of edits) { out += text.slice(i, e.s) + e.rep; i = e.e; }
+  return out + text.slice(i);
+}
+function tidy(text) {
+  return text.split('\n').map(l => l.replace(/(\S)[ \t]{2,}/g, '$1 ').replace(/[ \t]+([,.;:])/g, '$1').replace(/,{2,}/g, ',').replace(/[ \t]+$/, '')).join('\n');
+}
+function cleanText(text) { return tidy(applyEdits(text, planEdits(text))); }
+
+/* Missing keywords the user chose to add to the Skills line */
+let ADD = new Set();
+function addKeywordsText(text, terms) {
+  if (!terms.length) return text;
+  const lines = text.split('\n');
+  const idx = lines.findIndex(l => HEADINGS.skills.test(normHead(l)));
+  if (idx >= 0) {
+    for (let j = idx + 1; j < lines.length; j++) {
+      if (lines[j].trim()) { lines[j] = lines[j].replace(/[ \t,.;]*$/, '') + ', ' + terms.join(', '); return lines.join('\n'); }
+    }
+  }
+  return text.replace(/\s*$/, '') + '\n\nSKILLS\n' + terms.join(', ');
+}
+function addTerms() { return [...ADD].map(t => displayTerm(t)); }
+function finalText(cv) { return addKeywordsText(cleanText(cv), addTerms()); }
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function proofHTML(text) {
+  let out = '', i = 0;
+  for (const m of findSlop(text)) {
     out += esc(text.slice(i, m.s));
-    const t = esc(m.text);
-    if (m.entry.type === 'swap') out += `<del>${t}</del><ins>${esc(matchCase(m.text, m.entry.rep))}</ins>`;
-    else if (m.entry.type === 'cut') out += `<del title="${esc(m.entry.note)}">${t}</del>`;
-    else out += `<mark title="${esc(m.entry.note)}">${t}</mark>`;
+    const t = esc(m.text), c = choice(m), note = esc(m.entry.note || '');
+    if (c.apply && c.text.trim() === '') out += `<del title="${note}">${t}</del>`;
+    else if (c.apply && c.text !== m.text) out += `<del>${t}</del><ins>${esc(matchCase(m.text, c.text))}</ins>`;
+    else if (m.entry.type === 'flag') out += `<mark title="${note}">${t}</mark>`;
+    else out += `<span class="kept" title="Kept as written">${t}</span>`;
     i = m.e;
   }
   return out + esc(text.slice(i));
 }
-
 function markOnly(text) {
-  const ms = findSlop(text);
   let out = '', i = 0;
-  for (const m of ms) { out += esc(text.slice(i, m.s)) + `<mark title="${esc(m.entry.note)}">${esc(m.text)}</mark>`; i = m.e; }
+  for (const m of findSlop(text)) { out += esc(text.slice(i, m.s)) + `<mark title="${esc(m.entry.note || '')}">${esc(m.text)}</mark>`; i = m.e; }
   return out + esc(text.slice(i));
 }
 
-/* ---------- ATS analysis ---------- */
+/* =====================================================================
+   ATS ANALYSIS
+   ===================================================================== */
 const SKILLS = {
-  'java': [], 'python': [], 'javascript': ['js'], 'typescript': [], 'c#': ['csharp'], 'c++': [], 'go': ['golang'], 'kotlin': [], 'swift': [],
-  'sql': [], 'mysql': [], 'postgresql': ['postgres'], 'mongodb': ['mongo'], 'oracle': [],
+  'java': [], 'python': [], 'javascript': ['js'], 'typescript': [], 'c#': ['csharp'], 'c++': [], 'golang': [], 'kotlin': [], 'swift': [],
+  'sql': [], 'mysql': [], 'postgresql': ['postgres'], 'mongodb': ['mongo'], 'oracle db': ['oracle database', 'pl/sql'],
   'selenium': ['selenium webdriver', 'webdriver'], 'testng': [], 'junit': [], 'pytest': [], 'mockito': [], 'cucumber': [], 'gherkin': [],
   'bdd': ['behavior driven', 'behaviour driven'], 'tdd': ['test driven'], 'rest assured': ['restassured'], 'postman': [], 'soapui': [],
   'api testing': ['api test', 'api automation'], 'rest api': ['restful', 'rest apis', 'rest services'], 'graphql': [],
@@ -443,23 +679,43 @@ const SKILLS = {
   'docker': [], 'kubernetes': ['k8s'], 'aws': ['amazon web services'], 'azure': [], 'gcp': ['google cloud'], 'linux': ['unix'],
   'jira': [], 'confluence': [], 'testrail': [], 'zephyr': [], 'xray': [], 'allure': [], 'extent reports': [], 'log4j': [],
   'agile': [], 'scrum': [], 'kanban': [], 'sdlc': [], 'stlc': [],
-  'page object model': ['page object', 'pom'], 'regression testing': ['regression'], 'smoke testing': ['smoke test', 'smoke tests'],
+  'page object model': ['page object', 'pom'], 'regression testing': ['regression'], 'smoke testing': ['smoke test', 'smoke tests', 'smoke suites', 'smoke suite'],
   'manual testing': [], 'test automation': ['automation testing', 'automated testing', 'automated tests'], 'performance testing': ['load testing'],
   'mobile testing': [], 'unit testing': ['unit tests'], 'integration testing': ['integration tests'], 'e2e testing': ['end-to-end', 'end to end'],
-  'uat': ['user acceptance'], 'test planning': ['test plan', 'test plans'], 'test cases': ['test case'], 'defect tracking': ['bug tracking', 'defect management'],
+  'uat': ['user acceptance'], 'test planning': ['test plan', 'test plans'], 'test cases': ['test case'], 'defect tracking': ['bug tracking', 'defect management', 'tracking defects'],
   'react': ['react.js', 'reactjs'], 'angular': [], 'vue': ['vue.js'], 'node.js': ['nodejs'], 'spring boot': ['spring'], 'microservices': [],
   'html': [], 'css': [], 'kafka': [], 'redis': [], 'terraform': [], 'ansible': [],
-  'excel': [], 'power bi': [], 'tableau': [], 'machine learning': ['ml'], 'data analysis': [], 'pandas': [], 'figma': [], 'salesforce': [], 'sap': []
+  'excel': [], 'power bi': [], 'tableau': [], 'machine learning': ['ml'], 'data analysis': [], 'pandas': [], 'figma': [], 'salesforce': [], 'sap': [],
+  'project management': [], 'stakeholder management': [], 'sales': [], 'marketing': [], 'seo': [], 'accounting': [], 'tally': [], 'gst': []
 };
+const FAMILY = {};
+[['selenium', 'playwright', 'cypress', 'webdriverio', 'appium'], ['testng', 'junit', 'pytest'], ['jenkins', 'github actions', 'gitlab ci', 'azure devops', 'ci/cd'],
+ ['aws', 'azure', 'gcp'], ['rest assured', 'postman', 'api testing', 'rest api', 'karate', 'soapui'], ['cucumber', 'bdd', 'gherkin'], ['docker', 'kubernetes'],
+ ['agile', 'scrum', 'kanban'], ['sql', 'mysql', 'postgresql', 'oracle db', 'mongodb'], ['jmeter', 'gatling', 'loadrunner', 'k6', 'performance testing'],
+ ['react', 'angular', 'vue'], ['power bi', 'tableau', 'excel'], ['java', 'kotlin'], ['javascript', 'typescript']
+].forEach((f, i) => f.forEach(s => { FAMILY[s] = i; }));
 const STOP = new Set(('a about above across after again against all also am an and any are as at be because been before being below between both but by can could did do does doing down during each few for from further had has have having he her here hers him his how i if in into is it its itself just me more most my no nor not now of off on once only or other our ours out over own same she should so some such than that the their theirs them then there these they this those through to too under until up very was we were what when where which while who whom why will with would you your yours ' +
-  'ability able across apply applicants candidate candidates role roles position job jobs work working team teams company experience experienced years year strong excellent good great knowledge understanding skills skill required requirements preferred plus bonus must nice etc including include includes using use used responsibilities responsible looking join help ensure within across new well like based level opportunity opportunities environment day days time per various key make making across best equal employer benefits salary location remote hybrid office full part please us our we youll you’ll youre you’re will able what who').split(/\s+/));
+  'ability able apply applicants candidate candidates role roles position job jobs work working team teams company experience experienced years year strong excellent good great knowledge understanding skills skill required requirements preferred plus bonus must nice etc including include includes using use used responsibilities responsible looking join help ensure within new well like based level opportunity opportunities environment day days time per various key make making best equal employer benefits salary location remote hybrid office full part please youll youre related field design designs report reports results').split(/\s+/));
 
 function norm(s) { return ' ' + s.toLowerCase().replace(/[“”’]/g, "'").replace(/\s+/g, ' ') + ' '; }
-function termRe(t) { return new RegExp('(?<![a-z0-9+#])' + escRe(t).replace(/ /g, '[\\s-]+') + '(?![a-z0-9+#])', 'g'); }
+const reCache = new Map();
+function termRe(t) {
+  if (!reCache.has(t)) reCache.set(t, new RegExp('(?<![a-z0-9+#])' + escRe(t).replace(/ /g, '[\\s-]+') + '(?![a-z0-9+#])', 'g'));
+  const r = reCache.get(t); r.lastIndex = 0; return r;
+}
 function countTerm(hay, t) { const m = hay.match(termRe(t)); return m ? m.length : 0; }
 function stem(w) { return w.replace(/(?:ations?|ments?|ings?|ers?|ed|es|s)$/, '').slice(0, 7); }
+function normHead(l) { return l.toLowerCase().replace(/[:|_*#=]+/g, '').replace(/\s+/g, ' ').trim(); }
 
+let JD_DISPLAY = '';
+function displayTerm(t) {
+  const m = JD_DISPLAY.match(new RegExp('(?<![A-Za-z0-9+#])' + escRe(t).replace(/ /g, '[\\s-]+') + '(?![A-Za-z0-9+#])', 'i'));
+  return m ? m[0] : t;
+}
+
+const kwCache = new Map();
 function extractKeywords(jd) {
+  if (kwCache.has(jd)) return kwCache.get(jd);
   const hay = norm(jd);
   const skills = [];
   for (const [k, aliases] of Object.entries(SKILLS)) {
@@ -481,207 +737,447 @@ function extractKeywords(jd) {
     .map(([t, n]) => ({ term: t, forms: [t], jdCount: n, weight: 1.5, kind: 'phrase' }));
   const inBigram = new Set(bigrams.flatMap(b => b.term.split(' ')));
   const singles = [...freq].filter(([w, n]) => n >= 2 && !inBigram.has(w)).sort((a, b) => b[1] - a[1]).slice(0, 12)
-    .map(([t, n]) => ({ term: t, forms: [t], jdCount: n, weight: 1, kind: 'term', stemmed: true }));
-  return [...skills.sort((a, b) => b.jdCount - a.jdCount), ...bigrams, ...singles];
-}
-
-function cvHasTerm(cvNorm, cvStems, kw) {
-  let n = kw.forms.reduce((a, t) => a + countTerm(cvNorm, t), 0);
-  if (!n && kw.stemmed) n = cvStems.get(stem(kw.term)) || 0;
-  return n;
+    .map(([t, n]) => ({ term: t, forms: [t], jdCount: n, weight: 1, kind: 'term' }));
+  const out = [...skills.sort((a, b) => b.jdCount - a.jdCount), ...bigrams, ...singles];
+  if (kwCache.size > 20) kwCache.clear();
+  kwCache.set(jd, out);
+  return out;
 }
 
 const HEADINGS = {
   summary: /^(?:professional\s+)?(?:summary|profile|objective|about(?: me)?|career objective|professional profile)$/,
   experience: /^(?:work |professional |relevant )?(?:experience|employment(?: history)?|work history|career history)$/,
-  education: /^(?:education|academic(?:s| background| qualifications)?|qualifications)$/,
+  education: /^(?:education|academic(?:s| background| qualifications)?|qualifications|educational qualifications?)$/,
   skills: /^(?:technical |key |core |professional )?(?:skills|competencies|skill set|tech stack|technologies|tools)(?: (?:&|and) (?:tools|technologies))?$/,
   projects: /^(?:key |personal |academic )?projects$/,
   certifications: /^(?:certifications?|licen[cs]es(?: (?:&|and) certifications)?|courses)$/
 };
 const MONTH = '(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\\.?';
+const MONTHS = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+const PART = `(?:${MONTH}\\s*\\d{4}|\\b\\d{1,2}/\\d{4}\\b|\\b(?:19|20)\\d{2}\\b)`;
+const RANGE_RE = new RegExp(`(${PART})\\s*(?:[-–—]|to)\\s*(${PART}|present|current|now|date|till date)`, 'gi');
+const DATE_ONLY = new RegExp(`^${PART}\\s*(?:[-–—]|to)\\s*(?:${PART}|present|current|now|date|till date)$`, 'i');
+const NOW = new Date();
+function toMonth(s, isEnd) {
+  s = s.toLowerCase().trim();
+  if (/present|current|now|date/.test(s)) return NOW.getFullYear() * 12 + NOW.getMonth();
+  let m = s.match(/^([a-z]{3})[a-z]*\.?\s*(\d{4})$/);
+  if (m) return +m[2] * 12 + (MONTHS[m[1]] ?? 0);
+  m = s.match(/^(\d{1,2})\/(\d{4})$/);
+  if (m) return +m[2] * 12 + (+m[1] - 1);
+  m = s.match(/(\d{4})/);
+  return m ? +m[1] * 12 + (isEnd ? 11 : 0) : null;
+}
 
-function analyze(cv, jd) {
+/* Everything about the CV that doesn't depend on which ATS is selected */
+function baseAnalysis(cv, jd, meta) {
   const lines = cv.split('\n');
   const trimmed = lines.map(l => l.trim()).filter(Boolean);
   const words = (cv.match(/\b[\w'’+#.-]+\b/g) || []).length;
-  const checks = [];
-  const add = (st, title, d) => checks.push({ st, title, d });
-
-  // sections
   const found = {};
   for (const l of trimmed) {
-    const h = l.toLowerCase().replace(/[:|_*#=]+/g, '').replace(/\s+/g, ' ').trim();
+    const h = normHead(l);
     if (h.split(' ').length > 5) continue;
     for (const [k, re] of Object.entries(HEADINGS)) if (re.test(h)) found[k] = true;
   }
-  const req = ['experience', 'education', 'skills'];
-  const missing = req.filter(k => !found[k]);
-  const structScore = (req.length - missing.length) / req.length * 80 + (found.summary ? 10 : 0) + (found.projects || found.certifications ? 10 : 0);
-  if (!missing.length) add('ok', 'Standard section headings found', 'Experience, Education and Skills are labelled the way parsers expect.');
-  else add('bad', `Missing heading: ${missing.map(cap).join(', ')}`, 'Parsers sort your text by headings. Use the plain names: "Experience", "Education", "Skills".');
-  if (!found.summary) add('warn', 'No summary section', 'Optional, but 2–3 lines of plain facts (role, years, main stack) help recruiters and keyword search.');
-
-  // contact
   const email = /[\w.+-]+@[\w-]+\.[\w.-]+/.test(cv);
   const phone = /(?:\+?\d[\d\s().-]{8,}\d)/.test(cv);
   const linkedin = /linkedin\.com\/in\//i.test(cv);
-  const contactScore = (email ? 45 : 0) + (phone ? 35 : 0) + (linkedin ? 20 : 0);
-  if (email && phone) add(linkedin ? 'ok' : 'warn', linkedin ? 'Contact details complete' : 'No LinkedIn URL', linkedin ? 'Email, phone and LinkedIn are all present.' : 'Add your linkedin.com/in/ URL. Many ATS link it to your profile.');
-  else add('bad', `Missing ${[!email && 'email', !phone && 'phone'].filter(Boolean).join(' and ')}`, 'Put contact details in the body text, not in a header or footer, which some parsers skip.');
-
-  // bullets and impact
-  const bullets = trimmed.filter(l => /^[-•*·▪◦–►✓]\s*\S/.test(l)).map(l => l.replace(/^[-•*·▪◦–►✓]\s*/, ''));
+  const bulletRe = new RegExp('^[' + escRe(BULLET_CH) + ']\\s*\\S');
+  const bullets = trimmed.filter(l => bulletRe.test(l)).map(l => l.replace(new RegExp('^[' + escRe(BULLET_CH) + ']\\s*'), ''));
   const quant = bullets.filter(b => /\d|%/.test(b));
   const weak = bullets.filter(b => /^(?:responsible for|worked on|helped|involved in|duties|tasks included|assisted)/i.test(b));
-  let impactScore = 0;
-  if (!bullets.length) add('bad', 'No bullet points found', 'Write each achievement as its own line starting with "-" or "•". Paragraphs bury your keywords.');
-  else {
-    const pct = Math.round(quant.length / bullets.length * 100);
-    impactScore = Math.min(100, pct / 0.6) - weak.length / bullets.length * 30;
-    add(pct >= 50 ? 'ok' : pct >= 25 ? 'warn' : 'bad', `${quant.length} of ${bullets.length} bullets have a number (${pct}%)`, 'Aim for at least half. Counts, percentages, time saved and money all work.');
-    if (weak.length) add('warn', `${weak.length} bullet${weak.length > 1 ? 's' : ''} open weakly`, `e.g. "${weak[0].slice(0, 60)}${weak[0].length > 60 ? '…' : ''}". Start with an action verb: Built, Cut, Automated, Fixed.`);
-  }
-
-  // dates
-  const dateRe = new RegExp(`(?:${MONTH}\\s*\\d{4}|\\b\\d{1,2}/\\d{4}\\b|\\b(?:19|20)\\d{2}\\b)\\s*(?:[-–—]|to)\\s*(?:${MONTH}\\s*\\d{4}|\\b\\d{1,2}/\\d{4}\\b|\\b(?:19|20)\\d{2}\\b|present|current|now|date)`, 'gi');
-  const ranges = cv.match(dateRe) || [];
-  const styles = new Set(ranges.map(r => /[a-z]{3}/i.test(r.split(/[-–—]|to/i)[0]) ? 'month' : /\//.test(r) ? 'numeric' : 'year'));
-  if (!ranges.length) add(found.experience ? 'bad' : 'warn', 'No date ranges found', 'Use "Jan 2022 – Present" on each job. ATS computes your years of experience from these.');
-  else if (styles.size > 1) add('warn', 'Mixed date formats', 'Pick one format, e.g. "Jan 2022 – Mar 2024", and use it everywhere.');
-  else add('ok', `${ranges.length} date range${ranges.length > 1 ? 's' : ''} in one format`, 'Parsers can calculate your tenure.');
-
-  // parse hazards
-  let formatScore = 100;
+  const ranges = [...cv.matchAll(RANGE_RE)];
+  const styles = new Set(ranges.map(r => /[a-z]{3}/i.test(r[1]) ? 'month' : /\//.test(r[1]) ? 'numeric' : 'year'));
+  const iv = ranges.map(r => [toMonth(r[1], false), toMonth(r[2], true)]).filter(([a, b]) => a !== null && b !== null && b >= a).sort((a, b) => a[0] - b[0]);
+  let months = 0, cur = null;
+  for (const [a, b] of iv) { if (!cur || a > cur[1]) { if (cur) months += cur[1] - cur[0] + 1; cur = [a, b]; } else cur[1] = Math.max(cur[1], b); }
+  if (cur) months += cur[1] - cur[0] + 1;
+  const years = Math.round(months / 12 * 10) / 10;
   const pipes = trimmed.filter(l => (l.match(/\|/g) || []).length >= 3 && !/@|linkedin|\+?\d{5}/i.test(l)).length;
   const tabs = lines.filter(l => /\S\t+\S|\S {6,}\S/.test(l)).length;
   const glyphs = cv.match(/[-☀-➿]|[\u{1F300}-\u{1FAFF}]/gu) || [];
-  if (pipes || tabs > 2) { formatScore -= 40; add('warn', 'Possible table or column layout', 'Multi-column layouts get read across rows and scramble your text. Use one column.'); }
-  if (glyphs.length) { formatScore -= 25; add('warn', `${glyphs.length} icon or symbol character${glyphs.length > 1 ? 's' : ''}`, 'Icons for phone, email or ratings often parse as junk. Use plain words.'); }
   const firstPerson = (cv.match(/\b(?:I|my|me)\b/g) || []).length;
-  if (firstPerson > 2) { formatScore -= 15; add('warn', `First person used ${firstPerson} times`, 'CV convention drops "I" and "my". "Built a framework", not "I built my framework".'); }
-  if (words < 200) { formatScore -= 30; add('bad', `Only ${words} words`, 'Too thin for keyword matching. Most one-page CVs land between 400 and 700 words.'); }
-  else if (words > 1100) { formatScore -= 20; add('warn', `${words} words`, 'Long for most roles. Two pages (about 1,000 words) is the usual ceiling outside academia.'); }
-  else add('ok', `${words} words`, words <= 750 ? 'Fits one page.' : 'About two pages, fine for 5+ years of experience.');
-  if (!pipes && tabs <= 2 && !glyphs.length) add('ok', 'Single-column plain text', 'Nothing here should confuse a parser.');
-
-  // slop
+  const personal = (cv.match(/\b(?:date of birth|d\.?o\.?b\.?|marital status|father'?s name|mother'?s name|religion|nationality|gender|caste|passport no)\b/gi) || []).map(s => s.toLowerCase());
+  const notice = /notice period|immediate(?:ly)? (?:joiner|available)|serving notice|available to join/i.test(cv);
+  const degree = /\b(?:b\.?\s?tech|b\.?\s?e\b|bachelor|b\.?\s?sc|bca|mca|m\.?\s?tech|master|mba|b\.?\s?com|degree|diploma|ph\.?d)/i.test(cv);
   const slop = findSlop(cv);
   const emd = (cv.match(/—/g) || []).length;
-  const slopScore = Math.max(0, 100 - slop.length * 8 - Math.max(0, emd - 2) * 5);
-  if (emd > 2) add('warn', `${emd} em-dashes`, 'Heavy em-dash use is a common tell of AI-written text. The clean copy turns them into commas.');
 
-  // keywords
-  let kw = null, kwScore = null, jdNotes = [];
+  let kw = null, jdInfo = null;
   if (jd.trim().length > 40) {
     const list = extractKeywords(jd);
     const cvNorm = norm(cv);
     const cvStems = new Map();
     (cv.toLowerCase().match(/[a-z][a-z0-9+#.-]*[a-z0-9+#]/g) || []).forEach(w => { const s = stem(w); cvStems.set(s, (cvStems.get(s) || 0) + 1); });
+    const presentSkills = new Set(Object.keys(SKILLS).filter(k => [k, ...SKILLS[k]].some(f => countTerm(cvNorm, f))));
+    kw = list.map(k => {
+      const exact = countTerm(cvNorm, k.term);
+      const forms = k.forms.reduce((a, t) => a + countTerm(cvNorm, t), 0);
+      const stemmed = k.kind === 'term' ? (cvStems.get(stem(k.term)) || 0) : 0;
+      const fam = k.kind === 'skill' && FAMILY[k.term] !== undefined ? [...presentSkills].find(s => s !== k.term && FAMILY[s] === FAMILY[k.term]) : null;
+      return { ...k, exact, forms, stemmed, related: fam || null };
+    });
+    const y = jd.match(/(\d{1,2})\s*\+?\s*(?:(?:-|–|to)\s*\d{1,2}\s*)?(?:years|yrs)/i);
+    jdInfo = {
+      years: y ? +y[1] : null, yearsText: y ? y[0].replace(/\s+/g, ' ') : '',
+      degree: /\b(?:bachelor'?s?|b\.?\s?tech|b\.?e\b|b\.?sc|degree|master'?s?|graduate)\b/i.test(jd),
+      auth: /visa|sponsor|work authori[sz]ation|right to work|citizen|work permit/i.test(jd),
+      notice: /notice period|immediate joiner|join immediately|immediate joining|early joiner/i.test(jd),
+      ctc: /\bctc\b|lpa|salary expectation|expected salary/i.test(jd),
+      onsite: /relocat|on-?site|work from office|wfo/i.test(jd)
+    };
+  }
+  return { cv, words, found, email, phone, linkedin, bullets, quant, weak, ranges, styles, years, pipes, tabs, glyphs, firstPerson, personal, notice, degree, slop, emd, kw, jdInfo, meta: meta || {} };
+}
+
+/* Score one ATS profile against the base analysis */
+function scoreFor(b, prof) {
+  const checks = [];
+  const add = (st, title, d) => checks.push({ st, title, d });
+  const pm = PARSE_MULT[prof.parse], km = KNOCK_MULT[prof.knock];
+  if (!b.cv.trim()) return { total: 0, parts: [], checks, kw: null };
+
+  // keywords, counted the way this ATS matches
+  let kwScore = null, kwRows = null;
+  if (b.kw) {
     let tot = 0, got = 0;
-    kw = list.map(k => { const n = cvHasTerm(cvNorm, cvStems, k); const w = k.weight * Math.min(3, k.jdCount); tot += w; if (n) got += w; return { ...k, cvCount: n }; });
+    kwRows = b.kw.map(k => {
+      let credit = 0, how = '';
+      const n = prof.match === 'exact' ? (k.kind === 'skill' ? k.exact : k.forms) : (k.forms || k.stemmed);
+      if (n) { credit = 1; how = 'hit'; }
+      else if (prof.match === 'semantic' && k.related) { credit = 0.5; how = 'part'; }
+      else if (prof.match === 'exact' && k.forms) { how = 'alias'; }
+      const w = k.weight * Math.min(3, k.jdCount);
+      tot += w; got += w * credit;
+      return { ...k, cvCount: n || 0, credit, how };
+    });
     kwScore = tot ? got / tot * 100 : 0;
-    const yrs = jd.match(/(\d{1,2})\s*\+?\s*(?:(?:-|–|to)\s*\d{1,2}\s*)?(?:years|yrs)/i);
-    if (yrs) jdNotes.push(`The posting asks for ${yrs[0].replace(/\s+/g, ' ')}. Knockout questions often check this, so make sure your dates add up.`);
-    if (/\b(?:bachelor'?s?|b\.?\s?tech|b\.?e\b|b\.?sc|degree|master'?s?)\b/i.test(jd)) jdNotes.push('A degree is mentioned. Write it out in full in Education, e.g. "B.Tech, Computer Science".');
+    const alias = kwRows.filter(k => k.how === 'alias');
+    if (alias.length) add('warn', `${alias.length} keyword${alias.length > 1 ? 's' : ''} written differently from the posting`, `${prof.name} matches literally. Your CV has a variant of "${alias[0].term}" but not the posting's exact wording. Use both forms.`);
   }
 
+  // structure
+  const req = ['experience', 'education', 'skills'];
+  const missing = req.filter(k => !b.found[k]);
+  const structScore = (req.length - missing.length) / req.length * 80 + (b.found.summary ? 10 : 0) + (b.found.projects || b.found.certifications ? 10 : 0);
+  if (!missing.length) add('ok', 'Standard section headings found', 'Experience, Education and Skills are labelled the way parsers expect.');
+  else add('bad', `Missing heading: ${missing.map(cap).join(', ')}`, `${prof.parse === 'strict' ? prof.name + ' relies heavily on headings. ' : ''}Use the plain names: "Experience", "Education", "Skills".`);
+  if (!b.found.summary) add('warn', 'No summary section', 'Optional, but 2–3 lines of plain facts (role, years, main stack) help keyword search.');
+
+  // contact
+  const contactScore = (b.email ? 45 : 0) + (b.phone ? 35 : 0) + (b.linkedin ? 20 : 0);
+  if (b.email && b.phone) add(b.linkedin ? 'ok' : 'warn', b.linkedin ? 'Contact details complete' : 'No LinkedIn URL', b.linkedin ? 'Email, phone and LinkedIn are all present.' : 'Add your linkedin.com/in/ URL; recruiters open it.');
+  else add('bad', `Missing ${[!b.email && 'email', !b.phone && 'phone'].filter(Boolean).join(' and ')}`, 'Put contact details in the body text, not in a header or footer.');
+  if (b.meta.headerContact) add(prof.parse === 'strict' ? 'bad' : 'warn', 'Contact details sit in the Word header or footer', `${prof.parse === 'strict' ? prof.name + ' often skips headers and footers. ' : 'Some parsers skip headers and footers. '}Move them into the first lines of the page.`);
+
+  // impact
+  let impactScore = 0;
+  if (!b.bullets.length) add('bad', 'No bullet points found', 'Write each achievement as its own line starting with "-" or "•".');
+  else {
+    const pct = Math.round(b.quant.length / b.bullets.length * 100);
+    impactScore = Math.max(0, Math.min(100, pct / 0.6) - b.weak.length / b.bullets.length * 30);
+    add(pct >= 50 ? 'ok' : pct >= 25 ? 'warn' : 'bad', `${b.quant.length} of ${b.bullets.length} bullets have a number (${pct}%)`, prof.match === 'human' || prof.match === 'semantic' ? 'This system puts results in front of a reader or an AI ranker. Aim for at least half with a number.' : 'Aim for at least half. Counts, percentages, time saved and money all work.');
+    if (b.weak.length) add('warn', `${b.weak.length} bullet${b.weak.length > 1 ? 's' : ''} open weakly`, `e.g. "${b.weak[0].slice(0, 60)}${b.weak[0].length > 60 ? '…' : ''}". Start with an action verb: Built, Cut, Automated, Fixed.`);
+  }
+
+  // dates
+  if (!b.ranges.length) add(b.found.experience ? 'bad' : 'warn', 'No date ranges found', 'Use "Jan 2022 – Present" on each job. The ATS computes your years of experience from these.');
+  else if (b.styles.size > 1) add('warn', 'Mixed date formats', 'Pick one format, e.g. "Jan 2022 – Mar 2024", and use it everywhere.');
+  else add('ok', `${b.ranges.length} date range${b.ranges.length > 1 ? 's' : ''}, about ${b.years} years in total`, 'Parsers can calculate your tenure.');
+
+  // parse safety, scaled by how fragile this parser is
+  let pen = 0;
+  const hazard = (p, st, title, d) => { pen += p * pm; add(st, title, d); };
+  const sev = prof.parse === 'strict' ? 'bad' : 'warn';
+  if (b.pipes || b.tabs > 2) hazard(35, sev, 'Possible table or column layout in the text', 'Multi-column layouts get read across rows and scramble your text. Use one column.');
+  if (b.meta.tables) hazard(30, sev, `${b.meta.tables} table${b.meta.tables > 1 ? 's' : ''} in the Word file`, `${prof.parse === 'strict' ? prof.name + ' often reads tables out of order or skips them. ' : ''}Move table content into normal paragraphs.`);
+  if (b.meta.textBoxes) hazard(30, sev, 'Text boxes in the Word file', 'Many parsers skip text inside text boxes. Put that text in the body.');
+  if (b.meta.columns) hazard(30, sev, 'Two-column page layout', 'Columns are read across, mixing your sections. Switch to one column.');
+  if (b.meta.pdfColumns) hazard(30, sev, 'The PDF looks like it uses two columns', 'Check the extracted text on the left. If sections are mixed up, this ATS will see the same mess.');
+  if (b.meta.images) hazard(8, 'warn', `${b.meta.images} image${b.meta.images > 1 ? 's' : ''} in the file`, 'Photos, logos and skill bars are ignored or break parsing. Text only.');
+  if (b.glyphs.length) hazard(20, 'warn', `${b.glyphs.length} icon or symbol character${b.glyphs.length > 1 ? 's' : ''}`, 'Icons for phone, email or ratings often parse as junk. Use plain words.');
+  if (b.firstPerson > 2) hazard(10, 'warn', `First person used ${b.firstPerson} times`, 'CV convention drops "I" and "my".');
+  if (b.words < 200) hazard(30, 'bad', `Only ${b.words} words`, 'Too thin for keyword matching. Most one-page CVs land between 400 and 700 words.');
+  else if (b.words > 1100) hazard(15, 'warn', `${b.words} words`, 'Long for most roles. Two pages (about 1,000 words) is the usual ceiling.');
+  else add('ok', `${b.words} words`, b.words <= 750 ? 'Fits one page.' : 'About two pages, fine for 5+ years of experience.');
+  if (b.meta.type && prof.fmt !== 'either' && b.meta.type !== prof.fmt && b.meta.type !== 'txt') {
+    hazard(prof.fmt === 'docx' ? 12 : 5, 'warn', `${prof.name} prefers ${FMT_TXT[prof.fmt]}`, `You uploaded a ${b.meta.type.toUpperCase()}. Download the ${prof.fmt === 'docx' ? 'Word' : 'PDF'} version below and upload that.`);
+  }
+  const formatScore = Math.max(0, 100 - pen);
+
+  // personal details: normal in many Indian CVs, a problem for global employers
+  if (b.personal.length) {
+    const list = [...new Set(b.personal)].join(', ');
+    if (prof.india) add('warn', `Personal details: ${list}`, 'Common in Indian CVs but not needed. Most private companies and portals ignore them; drop them to save space.');
+    else add('bad', `Personal details: ${list}`, `Leave these out for ${prof.name}. Global employers don't use them and many ask you not to include them.`);
+  }
+
+  // knockouts
+  let knockScore = null;
+  if (b.jdInfo) {
+    let ks = 100;
+    const j = b.jdInfo;
+    if (j.years) {
+      if (b.years >= j.years) add('ok', `Experience: about ${b.years} years vs ${j.yearsText} asked`, 'Your dates support the requirement.');
+      else { ks -= 45; add(prof.knock === 'high' ? 'bad' : 'warn', `Experience: about ${b.years || 0} years vs ${j.yearsText} asked`, `${prof.knock === 'high' ? prof.name + ' setups usually ask this as a screening question and filter on it. ' : ''}If you have more experience than your dates show, add the missing roles or internships.`); }
+    }
+    if (j.degree) {
+      if (b.degree) add('ok', 'Degree listed', 'The posting mentions a degree and your Education section has one.');
+      else { ks -= 30; add('warn', 'Posting mentions a degree', 'Write it out in full in Education, e.g. "B.Tech, Computer Science, 2020".'); }
+    }
+    if (j.auth) add(prof.knock === 'high' ? 'bad' : 'warn', 'Work authorisation question likely', 'Postings that mention visas or sponsorship usually ask a hard yes/no question. Answer it truthfully; it filters instantly.');
+    if (j.notice || (prof.india && j.ctc)) {
+      if (b.notice) add('ok', 'Notice period stated', 'Indian recruiters filter on this first.');
+      else { ks -= 15; add('warn', 'State your notice period', 'The posting cares about joining time. Add it to your summary or the application form, e.g. "Notice period: 30 days".'); }
+    }
+    if (j.onsite && prof.knock !== 'low') add('warn', 'Location or relocation requirement', 'Expect a question about relocating or working on-site. Your current city should be on the CV.');
+    knockScore = Math.max(0, ks);
+  }
+
+  const plainScore = Math.max(0, 100 - b.slop.length * 8 - Math.max(0, b.emd - 2) * 5);
+  if (b.emd > 2) add('warn', `${b.emd} em-dashes`, 'Heavy em-dash use is a common tell of AI-written text. The clean copy turns them into commas.');
+  if (b.slop.length && (prof.match === 'human' || prof.match === 'semantic')) add('warn', `${b.slop.length} AI-sounding phrases`, prof.match === 'human' ? 'A recruiter reads this CV. Filler phrases are the first thing they skim past.' : 'AI rankers look for evidence of skills; filler adds words without evidence.');
+
+  const W = { ...WEIGHTS[prof.match] };
+  W.knock *= km; W.parse *= pm;
   const parts = [
-    { k: 'Keywords', v: kwScore, w: 0.4 },
-    { k: 'Structure', v: structScore, w: 0.17 },
-    { k: 'Contact', v: contactScore, w: 0.08 },
-    { k: 'Measurable impact', v: Math.max(0, impactScore), w: 0.15 },
-    { k: 'Parse safety', v: Math.max(0, formatScore), w: 0.1 },
-    { k: 'Plain language', v: slopScore, w: 0.1 }
+    { k: 'Keywords', v: kwScore, w: W.kw },
+    { k: 'Structure', v: structScore, w: W.struct },
+    { k: 'Contact', v: contactScore, w: W.contact },
+    { k: 'Measurable impact', v: impactScore, w: W.impact },
+    { k: 'Parse safety', v: formatScore, w: W.parse },
+    { k: 'Plain language', v: plainScore, w: W.plain },
+    { k: 'Knockout fit', v: knockScore, w: W.knock }
   ];
   const active = parts.filter(p => p.v !== null);
   const wsum = active.reduce((a, p) => a + p.w, 0);
   const total = Math.round(active.reduce((a, p) => a + p.v * p.w, 0) / wsum);
-  return { total, parts, checks, kw, jdNotes, slop };
+  const order = { bad: 0, warn: 1, ok: 2 };
+  checks.sort((a, b2) => order[a.st] - order[b2.st]);
+  return { total, parts, checks, kw: kwRows };
 }
-
 function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-/* ---------- Rendering: scan ---------- */
+/* =====================================================================
+   SCAN VIEW
+   ===================================================================== */
 const $ = id => document.getElementById(id);
-const resumeEl = $('resume'), jdEl = $('jd');
+const resumeEl = $('resume'), jdEl = $('jd'), atsEl = $('ats');
+let SRC = null; // { type, name, buf, text, meta }
+let lastBase = null;
+
+function prof() { return PMAP[atsEl.value] || PROFILES[0]; }
+
+function buildSelect() {
+  const groups = {};
+  PROFILES.forEach(p => { (groups[p.g] = groups[p.g] || []).push(p); });
+  atsEl.innerHTML = Object.keys(G).filter(g => groups[g]).map(g => `<optgroup label="${esc(G[g])}">${groups[g].map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('')}</optgroup>`).join('');
+  $('atsCount').textContent = PROFILES.length;
+}
+
+function renderProfile() {
+  const p = prof();
+  $('atsWho').textContent = `${G[p.g]} · ${p.who}`;
+  $('profTitle').textContent = `How ${p.name} reads your CV`;
+  $('scoreTitle').textContent = 'ATS score';
+  $('scoreTag').textContent = p.name;
+  $('facts').innerHTML = [
+    ['Matching', MATCH_TXT[p.match]], ['Parser', PARSE_TXT[p.parse]], ['Screening questions', KNOCK_TXT[p.knock]],
+    ['Safest upload', FMT_TXT[p.fmt]], ['AI ranking', p.ai || (p.match === 'human' ? 'None by default' : 'Not a main feature')]
+  ].map(([k, v]) => `<div class="fact"><span>${k}</span><b>${esc(v)}</b></div>`).join('');
+  $('tips').innerHTML = p.tips.map(t => `<li>${esc(t)}</li>`).join('');
+  $('bProfTitle').textContent = `Tips for ${p.name}`;
+  $('bFmt').textContent = 'Upload as ' + FMT_TXT[p.fmt];
+  $('bTips').innerHTML = p.tips.concat(['Single column, standard headings, one date format. The downloads below follow these rules.']).map(t => `<li>${esc(t)}</li>`).join('');
+}
+
+function ringColor(v) { return v >= 75 ? 'var(--ok)' : v >= 55 ? 'var(--warn)' : 'var(--pen)'; }
 
 function renderScan() {
-  const cv = resumeEl.value, jd = jdEl.value;
-  const r = analyze(cv, jd);
+  const cv = resumeEl.value, jd = jdEl.value, p = prof();
+  JD_DISPLAY = jd;
+  const base = baseAnalysis(cv, jd, SRC ? SRC.meta : {});
+  lastBase = base;
+  const r = scoreFor(base, p);
   const C = 2 * Math.PI * 52;
-  const col = r.total >= 75 ? 'var(--ok)' : r.total >= 55 ? 'var(--warn)' : 'var(--pen)';
   $('ringArc').setAttribute('stroke-dasharray', `${C * r.total / 100} ${C}`);
-  $('ringArc').setAttribute('stroke', col);
+  $('ringArc').setAttribute('stroke', ringColor(r.total));
   $('ringNum').textContent = cv.trim() ? r.total : '–';
-  $('bars').innerHTML = r.parts.map(p => {
-    const v = p.v === null ? null : Math.round(p.v);
-    return `<div class="bar"><span>${p.k}</span><div class="track"><div class="fill" style="width:${v ?? 0}%"></div></div><span class="val">${v === null ? 'n/a' : v}</span></div>`;
+  $('bars').innerHTML = r.parts.map(x => {
+    const v = x.v === null ? null : Math.round(x.v);
+    return `<div class="bar${v === null ? ' off' : ''}"><span>${x.k}</span><div class="track"><div class="fill" style="width:${v ?? 0}%"></div></div><span class="val">${v === null ? 'n/a' : v}</span></div>`;
   }).join('');
   $('scoreNote').textContent = !cv.trim() ? 'Paste or upload a CV to start.'
-    : r.kw ? (r.total >= 75 ? 'Strong match. A recruiter searching for this role should find you.' : r.total >= 55 ? 'Decent, but some missing keywords or weak bullets will push you down the ranking.' : 'Likely to rank low for this posting. Start with the missing keywords below.')
-    : 'No job description, so the keyword part is skipped. Paste one for a full score.';
+    : !r.kw ? `No job description, so keywords and knockouts are skipped. Paste one for a full ${p.name} score.`
+    : r.total >= 75 ? `Strong for ${p.name}. A recruiter searching this system for the role should find you.`
+    : r.total >= 55 ? `Decent for ${p.name}, but the gaps below will push you down the list.`
+    : `Likely to rank low in ${p.name} for this posting. Start with the red items below.`;
 
-  if (!r.kw) {
-    $('kwCount').textContent = '';
-    $('kwBody').innerHTML = '<p class="note">Paste a job description to see which of its keywords your CV covers.</p>';
-  } else {
-    const hits = r.kw.filter(k => k.cvCount), miss = r.kw.filter(k => !k.cvCount);
-    $('kwCount').textContent = `${hits.length} / ${r.kw.length} found`;
-    $('kwCount').className = 'slopcount ' + (miss.length ? 'some' : 'zero');
-    $('kwBody').innerHTML =
-      (miss.length ? `<h3>Missing</h3><div class="chips">${miss.map(k => `<span class="chip miss">${esc(k.term)}<small>×${k.jdCount} in JD</small></span>`).join('')}</div>` : '') +
-      (hits.length ? `<h3 style="margin-top:6px">Found</h3><div class="chips">${hits.map(k => `<span class="chip hit">${esc(k.term)}<small>×${k.cvCount}</small></span>`).join('')}</div>` : '') +
-      `<p class="note">Add a missing keyword only where it's true, ideally inside a bullet that shows you used it. Recruiters search the ATS with these exact words.</p>` +
-      r.jdNotes.map(n => `<p class="note">• ${esc(n)}</p>`).join('');
-  }
+  // projected score after fixes
+  const fin = finalText(cv);
+  const proj = cv.trim() && fin !== cv ? scoreFor(baseAnalysis(fin, jd, base.meta), p).total : null;
+  $('projected').hidden = proj === null || proj <= r.total;
+  if (proj !== null) $('projected').innerHTML = `After the fixes below: <b>${r.total} → ${proj}</b> in ${esc(p.name)}.`;
 
+  renderKeywords(r);
   $('checks').innerHTML = r.checks.map(c => `<li><span class="dot ${c.st}">${c.st === 'ok' ? '✓' : c.st === 'warn' ? '!' : '×'}</span><div><b>${esc(c.title)}</b><span class="d">${esc(c.d)}</span></div></li>`).join('');
-
-  $('proof').innerHTML = cv.trim() ? proofHTML(cv, r.slop) : '<span class="note">Your CV will appear here with filler words marked.</span>';
-  const n = r.slop.length;
-  $('slopCount').textContent = n ? `${n} slop phrase${n > 1 ? 's' : ''} marked` : 'No slop found';
-  $('slopCount').className = 'slopcount ' + (n ? 'some' : 'zero');
-  const groups = new Map();
-  for (const m of r.slop) { const key = m.entry.label; const g = groups.get(key) || { m, n: 0 }; g.n++; groups.set(key, g); }
-  $('slopTable').innerHTML = groups.size ? `<thead><tr><th>Phrase</th><th>Action</th><th>Fix</th><th style="text-align:right">Count</th></tr></thead><tbody>` +
-    [...groups.values()].sort((a, b) => b.n - a.n).map(({ m, n }) => `<tr><td>${esc(m.text.toLowerCase())}</td><td><span class="kind ${m.entry.type}">${m.entry.type}</span></td><td>${m.entry.type === 'swap' ? `Use “${esc(m.entry.rep)}”.` : esc(m.entry.note)}</td><td class="n">${n}</td></tr>`).join('') + '</tbody>' : '';
-
-  $('clean').textContent = cv.trim() ? cleanText(cv) : '';
+  renderProofAndClean();
+  renderSlopTable();
+  renderCompare(base);
+  renderDownloads();
   $('exampleTag').hidden = cv !== EXAMPLE_CV;
   save();
 }
 
-/* ---------- File upload ---------- */
-function loadScript(src) {
-  return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Could not load ' + src)); document.head.appendChild(s); });
-}
-async function readPdf(buf) {
-  if (!window.pdfjsLib) {
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js');
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+function renderKeywords(r) {
+  const p = prof();
+  if (!r.kw) {
+    $('kwCount').textContent = '';
+    $('kwBody').innerHTML = '<p class="note">Paste a job description to see which of its keywords your CV covers.</p>';
+    return;
   }
-  const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+  const hits = r.kw.filter(k => k.credit === 1), part = r.kw.filter(k => k.credit === 0.5), miss = r.kw.filter(k => !k.credit);
+  $('kwCount').textContent = `${hits.length} / ${r.kw.length} found`;
+  $('kwCount').className = 'slopcount ' + (miss.length ? 'some' : 'zero');
+  $('kwBody').innerHTML =
+    (miss.length ? `<h3>Missing · tap to add to your Skills line</h3><div class="chips">${miss.map(k => `<button class="chipbtn" data-kw="${esc(k.term)}" aria-pressed="${ADD.has(k.term)}">${ADD.has(k.term) ? '✓ ' : '+ '}${esc(displayTerm(k.term))}<small>×${k.jdCount} in JD${k.how === 'alias' ? ', variant in CV' : ''}</small></button>`).join('')}</div>` : '') +
+    (part.length ? `<h3 style="margin-top:6px">Partly matched by AI</h3><div class="chips">${part.map(k => `<span class="chip part">${esc(displayTerm(k.term))}<small>via ${esc(k.related)}</small></span>`).join('')}</div>` : '') +
+    (hits.length ? `<h3 style="margin-top:6px">Found</h3><div class="chips">${hits.map(k => `<span class="chip hit">${esc(displayTerm(k.term))}<small>×${k.cvCount}</small></span>`).join('')}</div>` : '') +
+    `<p class="note">${p.match === 'exact' ? `${esc(p.name)} matches keywords literally, so use the posting's exact words.` : p.match === 'semantic' ? `${esc(p.name)} gives partial credit for related skills, but the exact term still scores higher.` : p.match === 'human' ? 'A person reads this CV, but recruiters still search the database with these words.' : 'Plurals and word forms count here.'} Add a keyword only if it's true.</p>`;
+}
+
+function renderProofAndClean() {
+  const cv = resumeEl.value;
+  $('proof').innerHTML = cv.trim() ? proofHTML(cv) : '<span class="note">Your CV will appear here with filler words marked.</span>';
+  const n = findSlop(cv).length;
+  $('slopCount').textContent = n ? `${n} slop phrase${n > 1 ? 's' : ''} marked` : 'No slop found';
+  $('slopCount').className = 'slopcount ' + (n ? 'some' : 'zero');
+  $('clean').textContent = cv.trim() ? finalText(cv) : '';
+}
+
+let slopSig = '';
+function renderSlopTable() {
+  const groups = new Map();
+  for (const m of findSlop(resumeEl.value)) {
+    const key = m.text.toLowerCase();
+    const g = groups.get(key) || { m, n: 0 }; g.n++; groups.set(key, g);
+  }
+  const sig = [...groups.keys()].join('|');
+  if (sig === slopSig) return;
+  slopSig = sig;
+  if (!groups.size) { $('slopTable').innerHTML = ''; return; }
+  const rows = [...groups.entries()].sort((a, b) => b[1].n - a[1].n).map(([key, { m, n }], i) => {
+    const c = choice(m);
+    const tip = m.entry.type === 'flag' ? m.entry.note : m.entry.type === 'cut' ? 'Leave empty to remove it.' : '';
+    return `<tr><td>${esc(key)}${tip ? `<span class="tip">${esc(tip)}</span>` : ''}</td><td><span class="kind ${m.entry.type}">${m.entry.type}</span></td>
+      <td><input type="text" id="ov-${i}" data-key="${esc(key)}" value="${esc(c.text)}" placeholder="(removed)" aria-label="Replace ${esc(key)} with"></td>
+      <td><input type="checkbox" id="ova-${i}" data-akey="${esc(key)}" ${c.apply ? 'checked' : ''} aria-label="Apply fix for ${esc(key)}"></td><td class="n">${n}</td></tr>`;
+  }).join('');
+  $('slopTable').innerHTML = `<thead><tr><th>Phrase</th><th>Action</th><th>Replace with</th><th>Apply</th><th style="text-align:right">Count</th></tr></thead><tbody>${rows}</tbody>`;
+}
+function findMatchByKey(key) { return findSlop(resumeEl.value).find(m => m.text.toLowerCase() === key); }
+$('slopTable').addEventListener('input', e => {
+  const key = e.target.dataset.key;
+  if (key === undefined) return;
+  const m = findMatchByKey(key); if (!m) return;
+  const c = { ...choice(m), text: e.target.value };
+  if (c.text !== m.text) c.apply = true;
+  OV[key] = c;
+  const box = e.target.closest('tr').querySelector('input[type="checkbox"]'); if (box) box.checked = c.apply;
+  softUpdate();
+});
+$('slopTable').addEventListener('change', e => {
+  const key = e.target.dataset.akey;
+  if (key === undefined) return;
+  const m = findMatchByKey(key); if (!m) return;
+  OV[key] = { ...choice(m), apply: e.target.checked };
+  softUpdate();
+});
+let su;
+function softUpdate() { clearTimeout(su); su = setTimeout(renderScan, 150); }
+
+$('kwBody').addEventListener('click', e => {
+  const b = e.target.closest('[data-kw]'); if (!b) return;
+  const t = b.dataset.kw;
+  ADD.has(t) ? ADD.delete(t) : ADD.add(t);
+  renderScan();
+});
+
+function renderCompare(base) {
+  if (!$('cmpBox').open) return;
+  const cur = atsEl.value;
+  const rows = PROFILES.map(p => ({ p, s: scoreFor(base, p).total })).sort((a, b) => b.s - a.s);
+  $('cmpTable').innerHTML = `<thead><tr><th>ATS</th><th>Used by</th><th>Matching</th><th style="text-align:right">Score</th><th></th></tr></thead><tbody>` +
+    rows.map(({ p, s }) => `<tr data-ats="${p.id}" class="${p.id === cur ? 'sel' : ''}" tabindex="0"><td><b>${esc(p.name)}</b></td><td>${esc(G[p.g])}</td><td>${MATCH_TXT[p.match]}</td><td class="n">${base.cv.trim() ? s : '–'}</td><td><div class="mini"><i style="width:${s}%;background:${ringColor(s)}"></i></div></td></tr>`).join('') + '</tbody>';
+}
+$('cmpBox').addEventListener('toggle', () => { if (lastBase) renderCompare(lastBase); });
+$('cmpTable').addEventListener('click', e => { const tr = e.target.closest('[data-ats]'); if (tr) setAts(tr.dataset.ats); });
+$('cmpTable').addEventListener('keydown', e => { const tr = e.target.closest('[data-ats]'); if (tr && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setAts(tr.dataset.ats); } });
+function setAts(id) { atsEl.value = id; try { localStorage.setItem('plaincv-ats', id); } catch (e) {} renderProfile(); renderScan(); }
+atsEl.addEventListener('change', () => setAts(atsEl.value));
+
+/* =====================================================================
+   FILES IN
+   ===================================================================== */
+const LIB = {
+  pdfw: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+  pdf: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  mammoth: 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js',
+  jszip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+  pdflib: 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js'
+};
+const loaded = {};
+function loadScript(src) {
+  if (!loaded[src]) loaded[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('Could not load a helper library. Check your connection and try again.')); }; document.head.appendChild(s); });
+  return loaded[src];
+}
+async function needPdfJs() { if (!window.pdfjsLib) { await loadScript(LIB.pdfw); await loadScript(LIB.pdf); } }
+async function needZip() { if (!window.JSZip) await loadScript(LIB.jszip); }
+async function needPdfLib() { if (!window.PDFLib) await loadScript(LIB.pdflib); }
+
+async function readPdf(buf) {
+  await needPdfJs();
+  const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
   const pages = [];
+  let colLines = 0, allLines = 0;
   for (let p = 1; p <= pdf.numPages; p++) {
-    const tc = await (await pdf.getPage(p)).getTextContent();
-    let lastY = null, line = '', out = [];
+    const page = await pdf.getPage(p);
+    const width = page.view[2] - page.view[0];
+    const tc = await page.getTextContent();
+    let lastY = null, line = '', firstX = null, out = [];
+    const flush = () => { if (line.trim()) { out.push(line); allLines++; if (firstX !== null && firstX - page.view[0] > width * 0.4) colLines++; } line = ''; firstX = null; };
     for (const it of tc.items) {
       const y = Math.round(it.transform[5]);
-      if (lastY !== null && Math.abs(y - lastY) > 2) { out.push(line); line = ''; }
+      if (lastY !== null && Math.abs(y - lastY) > 2) flush();
+      if (firstX === null && it.str.trim()) firstX = it.transform[4];
       line += (line && !line.endsWith(' ') && it.str && !it.str.startsWith(' ') ? ' ' : '') + it.str;
       lastY = y;
-      if (it.hasEOL) { out.push(line); line = ''; lastY = null; }
+      if (it.hasEOL) { flush(); lastY = null; }
     }
-    if (line) out.push(line);
+    flush();
     pages.push(out.map(l => l.replace(/\s+/g, ' ').trim()).join('\n'));
   }
-  return pages.join('\n\n').replace(/\n{3,}/g, '\n\n');
+  return { text: pages.join('\n\n').replace(/\n{3,}/g, '\n\n'), meta: { type: 'pdf', pdfColumns: allLines > 12 && colLines / allLines > 0.22 } };
 }
 async function readDocx(buf) {
-  if (!window.mammoth) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
-  const r = await window.mammoth.extractRawText({ arrayBuffer: buf });
-  return r.value.replace(/\n{3,}/g, '\n\n');
+  if (!window.mammoth) await loadScript(LIB.mammoth);
+  await needZip();
+  const r = await window.mammoth.extractRawText({ arrayBuffer: buf.slice(0) });
+  const zip = await window.JSZip.loadAsync(buf.slice(0));
+  const doc = await zip.file('word/document.xml').async('string');
+  const hf = Object.keys(zip.files).filter(n => /^word\/(?:header|footer)\d*\.xml$/.test(n));
+  let hfText = '';
+  for (const n of hf) hfText += ' ' + (await zip.file(n).async('string')).replace(/<[^>]+>/g, ' ');
+  const meta = {
+    type: 'docx',
+    tables: (doc.match(/<w:tbl>/g) || []).length,
+    textBoxes: /<w:txbxContent/.test(doc),
+    columns: /<w:cols\b[^>]*w:num="([2-9])"/.test(doc),
+    images: (doc.match(/<w:drawing>/g) || []).length,
+    headerContact: /[\w.+-]+@[\w-]+\.\w|\+?\d[\d\s().-]{8,}\d/.test(hfText)
+  };
+  return { text: r.value.replace(/\n{3,}/g, '\n\n').trim(), meta };
 }
 $('file').addEventListener('change', async e => {
   const f = e.target.files[0];
@@ -690,12 +1186,16 @@ $('file').addEventListener('change', async e => {
   note.textContent = `Reading ${f.name}…`;
   try {
     const name = f.name.toLowerCase();
-    let text;
-    if (name.endsWith('.pdf')) text = await readPdf(await f.arrayBuffer());
-    else if (name.endsWith('.docx')) text = await readDocx(await f.arrayBuffer());
-    else text = await f.text();
-    if (!text.trim()) throw new Error('No text found. If this is a scanned image, an ATS cannot read it either. Export a text-based PDF.');
-    resumeEl.value = text;
+    const buf = await f.arrayBuffer();
+    let r;
+    if (name.endsWith('.pdf')) r = await readPdf(buf);
+    else if (name.endsWith('.docx')) r = await readDocx(buf);
+    else if (name.endsWith('.doc')) throw new Error('Old .doc files can’t be read here. Save it as .docx in Word or Google Docs and upload again.');
+    else r = { text: await f.text(), meta: { type: 'txt' } };
+    if (!r.text.trim()) throw new Error('No text found. If this is a scanned image, an ATS can’t read it either. Export a text-based PDF or a DOCX.');
+    SRC = { type: r.meta.type, name: f.name, buf, text: r.text, meta: r.meta };
+    OV = {}; ADD = new Set(); slopSig = '';
+    resumeEl.value = r.text;
     note.textContent = `Loaded ${f.name}. This is roughly what a parser extracts, so check that nothing came out scrambled.`;
     renderScan();
   } catch (err) {
@@ -704,16 +1204,264 @@ $('file').addEventListener('change', async e => {
   e.target.value = '';
 });
 
+/* =====================================================================
+   FILES OUT
+   ===================================================================== */
+async function saveFile(filename, blob, toastEl) {
+  const say = (msg, err) => { toastEl.textContent = msg; toastEl.classList.toggle('err', !!err); };
+  try {
+    const d = window.claude && typeof window.claude.use === 'function' ? await window.claude.use('downloads') : null;
+    if (d) {
+      await d.save({ filename, data: blob });
+      say(`Saved ${filename}.`);
+      return;
+    }
+    if (window.claude && typeof window.claude.use === 'function') { say('Downloads aren’t available in this view. Open the page in claude.ai, or copy the clean text instead.', true); return; }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    say(`Downloaded ${filename}.`);
+  } catch (err) {
+    const code = err && err.code;
+    if (code === 'declined') say('Download cancelled.', true);
+    else if (code === 'rate_limited') say('A download prompt is already open. Finish that one first.', true);
+    else say(`Couldn't save the file: ${(err && err.message) || err}`, true);
+  }
+}
+function baseName() {
+  const n = SRC ? SRC.name.replace(/\.[^.]+$/, '') : (resumeEl.value.split('\n').find(l => l.trim()) || 'CV').replace(/\(example\)/i, '').trim();
+  return n.replace(/[^\w\- ]+/g, '').replace(/\s+/g, '_').slice(0, 60) || 'CV';
+}
+
+/* Edits a Word file in place: only the text inside runs changes, so fonts, spacing, tables and layout stay exactly as uploaded. */
+const W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+async function patchDocx(buf) {
+  await needZip();
+  const zip = await window.JSZip.loadAsync(buf.slice(0));
+  const xml = await zip.file('word/document.xml').async('string');
+  const doc = new DOMParser().parseFromString(xml, 'application/xml');
+  if (doc.getElementsByTagName('parsererror').length) throw new Error('The Word file’s XML could not be read.');
+  const paras = new Map();
+  const all = doc.getElementsByTagNameNS(W_NS, '*');
+  for (let i = 0; i < all.length; i++) {
+    const n = all[i], ln = n.localName;
+    if (ln !== 't' && ln !== 'tab' && ln !== 'br' && ln !== 'cr') continue;
+    let p = n.parentNode;
+    while (p && !(p.localName === 'p' && p.namespaceURI === W_NS)) p = p.parentNode;
+    if (!p) continue;
+    if (!paras.has(p)) paras.set(p, []);
+    paras.get(p).push(n);
+  }
+  let applied = 0, skipped = 0, kwDone = false;
+  const terms = addTerms();
+  const plist = [...paras.entries()];
+  const paraText = nodes => nodes.map(n => n.localName === 't' ? n.textContent : n.localName === 'tab' ? '\t' : '\n').join('');
+  plist.forEach(([p, nodes]) => {
+    let pos = 0;
+    const segs = nodes.map(n => { const len = n.localName === 't' ? n.textContent.length : 1; const s = { n, s: pos, e: pos + len, v: n.localName !== 't' }; pos += len; return s; });
+    const text = paraText(nodes);
+    const edits = planEdits(text);
+    for (let i = edits.length - 1; i >= 0; i--) {
+      const ed = edits[i];
+      const over = segs.filter(s => s.e > ed.s && s.s < ed.e);
+      if (!over.length || over.some(s => s.v)) { skipped++; continue; }
+      over.forEach((s, k) => {
+        const t = s.n.textContent;
+        const a = Math.max(ed.s, s.s) - s.s, b = Math.min(ed.e, s.e) - s.s;
+        s.n.textContent = t.slice(0, a) + (k === 0 ? ed.rep : '') + t.slice(b);
+        s.n.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
+      });
+      applied++;
+    }
+  });
+  if (terms.length) {
+    for (let i = 0; i < plist.length && !kwDone; i++) {
+      if (!HEADINGS.skills.test(normHead(paraText(plist[i][1])))) continue;
+      for (let j = i + 1; j < plist.length; j++) {
+        const ts = plist[j][1].filter(n => n.localName === 't' && n.textContent.trim());
+        if (!ts.length) continue;
+        const last = ts[ts.length - 1];
+        last.textContent = last.textContent.replace(/[ \t,.;]*$/, '') + ', ' + terms.join(', ');
+        last.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
+        kwDone = true; break;
+      }
+    }
+  }
+  let out = new XMLSerializer().serializeToString(doc);
+  if (!/^<\?xml/.test(out)) out = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' + out;
+  zip.file('word/document.xml', out);
+  const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  return { blob, applied, skipped, kwDone, kwWanted: terms.length > 0 };
+}
+
+/* Splits plain CV text into blocks for the rebuilt Word and PDF files */
+function toBlocks(text) {
+  const blocks = [];
+  let seenHeading = false;
+  const bulletRe = new RegExp('^[' + escRe(BULLET_CH) + ']\\s*');
+  for (const raw of text.split('\n')) {
+    const t = raw.trim();
+    if (!t) continue;
+    const h = normHead(t);
+    const known = Object.values(HEADINGS).some(re => re.test(h));
+    const caps = seenHeading && t === t.toUpperCase() && /[A-Z]/.test(t) && t.split(/\s+/).length <= 4 && t.length < 40 && !bulletRe.test(t);
+    if (blocks.length && (known || caps)) { blocks.push({ t: 'h', text: t.replace(/:+$/, '') }); seenHeading = true; continue; }
+    if (!seenHeading) {
+      if (!blocks.length) blocks.push({ t: 'name', text: t });
+      else if (/@|\+?\d[\d\s-]{7,}|linkedin|github|\|/.test(t)) blocks.push({ t: 'contact', text: t });
+      else blocks.push({ t: 'title', text: t });
+      continue;
+    }
+    if (bulletRe.test(t)) { blocks.push({ t: 'li', text: t.replace(bulletRe, '') }); continue; }
+    const prev = blocks[blocks.length - 1];
+    if (DATE_ONLY.test(t) && prev && prev.t === 'p' && !prev.right) { prev.t = 'job'; prev.right = t; continue; }
+    blocks.push({ t: 'p', text: t });
+  }
+  return blocks;
+}
+
+function xmlEsc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, ''); }
+async function buildDocx(blocks) {
+  await needZip();
+  const run = (t, o = {}) => `<w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>${o.b ? '<w:b/>' : ''}${o.color ? `<w:color w:val="${o.color}"/>` : ''}<w:sz w:val="${o.sz || 21}"/><w:szCs w:val="${o.sz || 21}"/></w:rPr><w:t xml:space="preserve">${xmlEsc(t)}</w:t></w:r>`;
+  const para = (runs, o = {}) => `<w:p><w:pPr>${o.tabs ? '<w:tabs><w:tab w:val="right" w:pos="9900"/></w:tabs>' : ''}${o.border ? '<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="333333"/></w:pBdr>' : ''}<w:spacing w:before="${o.before || 0}" w:after="${o.after ?? 40}"/>${o.ind ? '<w:ind w:left="360" w:hanging="220"/>' : ''}</w:pPr>${runs}</w:p>`;
+  const body = blocks.map(b => {
+    if (b.t === 'name') return para(run(b.text, { b: 1, sz: 34 }), { after: 20 });
+    if (b.t === 'title') return para(run(b.text, { sz: 23 }), { after: 20 });
+    if (b.t === 'contact') return para(run(b.text, { sz: 19, color: '444444' }), { after: 60 });
+    if (b.t === 'h') return para(run(b.text.toUpperCase(), { b: 1, sz: 22 }), { before: 200, after: 80, border: 1 });
+    if (b.t === 'job') return para(run(b.text, { b: 1 }) + '<w:r><w:tab/></w:r>' + run(b.right, { color: '444444' }), { tabs: 1, before: 80 });
+    if (b.t === 'li') return para(run('• ' + b.text), { ind: 1, after: 30 });
+    return para(run(b.text));
+  }).join('');
+  const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="${W_NS}"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1000" w:right="1000" w:bottom="1000" w:left="1000" w:header="500" w:footer="500" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const zip = new window.JSZip();
+  zip.file('[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+  zip.file('_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+  zip.file('word/document.xml', docXml);
+  return zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+}
+
+async function buildPdf(blocks) {
+  await needPdfLib();
+  const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+  const pdf = await PDFDocument.create();
+  const reg = await pdf.embedFont(StandardFonts.Helvetica), bold = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const PW = 595.28, PH = 841.89, M = 50, TW = PW - 2 * M;
+  let page = pdf.addPage([PW, PH]), y = PH - M;
+  const ok = new Map();
+  const safe = (s, f) => [...String(s).replace(/₹/g, 'Rs.').replace(/ /g, ' ')].map(ch => {
+    const k = f.name + ch;
+    if (!ok.has(k)) { try { f.widthOfTextAtSize(ch, 10); ok.set(k, true); } catch (e) { ok.set(k, false); } }
+    return ok.get(k) ? ch : '?';
+  }).join('');
+  const need = h => { if (y - h < M) { page = pdf.addPage([PW, PH]); y = PH - M; } };
+  const wrap = (s, f, size, width) => {
+    const words = s.split(/\s+/); const lines = []; let cur = '';
+    for (const w of words) { const t = cur ? cur + ' ' + w : w; if (f.widthOfTextAtSize(t, size) > width && cur) { lines.push(cur); cur = w; } else cur = t; }
+    if (cur) lines.push(cur);
+    return lines;
+  };
+  const text = (s, o = {}) => {
+    const f = o.b ? bold : reg, size = o.size || 10.5, x = M + (o.indent || 0), width = TW - (o.indent || 0), lh = size * 1.32;
+    const lines = wrap(safe(s, f), f, size, width);
+    lines.forEach((l, i) => { need(lh); y -= lh; page.drawText(l, { x, y, size, font: f, color: o.color || rgb(0.08, 0.08, 0.1) }); });
+  };
+  const grey = rgb(0.3, 0.3, 0.33);
+  for (const b of blocks) {
+    if (b.t === 'name') text(b.text, { b: 1, size: 18 });
+    else if (b.t === 'title') { y -= 2; text(b.text, { size: 11.5 }); }
+    else if (b.t === 'contact') { y -= 2; text(b.text, { size: 9.5, color: grey }); y -= 4; }
+    else if (b.t === 'h') {
+      y -= 10; need(24); text(b.text.toUpperCase(), { b: 1, size: 11 });
+      page.drawLine({ start: { x: M, y: y - 3 }, end: { x: PW - M, y: y - 3 }, thickness: 0.7, color: rgb(0.2, 0.2, 0.22) }); y -= 6;
+    } else if (b.t === 'job') {
+      y -= 4;
+      const right = safe(b.right, reg), rw = reg.widthOfTextAtSize(right, 10);
+      const left = safe(b.text, bold);
+      if (bold.widthOfTextAtSize(left, 10.5) + rw + 12 < TW) {
+        need(14); y -= 14;
+        page.drawText(left, { x: M, y, size: 10.5, font: bold, color: rgb(0.08, 0.08, 0.1) });
+        page.drawText(right, { x: PW - M - rw, y, size: 10, font: reg, color: grey });
+      } else { text(b.text, { b: 1 }); text(b.right, { size: 10, color: grey }); }
+    } else if (b.t === 'li') {
+      const f = reg, size = 10.5, lh = size * 1.32;
+      const lines = wrap(safe(b.text, f), f, size, TW - 14);
+      lines.forEach((l, i) => { need(lh); y -= lh; if (i === 0) page.drawText('•', { x: M + 3, y, size, font: f, color: rgb(0.08, 0.08, 0.1) }); page.drawText(l, { x: M + 14, y, size, font: f, color: rgb(0.08, 0.08, 0.1) }); });
+      y -= 1.5;
+    } else text(b.text);
+  }
+  const bytes = await pdf.save();
+  return new Blob([bytes], { type: 'application/pdf' });
+}
+
+function changeList(text) {
+  const out = [];
+  const lines = text.split('\n');
+  lines.forEach((l, i) => {
+    for (const e of planEdits(l)) {
+      const from = l.slice(e.s, e.e).trim(), to = e.rep.trim();
+      if (from === to) continue;
+      out.push(`Line ${i + 1}: "${from}" → ${to ? `"${to}"` : '(remove)'}`);
+    }
+  });
+  const terms = addTerms();
+  if (terms.length) out.push(`Skills line: add ${terms.join(', ')}`);
+  return out;
+}
+
+function renderDownloads() {
+  const p = prof(), cv = resumeEl.value;
+  const edited = SRC && cv !== SRC.text;
+  const rec = p.fmt === 'pdf' ? 'pdf' : 'docx';
+  $('dlTag').textContent = `${p.name}: upload ${FMT_TXT[p.fmt]}`;
+  const items = [];
+  if (SRC && SRC.type === 'docx') items.push({ id: 'orig-docx', b: 'Word, original layout', s: 'Your uploaded file with only the wording changed', primary: rec === 'docx' || p.fmt === 'either' });
+  items.push({ id: 'plain-docx', b: 'Word (.docx), clean layout', s: 'Single column, standard headings', primary: !(SRC && SRC.type === 'docx') && rec === 'docx' });
+  items.push({ id: 'plain-pdf', b: 'PDF, clean layout', s: 'Text-based, single column', primary: rec === 'pdf' && !(SRC && SRC.type === 'docx') });
+  items.push({ id: 'txt', b: 'Plain text (.txt)', s: 'For pasting into application forms' });
+  if (SRC && SRC.type === 'pdf') items.push({ id: 'changes', b: 'Change list (.txt)', s: 'Every edit to make in your original file' });
+  $('dlButtons').innerHTML = items.map(i => `<button class="btn${i.primary ? ' primary' : ''}" data-dl="${i.id}"><b>${esc(i.b)}</b><span>${esc(i.s)}</span></button>`).join('');
+  const notes = [];
+  if (SRC && SRC.type === 'docx') notes.push('The original-layout Word file keeps your fonts, spacing and design. Only the swaps, cuts, your “Replace with” text and any keywords you added go in.');
+  if (SRC && SRC.type === 'pdf') notes.push('A PDF can’t be safely edited in place: covering old words leaves them in the file, and the ATS still reads them. Take the clean-layout file, or download the change list and apply it in the Word or Google Docs file you made the PDF from. Upload that DOCX here for an original-layout download.');
+  if (edited && SRC.type === 'docx') notes.push('You’ve edited the text since uploading. Those edits go into the clean-layout downloads, not the original-layout file. To change wording in the original layout, use “Replace with” in the table above.');
+  if (!SRC) notes.push('Upload your DOCX to get it back with its own layout. Pasted text downloads in a clean, ATS-safe layout.');
+  $('dlNote').textContent = notes.join(' ');
+}
+
+$('dlButtons').addEventListener('click', async e => {
+  const btn = e.target.closest('[data-dl]'); if (!btn) return;
+  const kind = btn.dataset.dl, toast = $('dlToast'), name = baseName();
+  if (!resumeEl.value.trim()) { toast.textContent = 'Add a CV first.'; toast.classList.add('err'); return; }
+  btn.disabled = true; toast.classList.remove('err'); toast.textContent = 'Preparing the file…';
+  try {
+    if (kind === 'orig-docx') {
+      const r = await patchDocx(SRC.buf);
+      await saveFile(`${name}_updated.docx`, r.blob, toast);
+      if (!toast.classList.contains('err')) toast.textContent += ` ${r.applied} change${r.applied === 1 ? '' : 's'} applied${r.skipped ? `, ${r.skipped} skipped because they cross a tab or line break` : ''}${r.kwWanted && !r.kwDone ? '. Couldn’t find a Skills line to add keywords to' : ''}.`;
+    } else if (kind === 'plain-docx') await saveFile(`${name}_ATS.docx`, await buildDocx(toBlocks(finalText(resumeEl.value))), toast);
+    else if (kind === 'plain-pdf') await saveFile(`${name}_ATS.pdf`, await buildPdf(toBlocks(finalText(resumeEl.value))), toast);
+    else if (kind === 'txt') await saveFile(`${name}_clean.txt`, new Blob([finalText(resumeEl.value)], { type: 'text/plain' }), toast);
+    else if (kind === 'changes') {
+      const list = changeList(resumeEl.value);
+      await saveFile(`${name}_changes.txt`, new Blob([(list.length ? list.join('\n') : 'No changes.') + '\n'], { type: 'text/plain' }), toast);
+    }
+  } catch (err) { toast.textContent = `Couldn't build the file: ${err.message}`; toast.classList.add('err'); }
+  btn.disabled = false;
+});
+
 /* ---------- Clipboard ---------- */
 function copyText(text, toastEl, fallbackEl) {
-  const done = msg => { toastEl.textContent = msg; setTimeout(() => { toastEl.textContent = ''; }, 2500); };
+  const done = msg => { toastEl.textContent = msg; toastEl.classList.remove('err'); setTimeout(() => { toastEl.textContent = ''; }, 2500); };
   try {
     navigator.clipboard.writeText(text).then(() => done('Copied.'), () => { selectEl(fallbackEl); done('Text selected. Press Ctrl+C or Cmd+C to copy.'); });
   } catch (e) { selectEl(fallbackEl); done('Text selected. Press Ctrl+C or Cmd+C to copy.'); }
 }
 function selectEl(el) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 $('copyClean').addEventListener('click', () => copyText($('clean').textContent, $('cleanToast'), $('clean')));
-$('useClean').addEventListener('click', () => { resumeEl.value = $('clean').textContent; renderScan(); $('cleanToast').textContent = 'Your CV now uses the clean copy. Rewrite the highlighted phrases next.'; });
+$('useClean').addEventListener('click', () => { resumeEl.value = $('clean').textContent; OV = {}; ADD = new Set(); slopSig = ''; renderScan(); $('cleanToast').textContent = 'Your CV now uses the clean copy. Rewrite the highlighted phrases next.'; });
 
 /* ---------- Examples ---------- */
 const EXAMPLE_CV = `PRIYA NAIR (EXAMPLE)
@@ -745,7 +1493,7 @@ B.Tech, Computer Science, Example Institute of Technology, 2020`;
 
 const EXAMPLE_JD = `SDET, Payments Platform (example posting)
 
-We are looking for an SDET with 3+ years of experience in test automation to join our payments team.
+We are looking for an SDET with 3+ years of experience in test automation to join our payments team in Pune. Notice period: immediate joiners or up to 30 days preferred.
 
 Requirements
 - Strong Java skills and hands-on test automation with Selenium and TestNG
@@ -759,17 +1507,19 @@ Requirements
 
 You will design the automation framework for payments services, own regression and smoke suites, and report test results to the payments engineering team.`;
 
-$('loadExample').addEventListener('click', () => { resumeEl.value = EXAMPLE_CV; jdEl.value = EXAMPLE_JD; $('fileNote').textContent = 'Example loaded. Paste or upload your own CV to replace it.'; renderScan(); });
-$('clearAll').addEventListener('click', () => { resumeEl.value = ''; jdEl.value = ''; renderScan(); resumeEl.focus(); });
+$('loadExample').addEventListener('click', () => { SRC = null; OV = {}; ADD = new Set(); slopSig = ''; resumeEl.value = EXAMPLE_CV; jdEl.value = EXAMPLE_JD; $('fileNote').textContent = 'Example loaded. Paste or upload your own CV to replace it.'; renderScan(); });
+$('clearAll').addEventListener('click', () => { SRC = null; OV = {}; ADD = new Set(); slopSig = ''; resumeEl.value = ''; jdEl.value = ''; renderScan(); resumeEl.focus(); });
 
 let t;
 [resumeEl, jdEl].forEach(el => el.addEventListener('input', () => { clearTimeout(t); t = setTimeout(renderScan, 220); }));
 
-/* ---------- Builder ---------- */
+/* =====================================================================
+   BUILDER
+   ===================================================================== */
 const EXAMPLE_BUILD = {
   name: 'Priya Nair (Example)', title: 'QA Automation Engineer', location: 'Pune, India', phone: '+91 98765 43210', email: 'priya.nair@example.com',
   links: 'linkedin.com/in/priya-nair-example | github.com/priya-example',
-  summary: 'QA automation engineer with 4 years of experience testing payment and web applications. Builds Java, Selenium and TestNG frameworks and runs them in Jenkins CI.',
+  summary: 'QA automation engineer with 4 years of experience testing payment and web applications. Builds Java, Selenium and TestNG frameworks and runs them in Jenkins CI. Notice period: 30 days.',
   skills: 'Languages: Java, SQL\nTesting: Selenium WebDriver, TestNG, REST Assured, Postman, Cucumber\nTools: Maven, Jenkins, Git, Jira, Docker',
   exp: [
     { role: 'QA Automation Engineer', company: 'Finlytics Software (example)', place: 'Pune', start: 'Jun 2022', end: 'Present',
@@ -801,7 +1551,7 @@ function renderForm() {
       ${inp('email', 'Email', B.email)}${inp('phone', 'Phone', B.phone)}
       ${inp('location', 'City, country', B.location)}${inp('links', 'Links (LinkedIn, GitHub)', B.links)}
     </div></fieldset>
-    <fieldset><legend class="sec">Summary</legend>${inp('summary', '2–3 lines: role, years, main stack', B.summary, { area: 1, rows: 3 })}</fieldset>
+    <fieldset><legend class="sec">Summary</legend>${inp('summary', '2–3 lines: role, years, main stack (add notice period for Indian employers)', B.summary, { area: 1, rows: 3 })}</fieldset>
     <fieldset><legend class="sec">Skills</legend>${inp('skills', 'One group per line, e.g. "Testing: Selenium, TestNG"', B.skills, { area: 1, rows: 4 })}</fieldset>
     ${listSection('exp', 'Experience', e => `<div class="fields">${inp(e.p + 'role', 'Job title', e.v.role)}${inp(e.p + 'company', 'Company', e.v.company)}${inp(e.p + 'place', 'City', e.v.place)}<div class="fields" style="grid-template-columns:repeat(2,minmax(0,1fr))">${inp(e.p + 'start', 'Start (Jan 2022)', e.v.start)}${inp(e.p + 'end', 'End (or Present)', e.v.end)}</div>${inp(e.p + 'bullets', 'Achievements, one per line', e.v.bullets, { area: 1, rows: 4, full: 1 })}</div>`)}
     ${listSection('projects', 'Projects', e => `<div class="fields">${inp(e.p + 'name', 'Project', e.v.name)}${inp(e.p + 'tech', 'Tech used', e.v.tech)}${inp(e.p + 'bullets', 'What it does and the result, one per line', e.v.bullets, { area: 1, rows: 2, full: 1 })}</div>`)}
@@ -828,31 +1578,31 @@ $('builderForm').addEventListener('click', e => {
   if (rem) { const [k, i] = rem.split('.'); B[k].splice(+i, 1); renderForm(); renderCV(); }
 });
 
-const lines = s => (s || '').split('\n').map(l => l.replace(/^[-•*·▪◦–]\s*/, '').trim()).filter(Boolean);
+const lines = s => (s || '').split('\n').map(l => l.replace(new RegExp('^[' + escRe(BULLET_CH) + ']\\s*'), '').trim()).filter(Boolean);
 function dates(a, b) { return [a, b].filter(Boolean).join(' – '); }
+function contactParts() { return [B.location, B.phone, B.email, ...(B.links || '').split(/\s*\|\s*/)].filter(s => s && s.trim()); }
 
 function buildText() {
   const o = [];
   if (B.name) o.push(B.name.toUpperCase());
   if (B.title) o.push(B.title);
-  const contact = [B.location, B.phone, B.email, ...(B.links || '').split(/\s*\|\s*/)].filter(s => s && s.trim());
-  if (contact.length) o.push(contact.join(' | '));
+  if (contactParts().length) o.push(contactParts().join(' | '));
   const sec = (h, body) => { if (body.length) o.push('', h, ...body); };
   sec('SUMMARY', B.summary.trim() ? [B.summary.trim()] : []);
   sec('SKILLS', lines(B.skills));
   const ex = [];
-  B.exp.forEach((e, i) => {
+  B.exp.forEach(e => {
     if (!e.role && !e.company) return;
-    if (i && ex.length) ex.push('');
+    if (ex.length) ex.push('');
     ex.push([e.role, e.company, e.place].filter(Boolean).join(', '));
     if (e.start || e.end) ex.push(dates(e.start, e.end));
     lines(e.bullets).forEach(b => ex.push('- ' + b));
   });
   sec('EXPERIENCE', ex);
   const pr = [];
-  B.projects.forEach((p, i) => {
+  B.projects.forEach(p => {
     if (!p.name) return;
-    if (i && pr.length) pr.push('');
+    if (pr.length) pr.push('');
     pr.push(p.tech ? `${p.name} | ${p.tech}` : p.name);
     lines(p.bullets).forEach(b => pr.push('- ' + b));
   });
@@ -861,10 +1611,26 @@ function buildText() {
   sec('CERTIFICATIONS', lines(B.certs).map(c => '- ' + c));
   return o.join('\n');
 }
+function builderBlocks() {
+  const bl = [];
+  bl.push({ t: 'name', text: B.name || 'Your Name' });
+  if (B.title) bl.push({ t: 'title', text: B.title });
+  if (contactParts().length) bl.push({ t: 'contact', text: contactParts().join(' | ') });
+  if (B.summary.trim()) bl.push({ t: 'h', text: 'Summary' }, { t: 'p', text: B.summary.trim() });
+  if (lines(B.skills).length) { bl.push({ t: 'h', text: 'Skills' }); lines(B.skills).forEach(s => bl.push({ t: 'p', text: s })); }
+  const ex = B.exp.filter(e => e.role || e.company);
+  if (ex.length) { bl.push({ t: 'h', text: 'Experience' }); ex.forEach(e => { bl.push({ t: 'job', text: [e.role, e.company, e.place].filter(Boolean).join(', '), right: dates(e.start, e.end) }); lines(e.bullets).forEach(b => bl.push({ t: 'li', text: b })); }); }
+  const pr = B.projects.filter(p => p.name);
+  if (pr.length) { bl.push({ t: 'h', text: 'Projects' }); pr.forEach(p => { bl.push({ t: 'job', text: p.name, right: p.tech || '' }); lines(p.bullets).forEach(b => bl.push({ t: 'li', text: b })); }); }
+  const ed = B.edu.filter(e => e.degree || e.school);
+  if (ed.length) { bl.push({ t: 'h', text: 'Education' }); ed.forEach(e => bl.push({ t: 'job', text: [e.degree, e.school].filter(Boolean).join(', '), right: e.year || '' })); }
+  if (lines(B.certs).length) { bl.push({ t: 'h', text: 'Certifications' }); lines(B.certs).forEach(c => bl.push({ t: 'li', text: c })); }
+  return bl;
+}
 
 function renderCV() {
   const m = markOnly;
-  const contact = [B.location, B.phone, B.email, ...(B.links || '').split(/\s*\|\s*/)].filter(s => s && s.trim()).map(esc).join(' · ');
+  const contact = contactParts().map(esc).join(' · ');
   let h = `<p class="nm">${esc(B.name || 'Your Name')}</p>${B.title ? `<p class="tt">${m(B.title)}</p>` : ''}<p class="ct">${contact}</p>`;
   if (B.summary.trim()) h += `<h4>Summary</h4><p>${m(B.summary.trim())}</p>`;
   const sk = lines(B.skills);
@@ -884,22 +1650,30 @@ function renderCV() {
   save();
 }
 
+function bClean(s) { const keep = OV; OV = {}; const r = cleanText(s || ''); OV = keep; return r; }
 $('bClean').addEventListener('click', () => {
-  const c = s => cleanText(s || '');
-  ['title', 'summary', 'skills', 'certs'].forEach(k => { B[k] = c(B[k]); });
-  B.exp.forEach(e => { e.bullets = c(e.bullets); });
-  B.projects.forEach(p => { p.bullets = c(p.bullets); });
+  ['title', 'summary', 'skills', 'certs'].forEach(k => { B[k] = bClean(B[k]); });
+  B.exp.forEach(e => { e.bullets = bClean(e.bullets); });
+  B.projects.forEach(p => { p.bullets = bClean(p.bullets); });
   renderForm(); renderCV();
   const left = findSlop(buildText()).length;
+  $('bToast').classList.remove('err');
   $('bToast').textContent = left ? `Cleaned. ${left} highlighted phrase${left > 1 ? 's need' : ' needs'} a rewrite with your real numbers.` : 'Cleaned. No slop left.';
 });
-$('bCopy').addEventListener('click', () => {
-  const pre = document.createElement('pre'); pre.textContent = buildText();
-  copyText(buildText(), $('bToast'), $('cvPreview'));
-});
-$('bScan').addEventListener('click', () => { resumeEl.value = buildText(); selectTab('scan'); renderScan(); window.scrollTo({ top: 0 }); });
+function bFile() { return (B.name || 'CV').replace(/\(example\)/i, '').trim().replace(/[^\w\- ]+/g, '').replace(/\s+/g, '_') || 'CV'; }
+async function bDownload(btn, fn) {
+  btn.disabled = true; $('bToast').classList.remove('err'); $('bToast').textContent = 'Preparing the file…';
+  try { await fn(); } catch (err) { $('bToast').textContent = `Couldn't build the file: ${err.message}`; $('bToast').classList.add('err'); }
+  btn.disabled = false;
+}
+$('bDocx').addEventListener('click', e => bDownload(e.currentTarget, async () => saveFile(`${bFile()}_CV.docx`, await buildDocx(builderBlocks()), $('bToast'))));
+$('bPdf').addEventListener('click', e => bDownload(e.currentTarget, async () => saveFile(`${bFile()}_CV.pdf`, await buildPdf(builderBlocks()), $('bToast'))));
+$('bTxt').addEventListener('click', e => bDownload(e.currentTarget, async () => saveFile(`${bFile()}_CV.txt`, new Blob([buildText()], { type: 'text/plain' }), $('bToast'))));
+$('bScan').addEventListener('click', () => { SRC = null; OV = {}; ADD = new Set(); slopSig = ''; resumeEl.value = buildText(); selectTab('scan'); renderScan(); window.scrollTo({ top: 0 }); });
 
-/* ---------- Tabs and storage ---------- */
+/* =====================================================================
+   TABS AND STORAGE
+   ===================================================================== */
 function selectTab(name) {
   ['scan', 'build'].forEach(n => { $('tab-' + n).setAttribute('aria-selected', String(n === name)); $('view-' + n).hidden = n !== name; });
   try { localStorage.setItem('plaincv-tab', name); } catch (e) {}
@@ -910,18 +1684,26 @@ $('tab-build').addEventListener('click', () => selectTab('build'));
 let st;
 function save() {
   clearTimeout(st);
-  st = setTimeout(() => { try { localStorage.setItem('plaincv-draft', JSON.stringify({ cv: resumeEl.value, jd: jdEl.value, b: B })); } catch (e) {} }, 400);
+  st = setTimeout(() => { try { localStorage.setItem('plaincv-draft', JSON.stringify({ cv: resumeEl.value, jd: jdEl.value, b: B, ov: OV, add: [...ADD] })); } catch (e) {} }, 400);
 }
 function restore() {
   try {
     const d = JSON.parse(localStorage.getItem('plaincv-draft') || 'null');
-    if (d && typeof d.cv === 'string') { resumeEl.value = d.cv; jdEl.value = d.jd || ''; if (d.b && d.b.exp) B = d.b; return true; }
+    if (d && typeof d.cv === 'string') {
+      resumeEl.value = d.cv; jdEl.value = d.jd || '';
+      if (d.b && d.b.exp) B = d.b;
+      if (d.ov && typeof d.ov === 'object') OV = d.ov;
+      if (Array.isArray(d.add)) ADD = new Set(d.add);
+      return true;
+    }
   } catch (e) {}
   return false;
 }
 
+buildSelect();
+try { const a = localStorage.getItem('plaincv-ats'); if (a && PMAP[a]) atsEl.value = a; } catch (e) {}
 if (!restore()) { resumeEl.value = EXAMPLE_CV; jdEl.value = EXAMPLE_JD; }
-renderForm(); renderCV(); renderScan();
+renderProfile(); renderForm(); renderCV(); renderScan();
 let startTab = location.hash === '#build' ? 'build' : 'scan';
 try { if (!location.hash) startTab = localStorage.getItem('plaincv-tab') || 'scan'; } catch (e) {}
 selectTab(startTab === 'build' ? 'build' : 'scan');
