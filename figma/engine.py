@@ -46,10 +46,11 @@ def tts(text, voice=VOICE, speed=None, lang=None):
 
 class Scene:
     """spoken: Devanagari for TTS. caption: Roman Hinglish. draw(cv, t, dur, st). type_spans: [(t0,t1)] for clicks."""
-    def __init__(self, spoken, caption, draw, pad=0.6, min_dur=0, type_spans=(), whoosh=False, hold=0.0, clicks=()):
+    def __init__(self, spoken, caption, draw, pad=0.6, min_dur=0, type_spans=(), whoosh=False, hold=0.0, clicks=(), sfx=()):
         self.spoken, self.caption, self.draw = spoken, caption, draw
         self.pad, self.min_dur, self.type_spans, self.whoosh, self.hold = pad, min_dur, list(type_spans), whoosh, hold
         self.clicks = list(clicks)
+        self.sfx = list(sfx)          # [(t, kind)] kind in SFX
 
 
 # ------------------------------------------------------------------ audio synth
@@ -64,6 +65,53 @@ def mouse_click():
     tick = np.random.randn(len(t)) * np.exp(-t * 900) * 0.6
     body = np.sin(2 * np.pi * 1800 * t) * np.exp(-t * 300) * 0.25
     return (tick + body).astype(np.float32)
+
+
+def _env(n, a=0.005, r=None):
+    t = np.arange(n) / SR; r = r or n / SR
+    return np.minimum(1, t / a) * np.exp(-t / (r / 4))
+
+
+def sfx_pop(f=880):
+    n = int(SR * 0.09); t = np.arange(n) / SR
+    return (np.sin(2 * np.pi * (f + 900 * np.exp(-t * 40)) * t) * _env(n, 0.002, 0.09) * 0.5).astype(np.float32)
+
+
+def sfx_ding(f=1320):
+    n = int(SR * 0.9); t = np.arange(n) / SR
+    w = np.sin(2 * np.pi * f * t) + 0.5 * np.sin(2 * np.pi * f * 2.01 * t) + 0.25 * np.sin(2 * np.pi * f * 3.02 * t)
+    return (w * np.exp(-t * 4.5) * 0.28).astype(np.float32)
+
+
+def sfx_chime():
+    a, b = sfx_ding(1046), sfx_ding(1568); out = np.zeros(len(a) + int(SR * 0.12), np.float32)
+    out[:len(a)] += a; out[int(SR * 0.12):] += b; return out
+
+
+def sfx_buzz():
+    n = int(SR * 0.35); t = np.arange(n) / SR
+    w = np.sign(np.sin(2 * np.pi * 110 * t)) * 0.5 + np.sin(2 * np.pi * 220 * t) * 0.3
+    return (w * np.minimum(1, t / 0.01) * np.exp(-t * 6) * 0.22).astype(np.float32)
+
+
+def sfx_tick():
+    n = int(SR * 0.03); t = np.arange(n) / SR
+    return (np.sin(2 * np.pi * 2400 * t) * np.exp(-t * 300) * 0.35).astype(np.float32)
+
+
+def sfx_riser(d=0.8):
+    n = int(SR * d); t = np.arange(n) / SR
+    x = np.convolve(np.random.randn(n), np.ones(12) / 12, "same")
+    return (x * (t / d) ** 2 * 0.35 + np.sin(2 * np.pi * (200 + 900 * t / d) * t) * (t / d) * 0.08).astype(np.float32)
+
+
+def sfx_drop():
+    n = int(SR * 0.5); t = np.arange(n) / SR
+    return (np.sin(2 * np.pi * (180 * np.exp(-t * 6) + 40) * t) * np.exp(-t * 5) * 0.6).astype(np.float32)
+
+
+SFX = {"pop": sfx_pop, "pop_lo": lambda: sfx_pop(520), "pop_hi": lambda: sfx_pop(1200), "ding": sfx_ding,
+       "chime": sfx_chime, "buzz": sfx_buzz, "tick": sfx_tick, "riser": sfx_riser, "drop": sfx_drop}
 
 
 def whoosh(d=0.45):
@@ -140,10 +188,13 @@ VOICE_FX = ("highpass=f=75,equalizer=f=180:t=q:w=1.2:g=2.5,equalizer=f=3200:t=q:
             "aecho=0.85:0.6:22|37:0.06|0.04")
 
 
-def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=None, lang=None):
+def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=None, lang=None, natural=None, voice_fx=True):
     workdir = workdir or os.path.dirname(out)
     os.makedirs(workdir, exist_ok=True)
-    voices = [tts(s.spoken, voice, lang=lang) if s.spoken else np.zeros(1, np.float32) for s in scenes]
+    global NATURAL
+    _nat = NATURAL
+    if natural is not None: NATURAL = natural
+    voices = [tts(s.spoken, voice, speed=(1.05 if natural is False else None), lang=lang) if s.spoken else np.zeros(1, np.float32) for s in scenes]
     durs = [max(len(v) / SR + s.pad + s.hold, s.min_dur) for v, s in zip(voices, scenes)]
     total = sum(durs) + 0.8
     audio = np.zeros(int(SR * total) + SR, np.float32)
@@ -153,6 +204,7 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir
         starts.append(t0); mix_into(audio, v, t0 + 0.1); mix_into(vo_bus, v, t0 + 0.1)
         if s.whoosh: mix_into(audio, whoosh(), max(0, t0 - 0.15), 0.5)
         for c in s.clicks: mix_into(audio, mouse_click(), t0 + c, 0.7)
+        for ft, kind in s.sfx: mix_into(audio, SFX[kind](), t0 + ft, 0.8)
         for a, b in s.type_spans:
             tt = t0 + a
             while tt < t0 + b: mix_into(audio, click(), tt, 0.5); tt += random.uniform(0.045, 0.085)
@@ -180,7 +232,8 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir
         if cap_y: caption(cv, s.caption, cap_y)
         p.stdin.write(cv.raw())
     p.stdin.close(); p.wait()
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-i", wav, "-c:v", "copy", "-af", VOICE_FX + ",loudnorm=I=-14:TP=-1:LRA=11",
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-i", wav, "-c:v", "copy", "-af", (VOICE_FX + "," if voice_fx else "") + "loudnorm=I=-14:TP=-1:LRA=11",
                     "-c:a", "aac", "-b:a", "192k", "-ac", "2", "-ar", "48000", "-shortest", "-movflags", "+faststart", out], check=True)
     os.remove(vid)
+    NATURAL = _nat
     return total
