@@ -219,7 +219,7 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
             <button class="btn" id="loadExample">Load example</button>
             <button class="btn" id="clearAll">Clear</button>
           </div>
-          <p class="note" id="fileNote">Or paste the text. Everything runs in your browser; nothing is uploaded anywhere. Upload a DOCX if you want to download it back with its original layout.</p>
+          <p class="note" id="fileNote">Or paste the text. Everything runs in your browser; nothing is uploaded anywhere. Upload your DOCX or PDF to download it back in its own format with only the words changed.</p>
           <textarea class="resume" id="resume" spellcheck="false" aria-label="CV text"></textarea>
         </div>
         <div class="panel">
@@ -303,6 +303,7 @@ legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spa
       <p class="note" id="dlNote"></p>
       <div class="dl" id="dlButtons"></div>
       <p class="toast" id="dlToast" aria-live="polite"></p>
+      <div id="dlIssues"></div>
     </div>
   </section>
 
@@ -567,7 +568,7 @@ function choice(m) { return OV[m.text.toLowerCase()] || defaultChoice(m); }
 
 /* Turns a text into a list of non-overlapping character edits {s, e, rep}.
    Used for the clean copy, and per paragraph for the original Word file. */
-const BULLET_CH = '-•*·▪◦–►✓';
+const BULLET_CH = '-•*·▪◦–►✓\uf0b7\uf0a7\uf076\uf0d8\uf0fc\u25cf\u25cb\u25a0\u2023\u2043➢➤';
 function planEdits(text) {
   const raw = [];
   for (const m of findSlop(text)) {
@@ -1052,7 +1053,7 @@ function renderProofAndClean() {
   const n = findSlop(cv).length;
   $('slopCount').textContent = n ? `${n} slop phrase${n > 1 ? 's' : ''} marked` : 'No slop found';
   $('slopCount').className = 'slopcount ' + (n ? 'some' : 'zero');
-  $('clean').textContent = cv.trim() ? finalText(cv) : '';
+  $('clean').textContent = cv.trim() ? outText(cv) : '';
 }
 
 let slopSig = '';
@@ -1122,7 +1123,6 @@ atsEl.addEventListener('change', () => setAts(atsEl.value));
 const LIB = {
   pdfw: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
   pdf: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
-  mammoth: 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js',
   jszip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
   pdflib: 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js'
 };
@@ -1138,46 +1138,85 @@ async function needPdfLib() { if (!window.PDFLib) await loadScript(LIB.pdflib); 
 async function readPdf(buf) {
   await needPdfJs();
   const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
-  const pages = [];
+  const lines = [];
   let colLines = 0, allLines = 0;
   for (let p = 1; p <= pdf.numPages; p++) {
     const page = await pdf.getPage(p);
     const width = page.view[2] - page.view[0];
     const tc = await page.getTextContent();
-    let lastY = null, line = '', firstX = null, out = [];
-    const flush = () => { if (line.trim()) { out.push(line); allLines++; if (firstX !== null && firstX - page.view[0] > width * 0.4) colLines++; } line = ''; firstX = null; };
+    let lastY = null, line = '', firstX = null, lineY = null;
+    const flush = () => {
+      const t = line.replace(/\s+/g, ' ').trim();
+      if (t) { lines.push({ page: p, y: lineY, text: t }); allLines++; if (firstX !== null && firstX - page.view[0] > width * 0.4) colLines++; }
+      line = ''; firstX = null; lineY = null;
+    };
     for (const it of tc.items) {
-      const y = Math.round(it.transform[5]);
+      const y = it.transform[5];
       if (lastY !== null && Math.abs(y - lastY) > 2) flush();
-      if (firstX === null && it.str.trim()) firstX = it.transform[4];
+      if (firstX === null && it.str.trim()) { firstX = it.transform[4]; lineY = y; }
       line += (line && !line.endsWith(' ') && it.str && !it.str.startsWith(' ') ? ' ' : '') + it.str;
       lastY = y;
       if (it.hasEOL) { flush(); lastY = null; }
     }
     flush();
-    pages.push(out.map(l => l.replace(/\s+/g, ' ').trim()).join('\n'));
+    if (p < pdf.numPages) lines.push({ page: null, y: null, text: '' });
   }
-  return { text: pages.join('\n\n').replace(/\n{3,}/g, '\n\n'), meta: { type: 'pdf', pdfColumns: allLines > 12 && colLines / allLines > 0.22 } };
+  return { text: lines.map(l => l.text).join('\n'), lines, meta: { type: 'pdf', pdfColumns: allLines > 12 && colLines / allLines > 0.22 } };
+}
+
+/* Word paragraphs in document order, each with the text nodes that make it up.
+   Tabs and line breaks are kept as fixed characters so edits never move them. */
+const W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+function docxParas(doc) {
+  const paras = new Map();
+  const all = doc.getElementsByTagNameNS(W_NS, '*');
+  for (let i = 0; i < all.length; i++) {
+    const n = all[i], ln = n.localName;
+    if (ln !== 't' && ln !== 'tab' && ln !== 'br' && ln !== 'cr') continue;
+    if (ln === 'tab' && n.parentNode && n.parentNode.localName === 'tabs') continue;
+    let p = null, a = n.parentNode, fallback = false;
+    while (a && a.nodeType === 1) {
+      if (a.localName === 'Fallback') fallback = true;
+      if (!p && a.localName === 'p' && a.namespaceURI === W_NS) p = a;
+      a = a.parentNode;
+    }
+    if (!p || fallback) continue;
+    if (!paras.has(p)) paras.set(p, []);
+    paras.get(p).push(n);
+  }
+  return [...paras.entries()].map(([p, nodes]) => {
+    let pos = 0;
+    const segs = nodes.map(n => {
+      const isT = n.localName === 't';
+      const txt = isT ? n.textContent : n.localName === 'tab' ? '\t' : ' ';
+      const s = { n, s: pos, e: pos + txt.length, v: !isT };
+      pos += txt.length;
+      return s;
+    });
+    return { p, segs, text: nodes.map(n => n.localName === 't' ? n.textContent : n.localName === 'tab' ? '\t' : ' ').join('') };
+  });
 }
 async function readDocx(buf) {
-  if (!window.mammoth) await loadScript(LIB.mammoth);
   await needZip();
-  const r = await window.mammoth.extractRawText({ arrayBuffer: buf.slice(0) });
   const zip = await window.JSZip.loadAsync(buf.slice(0));
-  const doc = await zip.file('word/document.xml').async('string');
+  const xml = await zip.file('word/document.xml').async('string');
+  const doc = new DOMParser().parseFromString(xml, 'application/xml');
+  if (doc.getElementsByTagName('parsererror').length) throw new Error('The Word file looks damaged. Open and re-save it in Word, then try again.');
+  const paras = docxParas(doc);
   const hf = Object.keys(zip.files).filter(n => /^word\/(?:header|footer)\d*\.xml$/.test(n));
   let hfText = '';
   for (const n of hf) hfText += ' ' + (await zip.file(n).async('string')).replace(/<[^>]+>/g, ' ');
   const meta = {
     type: 'docx',
-    tables: (doc.match(/<w:tbl>/g) || []).length,
-    textBoxes: /<w:txbxContent/.test(doc),
-    columns: /<w:cols\b[^>]*w:num="([2-9])"/.test(doc),
-    images: (doc.match(/<w:drawing>/g) || []).length,
+    tables: (xml.match(/<w:tbl>/g) || []).length,
+    textBoxes: /<w:txbxContent/.test(xml),
+    columns: /<w:cols\b[^>]*w:num="([2-9])"/.test(xml),
+    images: (xml.match(/<w:drawing>/g) || []).length,
     headerContact: /[\w.+-]+@[\w-]+\.\w|\+?\d[\d\s().-]{8,}\d/.test(hfText)
   };
-  return { text: r.value.replace(/\n{3,}/g, '\n\n').trim(), meta };
+  return { text: paras.map(p => p.text).join('\n'), meta };
 }
+
 $('file').addEventListener('change', async e => {
   const f = e.target.files[0];
   if (!f) return;
@@ -1192,10 +1231,10 @@ $('file').addEventListener('change', async e => {
     else if (name.endsWith('.doc')) throw new Error('Old .doc files can’t be read here. Save it as .docx in Word or Google Docs and upload again.');
     else r = { text: await f.text(), meta: { type: 'txt' } };
     if (!r.text.trim()) throw new Error('No text found. If this is a scanned image, an ATS can’t read it either. Export a text-based PDF or a DOCX.');
-    SRC = { type: r.meta.type, name: f.name, buf, text: r.text, meta: r.meta };
+    SRC = { type: r.meta.type, name: f.name, buf, text: r.text, lines: r.lines || null, meta: r.meta };
     OV = {}; ADD = new Set(); slopSig = '';
     resumeEl.value = r.text;
-    note.textContent = `Loaded ${f.name}. This is roughly what a parser extracts, so check that nothing came out scrambled.`;
+    note.textContent = `Loaded ${f.name}. This is what a parser extracts. Edit any word or line here; the ${r.meta.type === 'txt' ? 'download' : 'same-format download'} changes only that text in your file.`;
     renderScan();
   } catch (err) {
     note.textContent = `Couldn't read ${f.name}: ${err.message}`;
@@ -1233,65 +1272,656 @@ function baseName() {
   return n.replace(/[^\w\- ]+/g, '').replace(/\s+/g, '_').slice(0, 60) || 'CV';
 }
 
-/* Edits a Word file in place: only the text inside runs changes, so fonts, spacing, tables and layout stay exactly as uploaded. */
-const W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
-async function patchDocx(buf) {
+/* =====================================================================
+   SAME-FORMAT EDITING
+   The uploaded file is never rebuilt. We diff the uploaded text against
+   the text you want, then change only those words and lines inside the
+   original file.
+   ===================================================================== */
+function desiredOriginal(cv) { return addKeywordsText(applyEdits(cv, planEdits(cv)), addTerms()); }
+function outText(cv) { return SRC && (SRC.type === 'docx' || SRC.type === 'pdf') ? desiredOriginal(cv) : finalText(cv); }
+
+function tokens(s) { return s.match(/\s+|[A-Za-z0-9]+|[^\sA-Za-z0-9]/g) || []; }
+function lcsTable(a, b) {
+  const n = a.length, m = b.length, T = [];
+  for (let i = 0; i <= n; i++) T.push(new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) T[i][j] = a[i] === b[j] ? T[i + 1][j + 1] + 1 : Math.max(T[i + 1][j], T[i][j + 1]);
+  return T;
+}
+/* Character edits {s, e, rep} that turn one line into another, word by word */
+function tokenEdits(oldS, newS) {
+  const a = tokens(oldS), b = tokens(newS), T = lcsTable(a, b), out = [];
+  let i = 0, j = 0, pos = 0, cur = null;
+  const flush = () => { if (cur) { out.push(cur); cur = null; } };
+  while (i < a.length || j < b.length) {
+    if (i < a.length && j < b.length && a[i] === b[j]) { flush(); pos += a[i].length; i++; j++; }
+    else if (j < b.length && (i >= a.length || T[i][j + 1] >= T[i + 1][j])) { if (!cur) cur = { s: pos, e: pos, rep: '' }; cur.rep += b[j]; j++; }
+    else { if (!cur) cur = { s: pos, e: pos, rep: '' }; pos += a[i].length; cur.e = pos; i++; }
+  }
+  flush();
+  return out;
+}
+function similarity(a, b) {
+  const A = new Set(a.toLowerCase().match(/[a-z0-9]+/g) || []), B = new Set(b.toLowerCase().match(/[a-z0-9]+/g) || []);
+  if (!A.size && !B.size) return 1;
+  let k = 0; A.forEach(w => { if (B.has(w)) k++; });
+  return k / (A.size + B.size - k);
+}
+/* Line-level diff: eq / mod / del / ins (ins carries the old line it follows) */
+function lineDiff(oldL, newL) {
+  const T = lcsTable(oldL, newL), ops = [];
+  let i = 0, j = 0, ho = [], hn = [];
+  const hunk = () => {
+    if (!ho.length && !hn.length) return;
+    const a = ho.length, b = hn.length, D = [], C = [];
+    for (let x = 0; x <= a; x++) { D.push(new Float64Array(b + 1)); C.push(new Uint8Array(b + 1)); }
+    for (let x = a - 1; x >= 0; x--) for (let y = b - 1; y >= 0; y--) {
+      const sim = similarity(oldL[ho[x]], newL[hn[y]]);
+      let best = D[x + 1][y], c = 1;
+      if (D[x][y + 1] > best) { best = D[x][y + 1]; c = 2; }
+      if (sim >= 0.2 && D[x + 1][y + 1] + sim >= best) { best = D[x + 1][y + 1] + sim; c = 3; }
+      D[x][y] = best; C[x][y] = c;
+    }
+    let x = 0, y = 0;
+    while (x < a || y < b) {
+      if (x < a && y < b && C[x][y] === 3) { ops.push({ t: 'mod', i: ho[x], j: hn[y] }); x++; y++; }
+      else if (x < a && (y >= b || C[x][y] === 1)) { ops.push({ t: 'del', i: ho[x] }); x++; }
+      else { ops.push({ t: 'ins', j: hn[y] }); y++; }
+    }
+    ho = []; hn = [];
+  };
+  while (i < oldL.length || j < newL.length) {
+    if (i < oldL.length && j < newL.length && oldL[i] === newL[j]) { hunk(); ops.push({ t: 'eq', i, j }); i++; j++; }
+    else if (j < newL.length && (i >= oldL.length || T[i][j + 1] >= T[i + 1][j])) { hn.push(j); j++; }
+    else { ho.push(i); i++; }
+  }
+  hunk();
+  let last = -1;
+  ops.forEach(o => { if (o.t === 'ins') o.after = last; else last = o.i; });
+  return ops;
+}
+
+/* ---------- Word ---------- */
+const XML_NS = 'http://www.w3.org/XML/1998/namespace';
+function setT(n, txt) { n.textContent = txt; n.setAttributeNS(XML_NS, 'xml:space', 'preserve'); }
+function applyParaEdits(para, edits) {
+  let ok = 0, bad = 0;
+  for (let k = edits.length - 1; k >= 0; k--) {
+    const ed = edits[k];
+    if (ed.s === ed.e) {
+      const seg = para.segs.find(s => !s.v && s.s <= ed.s && ed.s <= s.e) || para.segs.find(s => !s.v && s.e === ed.s);
+      if (!seg) { bad++; continue; }
+      const t = seg.n.textContent, at = ed.s - seg.s;
+      setT(seg.n, t.slice(0, at) + ed.rep + t.slice(at));
+      ok++; continue;
+    }
+    const over = para.segs.filter(s => s.e > ed.s && s.s < ed.e);
+    const firstT = over.find(s => !s.v);
+    if (!firstT || over.some(s => s.v && !(ed.rep.includes(s.n.localName === 'tab' ? '\t' : ' ')))) { bad++; continue; }
+    over.filter(s => !s.v).forEach(s => {
+      const t = s.n.textContent;
+      const a = Math.max(ed.s, s.s) - s.s, b = Math.min(ed.e, s.e) - s.s;
+      setT(s.n, t.slice(0, a) + (s === firstT ? ed.rep.replace(/\t/g, ' ') : '') + t.slice(b));
+    });
+    ok++;
+  }
+  return { ok, bad };
+}
+function cloneParaWithText(p, text) {
+  const c = p.cloneNode(true);
+  [...c.attributes].forEach(at => { if (/^w14:(paraId|textId)$/.test(at.name)) c.removeAttribute(at.name); });
+  const runs = [...c.getElementsByTagNameNS(W_NS, 'r')];
+  const keep = runs.find(r => r.getElementsByTagNameNS(W_NS, 't').length) || runs[0];
+  [...c.childNodes].forEach(ch => { if (ch.localName !== 'pPr') c.removeChild(ch); });
+  const ppr = c.getElementsByTagNameNS(W_NS, 'pPr')[0];
+  if (ppr) [...ppr.getElementsByTagNameNS(W_NS, 'sectPr')].forEach(s => s.parentNode.removeChild(s));
+  const r = keep ? keep.cloneNode(true) : c.ownerDocument.createElementNS(W_NS, 'w:r');
+  [...r.childNodes].forEach(ch => { if (ch.localName !== 'rPr') r.removeChild(ch); });
+  const t = c.ownerDocument.createElementNS(W_NS, 'w:t');
+  setT(t, text);
+  r.appendChild(t);
+  c.appendChild(r);
+  return c;
+}
+async function patchDocx(buf, oldText, newText) {
   await needZip();
   const zip = await window.JSZip.loadAsync(buf.slice(0));
   const xml = await zip.file('word/document.xml').async('string');
   const doc = new DOMParser().parseFromString(xml, 'application/xml');
-  if (doc.getElementsByTagName('parsererror').length) throw new Error('The Word file’s XML could not be read.');
-  const paras = new Map();
-  const all = doc.getElementsByTagNameNS(W_NS, '*');
-  for (let i = 0; i < all.length; i++) {
-    const n = all[i], ln = n.localName;
-    if (ln !== 't' && ln !== 'tab' && ln !== 'br' && ln !== 'cr') continue;
-    let p = n.parentNode;
-    while (p && !(p.localName === 'p' && p.namespaceURI === W_NS)) p = p.parentNode;
-    if (!p) continue;
-    if (!paras.has(p)) paras.set(p, []);
-    paras.get(p).push(n);
+  const paras = docxParas(doc);
+  const oldL = paras.map(p => p.text), newL = newText.split('\n');
+  const ops = lineDiff(oldL, newL);
+  let applied = 0, failed = [];
+  for (const o of ops) if (o.t === 'mod') {
+    const r = applyParaEdits(paras[o.i], tokenEdits(oldL[o.i], newL[o.j]));
+    applied += r.ok;
+    if (r.bad) failed.push(`"${newL[o.j].slice(0, 70)}": part of this line crosses a tab or line break; edit it in Word`);
   }
-  let applied = 0, skipped = 0, kwDone = false;
-  const terms = addTerms();
-  const plist = [...paras.entries()];
-  const paraText = nodes => nodes.map(n => n.localName === 't' ? n.textContent : n.localName === 'tab' ? '\t' : '\n').join('');
-  plist.forEach(([p, nodes]) => {
-    let pos = 0;
-    const segs = nodes.map(n => { const len = n.localName === 't' ? n.textContent.length : 1; const s = { n, s: pos, e: pos + len, v: n.localName !== 't' }; pos += len; return s; });
-    const text = paraText(nodes);
-    const edits = planEdits(text);
-    for (let i = edits.length - 1; i >= 0; i--) {
-      const ed = edits[i];
-      const over = segs.filter(s => s.e > ed.s && s.s < ed.e);
-      if (!over.length || over.some(s => s.v)) { skipped++; continue; }
-      over.forEach((s, k) => {
-        const t = s.n.textContent;
-        const a = Math.max(ed.s, s.s) - s.s, b = Math.min(ed.e, s.e) - s.s;
-        s.n.textContent = t.slice(0, a) + (k === 0 ? ed.rep : '') + t.slice(b);
-        s.n.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
-      });
-      applied++;
-    }
-  });
-  if (terms.length) {
-    for (let i = 0; i < plist.length && !kwDone; i++) {
-      if (!HEADINGS.skills.test(normHead(paraText(plist[i][1])))) continue;
-      for (let j = i + 1; j < plist.length; j++) {
-        const ts = plist[j][1].filter(n => n.localName === 't' && n.textContent.trim());
-        if (!ts.length) continue;
-        const last = ts[ts.length - 1];
-        last.textContent = last.textContent.replace(/[ \t,.;]*$/, '') + ', ' + terms.join(', ');
-        last.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
-        kwDone = true; break;
-      }
-    }
+  const lastIns = new Map();
+  for (const o of ops) if (o.t === 'ins') {
+    const anchor = paras[Math.max(0, o.after)];
+    if (!anchor) { failed.push(`"${newL[o.j].slice(0, 70)}": no paragraph to copy formatting from`); continue; }
+    const node = cloneParaWithText(anchor.p, newL[o.j]);
+    const ref = lastIns.get(anchor.p) || (o.after < 0 ? null : anchor.p);
+    if (ref) ref.parentNode.insertBefore(node, ref.nextSibling); else anchor.p.parentNode.insertBefore(node, anchor.p);
+    lastIns.set(anchor.p, node);
+    applied++;
+  }
+  for (const o of ops) if (o.t === 'del') {
+    const p = paras[o.i].p, parent = p.parentNode;
+    const siblings = [...parent.childNodes].filter(n => n.localName === 'p');
+    if (siblings.length > 1 && parent.localName !== 'tc') parent.removeChild(p);
+    else paras[o.i].segs.filter(s => !s.v).forEach(s => setT(s.n, ''));
+    applied++;
   }
   let out = new XMLSerializer().serializeToString(doc);
   if (!/^<\?xml/.test(out)) out = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' + out;
   zip.file('word/document.xml', out);
   const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-  return { blob, applied, skipped, kwDone, kwWanted: terms.length > 0 };
+  return { blob, applied, failed };
+}
+
+/* ---------- PDF ----------
+   Reads each page's content stream, decodes the text with the PDF's own
+   font tables, deletes the old glyphs and writes the new words with the
+   same embedded font, size and position. Nothing else on the page moves. */
+const WIN_EXTRA = { 128: 0x20AC, 130: 0x201A, 131: 0x0192, 132: 0x201E, 133: 0x2026, 134: 0x2020, 135: 0x2021, 136: 0x02C6, 137: 0x2030, 138: 0x0160, 139: 0x2039, 140: 0x0152, 142: 0x017D, 145: 0x2018, 146: 0x2019, 147: 0x201C, 148: 0x201D, 149: 0x2022, 150: 0x2013, 151: 0x2014, 152: 0x02DC, 153: 0x2122, 154: 0x0161, 155: 0x203A, 156: 0x0153, 158: 0x017E, 159: 0x0178 };
+const AGL = { space: ' ', exclam: '!', quotedbl: '"', numbersign: '#', dollar: '$', percent: '%', ampersand: '&', quotesingle: "'", parenleft: '(', parenright: ')', asterisk: '*', plus: '+', comma: ',', hyphen: '-', period: '.', slash: '/', colon: ':', semicolon: ';', less: '<', equal: '=', greater: '>', question: '?', at: '@', bracketleft: '[', backslash: '\\', bracketright: ']', asciicircum: '^', underscore: '_', grave: '`', braceleft: '{', bar: '|', braceright: '}', asciitilde: '~', bullet: '•', endash: '–', emdash: '—', quoteleft: '‘', quoteright: '’', quotedblleft: '“', quotedblright: '”', ellipsis: '…', fi: 'fi', fl: 'fl', ff: 'ff', ffi: 'ffi', ffl: 'ffl', copyright: '©', registered: '®', trademark: '™', degree: '°', periodcentered: '·', zero: '0', one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9', minus: '−', nbspace: ' ', sterling: '£', Euro: '€', rupee: '₹', section: '§', dagger: '†' };
+function glyphUni(g) {
+  if (!g) return null;
+  if (AGL[g] !== undefined) return AGL[g];
+  if (/^[A-Za-z]$/.test(g)) return g;
+  let m = g.match(/^uni((?:[0-9A-Fa-f]{4})+)$/);
+  if (m) return String.fromCharCode(...m[1].match(/.{4}/g).map(h => parseInt(h, 16)));
+  m = g.match(/^u([0-9A-Fa-f]{4,6})$/);
+  if (m) return String.fromCodePoint(parseInt(m[1], 16));
+  const base = g.split('.')[0];
+  return base !== g ? glyphUni(base) : null;
+}
+function latin1(bytes) { let s = ''; for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192)); return s; }
+function hexUnits(h) {
+  if (h.length % 4) { let o = ''; for (let i = 0; i + 2 <= h.length; i += 2) o += String.fromCharCode(parseInt(h.substr(i, 2), 16)); return o; }
+  let o = ''; for (let i = 0; i < h.length; i += 4) o += String.fromCharCode(parseInt(h.substr(i, 4), 16)); return o;
+}
+function parseCMap(s) {
+  const map = new Map();
+  for (const blk of s.matchAll(/beginbfchar([\s\S]*?)endbfchar/g))
+    for (const m of blk[1].matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]*)>/g)) map.set(parseInt(m[1], 16), hexUnits(m[2]));
+  for (const blk of s.matchAll(/beginbfrange([\s\S]*?)endbfrange/g))
+    for (const m of blk[1].matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>\s*(\[[^\]]*\]|<[0-9a-fA-F]*>)/g)) {
+      const lo = parseInt(m[1], 16), hi = Math.min(parseInt(m[2], 16), lo + 65535);
+      if (m[3][0] === '[') [...m[3].matchAll(/<([0-9a-fA-F]*)>/g)].forEach((d, k) => map.set(lo + k, hexUnits(d[1])));
+      else { const d = hexUnits(m[3].slice(1, -1)); for (let c = lo; c <= hi; c++) map.set(c, d.slice(0, -1) + String.fromCharCode(d.charCodeAt(d.length - 1) + (c - lo))); }
+    }
+  return map;
+}
+/* Tokenises a content stream into operators with their operands and byte positions */
+function lexContent(s) {
+  const ops = [], n = s.length, cont = [];
+  let stack = [], argStart = -1, i = 0;
+  const WS = c => c === 32 || c === 10 || c === 13 || c === 9 || c === 12 || c === 0;
+  const DELIM = '()<>[]{}/%';
+  const push = (tok, st) => { if (cont.length) cont[cont.length - 1].items.push(tok); else { if (!stack.length) argStart = st; stack.push(tok); } };
+  while (i < n) {
+    const c = s.charCodeAt(i);
+    if (WS(c)) { i++; continue; }
+    const ch = s[i], st = i;
+    if (ch === '%') { while (i < n && s[i] !== '\n' && s[i] !== '\r') i++; continue; }
+    if (ch === '(') {
+      let depth = 1; i++; const b = [];
+      while (i < n && depth > 0) {
+        const x = s[i];
+        if (x === '\\') {
+          i++; const y = s[i];
+          const E = { n: 10, r: 13, t: 9, b: 8, f: 12, '(': 40, ')': 41, '\\': 92 };
+          if (E[y] !== undefined) { b.push(E[y]); i++; }
+          else if (/[0-7]/.test(y)) { let o = ''; while (o.length < 3 && /[0-7]/.test(s[i])) { o += s[i]; i++; } b.push(parseInt(o, 8) & 255); }
+          else if (y === '\r') { i++; if (s[i] === '\n') i++; }
+          else if (y === '\n') i++;
+          else { b.push(s.charCodeAt(i)); i++; }
+          continue;
+        }
+        if (x === '(') depth++;
+        else if (x === ')') { depth--; if (!depth) { i++; break; } }
+        b.push(s.charCodeAt(i)); i++;
+      }
+      push({ t: 's', b }, st); continue;
+    }
+    if (ch === '<' && s[i + 1] === '<') { cont.push({ items: [], start: i }); i += 2; continue; }
+    if (ch === '>' && s[i + 1] === '>') { const d = cont.pop(); i += 2; push({ t: 'd' }, d ? d.start : st); continue; }
+    if (ch === '<') {
+      const j = s.indexOf('>', i); let h = s.slice(i + 1, j < 0 ? n : j).replace(/[^0-9a-fA-F]/g, '');
+      if (h.length % 2) h += '0';
+      const b = []; for (let k = 0; k < h.length; k += 2) b.push(parseInt(h.substr(k, 2), 16));
+      i = j < 0 ? n : j + 1; push({ t: 's', b }, st); continue;
+    }
+    if (ch === '[') { cont.push({ items: [], start: i }); i++; continue; }
+    if (ch === ']') { const a = cont.pop(); i++; push({ t: 'a', v: a ? a.items : [] }, a ? a.start : st); continue; }
+    if (ch === '/') { let j = i + 1; while (j < n && !WS(s.charCodeAt(j)) && !DELIM.includes(s[j])) j++; push({ t: 'n', v: s.slice(i + 1, j) }, st); i = j; continue; }
+    let j = i; while (j < n && !WS(s.charCodeAt(j)) && !DELIM.includes(s[j])) j++;
+    if (j === i) { i++; continue; }
+    const w = s.slice(i, j); i = j;
+    if (/^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(w)) { push({ t: 'num', v: parseFloat(w) }, st); continue; }
+    if (w === 'true' || w === 'false' || w === 'null') { push({ t: 'k', v: w }, st); continue; }
+    if (cont.length) continue;
+    ops.push({ op: w, args: stack, start: stack.length ? argStart : st, end: j });
+    stack = [];
+    if (w === 'ID') {
+      const re = /\sEI(?=\s|$)/g; re.lastIndex = i; const m = re.exec(s);
+      i = m ? m.index + 3 : n;
+    }
+  }
+  return ops;
+}
+const MUL = (a, b) => [a[0] * b[0] + a[1] * b[2], a[0] * b[1] + a[1] * b[3], a[2] * b[0] + a[3] * b[2], a[2] * b[1] + a[3] * b[3], a[4] * b[0] + a[5] * b[2] + b[4], a[4] * b[1] + a[5] * b[3] + b[5]];
+const fmtN = v => (Math.round(v * 1000) / 1000).toString();
+const FALLBACK_CH = { '’': "'", '‘': "'", '“': '"', '”': '"', '–': '-', '—': '-', '•': '-', ' ': ' ', "'": '’', '"': '”', '-': '–' };
+
+async function patchPdf(buf, oldText, newText, srcLines) {
+  await needPdfLib();
+  const { PDFDocument, PDFName, PDFArray, PDFDict, PDFRef, PDFNumber, PDFRawStream, decodePDFRawStream, StandardFonts } = window.PDFLib;
+  let doc;
+  try { doc = await PDFDocument.load(buf.slice(0), { updateMetadata: false }); }
+  catch (e) { throw new Error(/encrypt/i.test(String(e && e.message)) ? 'This PDF is password-protected. Save an unprotected copy and upload that.' : 'This PDF could not be opened for editing.'); }
+  const ctx = doc.context;
+  const L = o => (o instanceof PDFRef ? ctx.lookup(o) : o);
+  const get = (d, k) => (d && typeof d.get === 'function' ? L(d.get(PDFName.of(k))) : undefined);
+  const nm = o => { o = L(o); return o instanceof PDFName ? o.decodeText() : null; };
+  const num = o => { o = L(o); return o instanceof PDFNumber ? o.asNumber() : 0; };
+  const decode = st => latin1(st instanceof PDFRawStream ? decodePDFRawStream(st).decode() : st.getContents());
+
+  const fontCache = new Map();
+  function buildFont(fd) {
+    const sub = nm(get(fd, 'Subtype'));
+    const f = { twoByte: sub === 'Type0', toUni: new Map(), widths: new Map(), dw: 520, ok: sub !== 'Type3', base: (nm(get(fd, 'BaseFont')) || '').replace(/^[A-Z]{6}\+/, '') };
+    const enc = get(fd, 'Encoding');
+    if (f.twoByte) {
+      const e = nm(enc);
+      if (e !== 'Identity-H' && e !== 'Identity-V') f.ok = false;
+      const desc = get(fd, 'DescendantFonts'), cid = desc instanceof PDFArray ? L(desc.get(0)) : null;
+      f.dw = cid && get(cid, 'DW') ? num(get(cid, 'DW')) : 1000;
+      const W = cid && get(cid, 'W');
+      if (W instanceof PDFArray) {
+        const arr = W.asArray().map(L);
+        for (let i = 0; i < arr.length;) {
+          const c = num(arr[i]), nx = arr[i + 1];
+          if (nx instanceof PDFArray) { nx.asArray().forEach((w, k) => f.widths.set(c + k, num(w))); i += 2; }
+          else { const c2 = num(nx), w = num(arr[i + 2]); for (let k = c; k <= c2 && k - c < 65536; k++) f.widths.set(k, w); i += 3; }
+        }
+      }
+    } else {
+      const fc = num(get(fd, 'FirstChar')), ws = get(fd, 'Widths');
+      if (ws instanceof PDFArray) ws.asArray().forEach((w, k) => f.widths.set(fc + k, num(w)));
+      const fdesc = get(fd, 'FontDescriptor'), mw = fdesc && get(fdesc, 'MissingWidth');
+      if (ws) f.dw = mw ? num(mw) : 0;
+      let base = 'WinAnsiEncoding', diffs = null;
+      if (enc instanceof PDFDict) { base = nm(get(enc, 'BaseEncoding')) || 'StandardEncoding'; diffs = get(enc, 'Differences'); }
+      else if (nm(enc)) base = nm(enc);
+      for (let c = 32; c < 256; c++) {
+        let u = WIN_EXTRA[c] ? String.fromCharCode(WIN_EXTRA[c]) : c < 127 || c > 159 ? String.fromCharCode(c) : '';
+        if (base === 'StandardEncoding') { if (c === 39) u = '’'; else if (c === 96) u = '‘'; else if (c > 126) u = ''; }
+        if (base === 'MacRomanEncoding' && c > 126) u = '';
+        if (u) f.toUni.set(c, u);
+      }
+      if (diffs instanceof PDFArray) {
+        let code = 0;
+        diffs.asArray().map(L).forEach(o => {
+          if (o instanceof PDFNumber) code = o.asNumber();
+          else { const u = glyphUni(nm(o)); if (u !== null) f.toUni.set(code, u); else f.toUni.delete(code); code++; }
+        });
+      }
+    }
+    const tu = get(fd, 'ToUnicode');
+    let cmap = null;
+    if (tu && typeof tu.getContents === 'function') { try { cmap = parseCMap(decode(tu)); } catch (e) {} }
+    if (cmap && cmap.size) { f.toUni = cmap; }
+    else if (f.twoByte) f.ok = false;
+    f.fromUni = new Map();
+    f.toUni.forEach((u, c) => { if (u && !f.fromUni.has(u)) f.fromUni.set(u, c); });
+    f.space = f.fromUni.get(' ');
+    f.w = c => (f.widths.has(c) ? f.widths.get(c) : f.dw);
+    return f;
+  }
+  function fontFor(res, name) {
+    const fonts = get(res, 'Font'), ref = fonts && fonts.get(PDFName.of(name));
+    if (!ref) return null;
+    const key = ref instanceof PDFRef ? ref.toString() : ref;
+    if (!fontCache.has(key)) { try { fontCache.set(key, buildFont(L(ref))); } catch (e) { fontCache.set(key, null); } }
+    return fontCache.get(key);
+  }
+  /* Last resort when the embedded subset lacks a letter: the closest standard PDF font */
+  const stdCache = new Map(), WIN_REV = new Map();
+  for (let c = 32; c < 256; c++) { const u = WIN_EXTRA[c] ? String.fromCharCode(WIN_EXTRA[c]) : c < 127 || c > 159 ? String.fromCharCode(c) : ''; if (u && !WIN_REV.has(u)) WIN_REV.set(u, c); }
+  async function stdFont(base) {
+    const b = base || '';
+    const fam = /times|georgia|garamond|cambria|serif|book|minion|palatino|caslon/i.test(b) && !/sans/i.test(b) ? 'Times' : /courier|mono|consol/i.test(b) ? 'Courier' : 'Helvetica';
+    const bold = /bold|black|heavy|semibold|demi/i.test(b), it = /italic|oblique/i.test(b);
+    const key = { Times: ['TimesRoman', 'TimesRomanBold', 'TimesRomanItalic', 'TimesRomanBoldItalic'], Helvetica: ['Helvetica', 'HelveticaBold', 'HelveticaOblique', 'HelveticaBoldOblique'], Courier: ['Courier', 'CourierBold', 'CourierOblique', 'CourierBoldOblique'] }[fam][(bold ? 1 : 0) + (it ? 2 : 0)];
+    if (!stdCache.has(key)) {
+      const pf = await doc.embedFont(StandardFonts[key]);
+      const widths = new Map();
+      WIN_REV.forEach((c, u) => { try { widths.set(c, pf.widthOfTextAtSize(u, 1000)); } catch (e) {} });
+      const fromUni = new Map(); WIN_REV.forEach((c, u) => { if (widths.has(c)) fromUni.set(u, c); });
+      stdCache.set(key, { name: 'PCV' + key, ref: pf.ref, f: { twoByte: false, fromUni, space: 32, ok: true, base: key, w: c => widths.get(c) || 500 } });
+    }
+    return stdCache.get(key);
+  }
+
+  const pages = doc.getPages();
+  const units = [], recsByPage = [];
+  pages.forEach((page, pi) => {
+    const recs = [];
+    recsByPage.push(recs);
+    let res = null, nd = page.node;
+    while (nd && !res) { res = get(nd, 'Resources'); nd = get(nd, 'Parent'); }
+    const contents = page.node.get(PDFName.of('Contents'));
+    const refs = contents instanceof PDFRef ? (L(contents) instanceof PDFArray ? L(contents).asArray() : [contents]) : contents instanceof PDFArray ? contents.asArray() : [];
+    let grp = 0;
+    const run = (streamRefs, resources, ctm0, depth) => {
+      const gs = { ctm: ctm0 }, saved = [];
+      const ts = { font: null, fname: null, Tfs: 0, Tc: 0, Tw: 0, Th: 1, TL: 0 };
+      let Tm = [1, 0, 0, 1, 0, 0], Tlm = Tm.slice();
+      const newLine = () => { Tlm = MUL([1, 0, 0, 1, 0, -ts.TL], Tlm); Tm = Tlm.slice(); grp++; };
+      for (const ref of streamRefs) {
+        if (!(ref instanceof PDFRef)) continue;
+        const so = L(ref);
+        if (!so || typeof so.getContents !== 'function') continue;
+        let str;
+        try { str = decode(so); } catch (e) { continue; }
+        const unit = { ref, stream: so, str, ops: lexContent(str), page: pi };
+        const ui = units.push(unit) - 1;
+        const show = (oi, els) => {
+          const f = ts.font, step = f && f.twoByte ? 2 : 1;
+          els.forEach((el, ei) => {
+            if (el.t === 'num') { Tm = MUL([1, 0, 0, 1, -el.v / 1000 * ts.Tfs * ts.Th, 0], Tm); return; }
+            if (el.t !== 's') return;
+            const b = el.b;
+            for (let k = 0, ci = 0; k + step <= b.length; k += step, ci++) {
+              const code = step === 2 ? (b[k] << 8) | b[k + 1] : b[k];
+              const M = MUL(Tm, gs.ctm);
+              const w = f ? f.w(code) : 500;
+              Tm = MUL([1, 0, 0, 1, (w / 1000 * ts.Tfs + ts.Tc + (step === 1 && code === 32 ? ts.Tw : 0)) * ts.Th, 0], Tm);
+              const M2 = MUL(Tm, gs.ctm);
+              recs.push({ u: ui, op: oi, el: ei, ci, code, uni: f && f.ok ? (f.toUni.get(code) || '').normalize('NFKC') : '', x0: M[4], x1: M2[4], y: M[5], size: Math.abs(ts.Tfs * Math.hypot(M[2], M[3])) || 10, sc: Math.hypot(M[0], M[1]), grp, font: f, fname: ts.fname, Tfs: ts.Tfs, Th: ts.Th, Tc: ts.Tc, res: resources });
+            }
+          });
+        };
+        unit.ops.forEach((o, oi) => {
+          const a = o.args, v = k => (a[k] && typeof a[k].v === 'number' ? a[k].v : 0);
+          switch (o.op) {
+            case 'q': saved.push(gs.ctm.slice()); break;
+            case 'Q': if (saved.length) gs.ctm = saved.pop(); break;
+            case 'cm': gs.ctm = MUL([v(0), v(1), v(2), v(3), v(4), v(5)], gs.ctm); break;
+            case 'BT': Tm = [1, 0, 0, 1, 0, 0]; Tlm = Tm.slice(); grp++; break;
+            case 'Tf': ts.fname = a[0] && a[0].v; ts.Tfs = v(1); ts.font = fontFor(resources, ts.fname); break;
+            case 'Td': Tlm = MUL([1, 0, 0, 1, v(0), v(1)], Tlm); Tm = Tlm.slice(); grp++; break;
+            case 'TD': ts.TL = -v(1); Tlm = MUL([1, 0, 0, 1, v(0), v(1)], Tlm); Tm = Tlm.slice(); grp++; break;
+            case 'Tm': Tlm = [v(0), v(1), v(2), v(3), v(4), v(5)]; Tm = Tlm.slice(); grp++; break;
+            case 'T*': newLine(); break;
+            case 'TL': ts.TL = v(0); break;
+            case 'Tc': ts.Tc = v(0); break;
+            case 'Tw': ts.Tw = v(0); break;
+            case 'Tz': ts.Th = v(0) / 100; break;
+            case "'": newLine(); show(oi, [a[a.length - 1]]); break;
+            case '"': ts.Tw = v(0); ts.Tc = v(1); newLine(); show(oi, [a[a.length - 1]]); break;
+            case 'Tj': show(oi, [a[0]]); break;
+            case 'TJ': show(oi, a[0] && a[0].t === 'a' ? a[0].v : []); break;
+            case 'Do': {
+              if (depth >= 3 || !a[0]) break;
+              const xo = get(resources, 'XObject'), xr = xo && xo.get(PDFName.of(a[0].v)), x = L(xr);
+              if (x && x.dict && nm(get(x.dict, 'Subtype')) === 'Form') {
+                const mtx = get(x.dict, 'Matrix');
+                const Mx = mtx instanceof PDFArray ? mtx.asArray().map(num) : [1, 0, 0, 1, 0, 0];
+                run([xr], get(x.dict, 'Resources') || resources, MUL(Mx, gs.ctm), depth + 1);
+              }
+              break;
+            }
+          }
+        });
+      }
+    };
+    run(refs, res, [1, 0, 0, 1, 0, 0], 0);
+  });
+
+  const oldL = oldText.split('\n'), newL = newText.split('\n');
+  const ops = lineDiff(oldL, newL);
+  const failed = [];
+  let applied = 0;
+  const touched = new Set();
+  const nsCount = s => s.normalize('NFKC').replace(/\s/g, '').length;
+
+  /* Rewrites one line from its first changed word to the end of that line segment.
+     Each new character takes the font, size and style of the old text it lines up with. */
+  const styleOf = b => ({ bold: /bold|black|heavy|semibold|demi/i.test(b || ''), it: /italic|oblique/i.test(b || '') });
+  const famOf = b => (b || '').split(/[-,]/)[0].toLowerCase();
+  function fontsOf(res) {
+    const fonts = get(res, 'Font');
+    return fonts ? fonts.keys().map(k => ({ name: k.decodeText(), f: fontFor(res, k.decodeText()) })).filter(c => c.f && c.f.ok) : [];
+  }
+  function encChar(f, ch) {
+    if (/\s/.test(ch)) return f.space !== undefined ? { code: f.space } : { num: -250 };
+    let c = f.fromUni.get(ch);
+    if (c === undefined && FALLBACK_CH[ch]) c = f.fromUni.get(FALLBACK_CH[ch]);
+    if (c === undefined && ch.normalize('NFKC') !== ch) c = f.fromUni.get(ch.normalize('NFKC'));
+    return c === undefined ? null : { code: c };
+  }
+  async function editLine(line, newText, label) {
+    if (!line || !line.page) return false;
+    const recs = recsByPage[line.page - 1] || [];
+    const cand = recs.filter(r => Math.abs(r.y - line.y) <= Math.max(1.5, r.size * 0.35));
+    const nsIdx = [];
+    cand.forEach((r, ri) => { for (const ch of r.uni) if (!/\s/.test(ch)) nsIdx.push(ri); });
+    const nsStr = cand.map(r => r.uni.replace(/\s/g, '')).join('');
+    const oldT = line.text, lineNs = oldT.normalize('NFKC').replace(/\s/g, '');
+    let base = nsStr === lineNs ? 0 : -1;
+    if (base < 0) { const k = nsStr.indexOf(lineNs); if (k >= 0 && nsStr.indexOf(lineNs, k + 1) < 0) base = k; }
+    if (base < 0 || !lineNs) { failed.push(`${label}: couldn't find this line's letters in the PDF (its font hides them)`); return false; }
+    const lineStart = nsIdx[base], lineEnd = nsIdx[base + lineNs.length - 1];
+    // which old glyph each old character came from
+    const oSrc = []; let k = base, lastSrc = null;
+    for (let i = 0; i < oldT.length; i++) {
+      const n = oldT[i].normalize('NFKC').replace(/\s/g, '').length;
+      if (n) { lastSrc = cand[nsIdx[k]]; k += n; oSrc.push(lastSrc); } else oSrc.push(null);
+    }
+    for (let i = 0, prev = null; i < oSrc.length; i++) { if (oSrc[i]) prev = oSrc[i]; else oSrc[i] = prev; }
+    for (let i = oSrc.length - 1, next = null; i >= 0; i--) { if (oSrc[i] && !/\s/.test(oldT[i])) next = oSrc[i]; if (!oSrc[i]) oSrc[i] = next; }
+    if (!newText.trim()) {
+      for (let j = lineStart; j <= lineEnd; j++) { cand[j].del = true; touched.add(cand[j].u + ':' + cand[j].op); }
+      return true;
+    }
+    // align old and new words; new characters inherit the style of their neighbours
+    const a = tokens(oldT), b = tokens(newText), T = lcsTable(a, b), steps = [];
+    let i = 0, j = 0, pos = 0;
+    while (i < a.length || j < b.length) {
+      if (i < a.length && j < b.length && a[i] === b[j]) { steps.push({ t: 'eq', tok: a[i], at: pos }); pos += a[i].length; i++; j++; }
+      else if (j < b.length && (i >= a.length || T[i][j + 1] >= T[i + 1][j])) { steps.push({ t: 'ins', tok: b[j] }); j++; }
+      else { steps.push({ t: 'del', tok: a[i], at: pos }); pos += a[i].length; i++; }
+    }
+    let pre = 0;
+    for (const st of steps) { if (st.t !== 'eq') break; pre += st.tok.length; }
+    if (pre === oldT.length && pre === newText.length) return true;
+    // a replaced word takes the style of the word it replaces
+    const nSrc = [];
+    for (let x = 0; x < steps.length;) {
+      if (steps[x].t === 'eq') { for (let c = 0; c < steps[x].tok.length; c++) nSrc.push(oSrc[steps[x].at + c]); x++; continue; }
+      let y = x, hs = null;
+      while (y < steps.length && steps[y].t !== 'eq') {
+        const st = steps[y];
+        if (st.t === 'del' && !hs) for (let c = 0; c < st.tok.length; c++) if (!/\s/.test(oldT[st.at + c]) && oSrc[st.at + c]) { hs = oSrc[st.at + c]; break; }
+        y++;
+      }
+      for (let z = x; z < y; z++) if (steps[z].t === 'ins') for (let c = 0; c < steps[z].tok.length; c++) nSrc.push(hs);
+      x = y;
+    }
+    for (let x = 0, prev = null; x < nSrc.length; x++) { if (nSrc[x]) prev = nSrc[x]; else nSrc[x] = prev; }
+    for (let x = nSrc.length - 1, next = null; x >= 0; x--) { if (nSrc[x]) next = nSrc[x]; else nSrc[x] = next; }
+    let q = pre; while (q < oldT.length && /\s/.test(oldT[q])) q++;
+    let anchor, where, ia;
+    if (q < oldT.length) { anchor = oSrc[q]; where = 'before'; ia = cand.indexOf(anchor); }
+    else { anchor = cand[lineEnd]; where = 'after'; ia = lineEnd + 1; }
+    if (!anchor || !anchor.font) { failed.push(`${label}: couldn't place the change`); return false; }
+    // stop at a big gap (e.g. right-aligned dates) so that part keeps its place
+    let segEnd = lineEnd;
+    for (let x = Math.max(ia, lineStart); x < lineEnd; x++) {
+      const c1 = cand[x], c2 = cand[x + 1];
+      if (c2.x0 - c1.x1 > 2.5 * c1.size || c2.x0 < c1.x0 - 1) { segEnd = x; break; }
+    }
+    let tail = cand.slice(segEnd + 1, lineEnd + 1);
+    let emit = newText.slice(pre);
+    const emitSrcAll = nSrc.slice(pre);
+    if (tail.length) {
+      const tailNs = tail.map(r => r.uni).join('').replace(/\s/g, '');
+      const emitNs = emit.normalize('NFKC').replace(/\s/g, '');
+      if (emitNs.endsWith(tailNs)) {
+        let drop = tailNs.length, e = emit.length;
+        while (e > 0 && drop > 0) { e--; drop -= emit[e].normalize('NFKC').replace(/\s/g, '').length; }
+        emit = emit.slice(0, e).replace(/\s+$/, '');
+      } else { tail = []; segEnd = lineEnd; }
+    }
+    const delSet = ia <= segEnd ? cand.slice(ia, segEnd + 1) : [];
+    const emitSrc = emitSrcAll.slice(0, emit.length);
+    // choose a font for every character: its own, then a sibling of the same family and style, then the closest standard font
+    const runs = [];
+    const pageFonts = fontsOf(anchor.res);
+    for (let x = 0; x < emit.length; x++) {
+      const ch = emit[x], sr = emitSrc[x] || anchor;
+      const own = sr.res === anchor.res && sr.font ? { name: sr.fname, f: sr.font, size: sr.Tfs } : { name: anchor.fname, f: anchor.font, size: anchor.Tfs };
+      let pick = own, it = encChar(own.f, ch);
+      if (!it) {
+        const st = styleOf(own.f.base);
+        const sib = pageFonts.find(c => c.f !== own.f && famOf(c.f.base) === famOf(own.f.base) && styleOf(c.f.base).bold === st.bold && styleOf(c.f.base).it === st.it && encChar(c.f, ch));
+        if (sib) { pick = { name: sib.name, f: sib.f, size: own.size }; it = encChar(sib.f, ch); }
+        else {
+          const sf = await stdFont(own.f.base), fonts2 = get(anchor.res, 'Font');
+          it = encChar(sf.f, ch);
+          if (!it || !fonts2) { failed.push(`${label}: the PDF can't show the character "${ch}"`); return false; }
+          fonts2.set(PDFName.of(sf.name), sf.ref);
+          pick = { name: sf.name, f: sf.f, size: own.size };
+          if (!/\s/.test(ch)) usedStdChars.add(ch);
+        }
+      }
+      const lastRun = runs[runs.length - 1];
+      if (/\s/.test(ch) && lastRun) { const sp = encChar(lastRun.f, ch); lastRun.items.push(sp); continue; }
+      if (lastRun && lastRun.f === pick.f && lastRun.name === pick.name && lastRun.size === pick.size) lastRun.items.push(it);
+      else runs.push({ name: pick.name, f: pick.f, size: pick.size, twoByte: pick.f.twoByte, items: [it] });
+    }
+    const start = where === 'before' ? anchor.x0 : anchor.x1;
+    let newW = 0;
+    runs.forEach(r => r.items.forEach(it => { newW += (it.num !== undefined ? -it.num / 1000 * r.size : r.f.w(it.code) / 1000 * r.size + anchor.Tc) * anchor.Th * anchor.sc; }));
+    const lineSet = new Set(cand.slice(lineStart, lineEnd + 1));
+    const others = cand.filter(r => (!lineSet.has(r) || tail.includes(r)) && r.x0 > start + 0.5 && r.uni.trim());
+    const limit = others.length ? Math.min(...others.map(r => r.x0)) - anchor.size * 0.3 : pageRight(line.page);
+    let s = 1;
+    if (newW > 0 && start + newW > limit) {
+      s = (limit - start) / newW;
+      if (s < 0.6) { s = 0.6; failed.push(`${label}: much longer than the old line, so it may run into the text beside it. Shorten it`); }
+    }
+    let comp = null;
+    if (tail.length && tail[0].grp === anchor.grp) {
+      const compDev = tail[0].x0 - start - newW * s;
+      comp = -(compDev / anchor.sc) * 1000 / (anchor.Tfs * anchor.Th);
+    }
+    delSet.forEach(r => { r.del = true; touched.add(r.u + ':' + r.op); });
+    if (runs.length || comp !== null) {
+      (anchor[where] = anchor[where] || []).push({ runs, tz: s < 1 ? anchor.Th * 100 * s : null, comp });
+      touched.add(anchor.u + ':' + anchor.op);
+    }
+    return true;
+  }
+  const pageRight = p => pages[p - 1].getWidth() - 18;
+  let removed = 0;
+  const usedStdChars = new Set();
+
+  for (const o of ops) {
+    if (o.t === 'mod') {
+      const label = `"${newL[o.j].slice(0, 60)}${newL[o.j].length > 60 ? '…' : ''}"`;
+      if (await editLine(srcLines[o.i], newL[o.j], label)) applied++;
+    } else if (o.t === 'del') {
+      if (!oldL[o.i].trim()) continue;
+      if (await editLine(srcLines[o.i], '', `Removing "${oldL[o.i].slice(0, 50)}"`)) { applied++; removed++; }
+    } else if (o.t === 'ins' && newL[o.j].trim()) {
+      failed.push(`New line "${newL[o.j].slice(0, 60)}": a PDF can't take an extra line without moving everything below it. Add the words to an existing line, or add the line in your source file`);
+    }
+  }
+
+  // write the changed operators back into their streams
+  const byUnit = new Map();
+  touched.forEach(key => { const [u, op] = key.split(':').map(Number); if (!byUnit.has(u)) byUnit.set(u, new Set()); byUnit.get(u).add(op); });
+  const allRecs = recsByPage.flat();
+  byUnit.forEach((opSet, ui) => {
+    const unit = units[ui];
+    const recsOf = new Map();
+    allRecs.forEach(r => { if (r.u === ui && opSet.has(r.op)) { const key = r.op + ':' + r.el; if (!recsOf.has(key)) recsOf.set(key, []); recsOf.get(key).push(r); } });
+    const pieces = [];
+    [...opSet].sort((x, y) => unit.ops[x].start - unit.ops[y].start).forEach(oi => {
+      const o = unit.ops[oi];
+      const els = o.op === 'TJ' ? (o.args[0] && o.args[0].v) || [] : [o.args[o.args.length - 1]];
+      const recAt = ei => recsOf.get(oi + ':' + ei) || [];
+      let r0 = null;
+      for (let ei = 0; ei < els.length && !r0; ei++) if (recAt(ei).length) r0 = recAt(ei)[0];
+      if (!r0) return;
+      const tw = r0.font && r0.font.twoByte;
+      const segs = []; let cur = [];
+      const flush = () => { if (cur.length) { segs.push({ items: cur }); cur = []; } };
+      const emitIns = ins => { flush(); segs.push({ ins }); };
+      els.forEach((el, ei) => {
+        if (el.t === 'num') {
+          let prev = null;
+          for (let x = ei - 1; x >= 0 && !prev; x--) { const rr = recAt(x); if (rr.length) prev = rr[rr.length - 1]; }
+          if (prev && prev.del) return;
+          cur.push({ num: el.v }); return;
+        }
+        for (const r of recAt(ei)) {
+          (r.before || []).forEach(emitIns);
+          if (!r.del) cur.push({ code: r.code });
+          (r.after || []).forEach(emitIns);
+        }
+      });
+      flush();
+      const arr = (items, two) => {
+        let out = '', hex = '';
+        const end = () => { if (hex) { out += '<' + hex + '>'; hex = ''; } };
+        items.forEach(it => { if (it.num !== undefined) { end(); out += ' ' + fmtN(it.num) + ' '; } else hex += it.code.toString(16).padStart(two ? 4 : 2, '0'); });
+        end();
+        return '[' + out.trim() + '] TJ';
+      };
+      let txt = o.op === "'" ? 'T* ' : o.op === '"' ? `${fmtN(o.args[0].v)} Tw ${fmtN(o.args[1].v)} Tc T* ` : '';
+      txt += segs.map(sg => {
+        if (sg.items) return arr(sg.items, tw);
+        const { ins } = sg;
+        const parts = [];
+        let curName = r0.fname, curSize = r0.Tfs;
+        if (ins.tz !== null) parts.push(`${fmtN(ins.tz)} Tz`);
+        ins.runs.forEach(run => {
+          if (run.name !== curName || run.size !== curSize) { parts.push(`/${run.name} ${fmtN(run.size)} Tf`); curName = run.name; curSize = run.size; }
+          parts.push(arr(run.items, run.twoByte));
+        });
+        if (curName !== r0.fname || curSize !== r0.Tfs) parts.push(`/${r0.fname} ${fmtN(r0.Tfs)} Tf`);
+        if (ins.tz !== null) parts.push(`${fmtN(r0.Th * 100)} Tz`);
+        if (ins.comp !== null && Math.abs(ins.comp) > 0.5) parts.push(`[${fmtN(ins.comp)}] TJ`);
+        return parts.join(' ');
+      }).join(' ');
+      pieces.push({ s: o.start, e: o.end, txt: txt || '[] TJ' });
+    });
+    let out = '', i = 0;
+    pieces.forEach(p => { out += unit.str.slice(i, p.s) + p.txt; i = p.e; });
+    out += unit.str.slice(i);
+    const bytes = new Uint8Array(out.length);
+    for (let k = 0; k < out.length; k++) bytes[k] = out.charCodeAt(k) & 255;
+    const dictObj = {};
+    unit.stream.dict.entries().forEach(([k, v]) => { const key = k.decodeText(); if (!['Length', 'Filter', 'DecodeParms', 'DL'].includes(key)) dictObj[key] = v; });
+    ctx.assign(unit.ref, ctx.flateStream(bytes, dictObj));
+  });
+  const bytes = await doc.save();
+  // check the result the way an ATS would: extract the text again
+  let verified = null;
+  try {
+    const back = await readPdf(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
+    const have = new Set(back.lines.map(l => l.text.replace(/\s/g, '')));
+    const want = ops.filter(o => o.t === 'mod').map(o => newL[o.j].replace(/\s/g, ''));
+    verified = { ok: want.filter(w => have.has(w)).length, of: want.length };
+  } catch (e) {}
+  return { blob: new Blob([bytes], { type: 'application/pdf' }), applied, failed, verified, usedStd: [...usedStdChars], notes: removed ? [`${removed} removed line${removed > 1 ? 's leave' : ' leaves'} a blank gap, because a PDF can't move the lines below up. If a bullet was drawn as a shape rather than a character, it stays behind; rewrite the line instead of deleting it, or delete it in your source file.`] : [] };
 }
 
 /* Splits plain CV text into blocks for the rebuilt Word and PDF files */
@@ -1395,57 +2025,60 @@ async function buildPdf(blocks) {
   return new Blob([bytes], { type: 'application/pdf' });
 }
 
-function changeList(text) {
-  const out = [];
-  const lines = text.split('\n');
-  lines.forEach((l, i) => {
-    for (const e of planEdits(l)) {
-      const from = l.slice(e.s, e.e).trim(), to = e.rep.trim();
-      if (from === to) continue;
-      out.push(`Line ${i + 1}: "${from}" → ${to ? `"${to}"` : '(remove)'}`);
-    }
-  });
-  const terms = addTerms();
-  if (terms.length) out.push(`Skills line: add ${terms.join(', ')}`);
-  return out;
-}
 
 function renderDownloads() {
-  const p = prof(), cv = resumeEl.value;
-  const edited = SRC && cv !== SRC.text;
-  const rec = p.fmt === 'pdf' ? 'pdf' : 'docx';
+  const p = prof();
+  const kind = SRC && (SRC.type === 'docx' || SRC.type === 'pdf') ? SRC.type : null;
   $('dlTag').textContent = `${p.name}: upload ${FMT_TXT[p.fmt]}`;
-  const items = [];
-  if (SRC && SRC.type === 'docx') items.push({ id: 'orig-docx', b: 'Word, original layout', s: 'Your uploaded file with only the wording changed', primary: rec === 'docx' || p.fmt === 'either' });
-  items.push({ id: 'plain-docx', b: 'Word (.docx), clean layout', s: 'Single column, standard headings', primary: !(SRC && SRC.type === 'docx') && rec === 'docx' });
-  items.push({ id: 'plain-pdf', b: 'PDF, clean layout', s: 'Text-based, single column', primary: rec === 'pdf' && !(SRC && SRC.type === 'docx') });
-  items.push({ id: 'txt', b: 'Plain text (.txt)', s: 'For pasting into application forms' });
-  if (SRC && SRC.type === 'pdf') items.push({ id: 'changes', b: 'Change list (.txt)', s: 'Every edit to make in your original file' });
-  $('dlButtons').innerHTML = items.map(i => `<button class="btn${i.primary ? ' primary' : ''}" data-dl="${i.id}"><b>${esc(i.b)}</b><span>${esc(i.s)}</span></button>`).join('');
-  const notes = [];
-  if (SRC && SRC.type === 'docx') notes.push('The original-layout Word file keeps your fonts, spacing and design. Only the swaps, cuts, your “Replace with” text and any keywords you added go in.');
-  if (SRC && SRC.type === 'pdf') notes.push('A PDF can’t be safely edited in place: covering old words leaves them in the file, and the ATS still reads them. Take the clean-layout file, or download the change list and apply it in the Word or Google Docs file you made the PDF from. Upload that DOCX here for an original-layout download.');
-  if (edited && SRC.type === 'docx') notes.push('You’ve edited the text since uploading. Those edits go into the clean-layout downloads, not the original-layout file. To change wording in the original layout, use “Replace with” in the table above.');
-  if (!SRC) notes.push('Upload your DOCX to get it back with its own layout. Pasted text downloads in a clean, ATS-safe layout.');
-  $('dlNote').textContent = notes.join(' ');
+  const main = [], other = [];
+  if (kind === 'docx') main.push({ id: 'same-docx', b: 'Word, same format (.docx)', s: 'Your file with only the words and lines changed', primary: 1 });
+  if (kind === 'pdf') main.push({ id: 'same-pdf', b: 'PDF, same format (.pdf)', s: 'Your file with only the words and lines changed', primary: 1 });
+  (kind ? other : main).push(
+    { id: 'plain-docx', b: 'Word (.docx), new clean layout', s: 'Rebuilt single-column file' },
+    { id: 'plain-pdf', b: 'PDF, new clean layout', s: 'Rebuilt single-column file' });
+  other.push({ id: 'txt', b: 'Plain text (.txt)', s: 'For pasting into application forms' });
+  if (kind) other.push({ id: 'changes', b: 'Change list (.txt)', s: 'Every edit, to apply by hand' });
+  const btn = i => `<button class="btn${i.primary ? ' primary' : ''}" data-dl="${i.id}"><b>${esc(i.b)}</b><span>${esc(i.s)}</span></button>`;
+  $('dlButtons').innerHTML = main.map(btn).join('') + `<details class="more" style="grid-column:1/-1"><summary>Other formats</summary><div class="dl" style="margin-top:10px">${other.map(btn).join('')}</div></details>`;
+  $('dlNote').textContent = kind === 'docx'
+    ? 'Edit any word or line in the CV box, or use the fixes above. The download is your own Word file: fonts, spacing, bullets, tables and design stay exactly as they were; only the changed text is replaced. New lines copy the formatting of the line above them.'
+    : kind === 'pdf'
+    ? 'Edit any word or line in the CV box, or use the fixes above. The download is your own PDF: layout, fonts and design stay as they were; only the changed text is rewritten, in the PDF’s own font. A PDF can’t take extra lines, and its embedded font may lack some letters you type; anything that can’t be applied is listed after the download.'
+    : 'Upload your CV as DOCX or PDF to get it back in its own format with only the words changed. Pasted text downloads in a clean, ATS-safe layout.';
 }
 
 $('dlButtons').addEventListener('click', async e => {
   const btn = e.target.closest('[data-dl]'); if (!btn) return;
-  const kind = btn.dataset.dl, toast = $('dlToast'), name = baseName();
-  if (!resumeEl.value.trim()) { toast.textContent = 'Add a CV first.'; toast.classList.add('err'); return; }
+  const kind = btn.dataset.dl, toast = $('dlToast'), name = baseName(), cv = resumeEl.value;
+  $('dlIssues').innerHTML = '';
+  if (!cv.trim()) { toast.textContent = 'Add a CV first.'; toast.classList.add('err'); return; }
   btn.disabled = true; toast.classList.remove('err'); toast.textContent = 'Preparing the file…';
   try {
-    if (kind === 'orig-docx') {
-      const r = await patchDocx(SRC.buf);
-      await saveFile(`${name}_updated.docx`, r.blob, toast);
-      if (!toast.classList.contains('err')) toast.textContent += ` ${r.applied} change${r.applied === 1 ? '' : 's'} applied${r.skipped ? `, ${r.skipped} skipped because they cross a tab or line break` : ''}${r.kwWanted && !r.kwDone ? '. Couldn’t find a Skills line to add keywords to' : ''}.`;
-    } else if (kind === 'plain-docx') await saveFile(`${name}_ATS.docx`, await buildDocx(toBlocks(finalText(resumeEl.value))), toast);
-    else if (kind === 'plain-pdf') await saveFile(`${name}_ATS.pdf`, await buildPdf(toBlocks(finalText(resumeEl.value))), toast);
-    else if (kind === 'txt') await saveFile(`${name}_clean.txt`, new Blob([finalText(resumeEl.value)], { type: 'text/plain' }), toast);
+    if (kind === 'same-docx' || kind === 'same-pdf') {
+      const want = desiredOriginal(cv);
+      const r = kind === 'same-docx' ? await patchDocx(SRC.buf, SRC.text, want) : await patchPdf(SRC.buf, SRC.text, want, SRC.lines);
+      if (!r.applied && !r.failed.length) { toast.textContent = 'Nothing has changed yet. Edit the CV text or keep some fixes switched on, then download.'; btn.disabled = false; return; }
+      await saveFile(`${name}_updated.${kind === 'same-docx' ? 'docx' : 'pdf'}`, r.blob, toast);
+      if (!toast.classList.contains('err')) {
+        toast.textContent += ` ${r.applied} line${r.applied === 1 ? '' : 's'} changed, formatting untouched.`;
+        if (r.verified && r.verified.of) toast.textContent += ` Re-read check: ${r.verified.ok} of ${r.verified.of} edited lines read back exactly as intended.`;
+        if (r.usedStd && r.usedStd.length) toast.textContent += ` Your PDF's embedded font didn't include ${r.usedStd.map(c => `"${c}"`).join(', ')}, so ${r.usedStd.length === 1 ? 'that letter uses' : 'those letters use'} the closest standard font.`;
+      }
+      let issues = '';
+      if (r.failed.length) issues += `<p class="note"><b>Not applied (${r.failed.length})</b></p><ul class="tips">${r.failed.map(f => `<li>${esc(f)}</li>`).join('')}</ul>`;
+      if (r.notes && r.notes.length) issues += `<p class="note" style="margin-top:8px"><b>Check</b></p><ul class="tips">${r.notes.map(f => `<li>${esc(f)}</li>`).join('')}</ul>`;
+      $('dlIssues').innerHTML = issues;
+    } else if (kind === 'plain-docx') await saveFile(`${name}_ATS.docx`, await buildDocx(toBlocks(finalText(cv))), toast);
+    else if (kind === 'plain-pdf') await saveFile(`${name}_ATS.pdf`, await buildPdf(toBlocks(finalText(cv))), toast);
+    else if (kind === 'txt') await saveFile(`${name}_clean.txt`, new Blob([outText(cv)], { type: 'text/plain' }), toast);
     else if (kind === 'changes') {
-      const list = changeList(resumeEl.value);
-      await saveFile(`${name}_changes.txt`, new Blob([(list.length ? list.join('\n') : 'No changes.') + '\n'], { type: 'text/plain' }), toast);
+      const oldL = SRC.text.split('\n'), newL = desiredOriginal(cv).split('\n'), list = [];
+      lineDiff(oldL, newL).forEach(o => {
+        if (o.t === 'mod') list.push(`Change:  ${oldL[o.i]}\n     to:  ${newL[o.j]}`);
+        else if (o.t === 'del' && oldL[o.i].trim()) list.push(`Delete:  ${oldL[o.i]}`);
+        else if (o.t === 'ins' && newL[o.j].trim()) list.push(`Add after "${(oldL[o.after] || 'the top').slice(0, 50)}":  ${newL[o.j]}`);
+      });
+      await saveFile(`${name}_changes.txt`, new Blob([(list.length ? list.join('\n\n') : 'No changes.') + '\n'], { type: 'text/plain' }), toast);
     }
   } catch (err) { toast.textContent = `Couldn't build the file: ${err.message}`; toast.classList.add('err'); }
   btn.disabled = false;
