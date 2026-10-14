@@ -1,0 +1,928 @@
+<title>Plain CV Scanner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout: an editor's desk. Manuscript inputs on the left, the report on the right, the red-pen proof and clean copy full width below. */
+:root {
+  --paper: #f3f5f8;
+  --sheet: #ffffff;
+  --ink: #1a2130;
+  --muted: #5b6577;
+  --rule: #d8dde6;
+  --accent: #1f4fd1;
+  --accent-soft: #e6ecfb;
+  --pen: #c42f27;
+  --pen-soft: #fbe9e7;
+  --ok: #1b7546;
+  --ok-soft: #e3f3ea;
+  --warn: #9a5c00;
+  --warn-soft: #fbf0dc;
+  --hl: #fff0a3;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --f-doc: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f131a; --sheet: #161b24; --ink: #e5e9f0; --muted: #98a2b5; --rule: #2a3242;
+    --accent: #84a2ff; --accent-soft: #1c2742; --pen: #ff7b70; --pen-soft: #3a1d1c;
+    --ok: #55c78e; --ok-soft: #15301f; --warn: #f0b552; --warn-soft: #33270f; --hl: #4d4520;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f131a; --sheet: #161b24; --ink: #e5e9f0; --muted: #98a2b5; --rule: #2a3242;
+  --accent: #84a2ff; --accent-soft: #1c2742; --pen: #ff7b70; --pen-soft: #3a1d1c;
+  --ok: #55c78e; --ok-soft: #15301f; --warn: #f0b552; --warn-soft: #33270f; --hl: #4d4520;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding-block: 28px 18px; border-bottom: 1px solid var(--rule); }
+h1 { font-family: var(--f-display); font-size: clamp(28px, 4vw, 40px); line-height: 1.05; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h1 .strike { text-decoration: line-through; text-decoration-color: var(--pen); text-decoration-thickness: 3px; color: var(--muted); font-weight: 600; }
+.lede { margin: 6px 0 0; color: var(--muted); max-width: 60ch; }
+.tabs { display: flex; gap: 4px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 4px; }
+.tabs button { font: 500 14px var(--f-body); border: 0; background: transparent; color: var(--muted); padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--accent); color: var(--sheet); }
+.tabs button:focus-visible, .btn:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h2 { font-family: var(--f-display); font-size: 20px; margin: 0; letter-spacing: -0.005em; }
+h3 { font: 600 13px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0; }
+.panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 18px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 20px; }
+@media (max-width: 900px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.row.between { justify-content: space-between; }
+label.lbl { font: 500 13px var(--f-body); color: var(--muted); display: block; margin-bottom: 4px; }
+textarea, input[type="text"] { width: 100%; font: 14px/1.5 var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; }
+textarea { resize: vertical; }
+textarea.resume { min-height: 340px; font-family: var(--f-mono); font-size: 13px; }
+textarea.jd { min-height: 170px; font-size: 13.5px; }
+.btn { font: 500 13.5px var(--f-body); border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); padding: 7px 13px; border-radius: 6px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--sheet); }
+.btn.pen { color: var(--pen); border-color: var(--pen); }
+.btn.small { padding: 4px 9px; font-size: 12.5px; }
+.note { font-size: 13px; color: var(--muted); }
+.example-tag { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; background: var(--warn-soft); color: var(--warn); padding: 3px 8px; border-radius: 4px; }
+.file-label { position: relative; overflow: hidden; }
+.file-label input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* Score */
+.score { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
+.ring { width: 128px; height: 128px; }
+.ring text { font-family: var(--f-display); fill: var(--ink); }
+.ring .sub { font-family: var(--f-mono); font-size: 10px; fill: var(--muted); letter-spacing: 0.05em; }
+.bars { display: grid; gap: 8px; min-width: 0; }
+.bar { display: grid; grid-template-columns: 9.5em minmax(0, 1fr) 3em; gap: 8px; align-items: center; font-size: 13px; }
+.bar .track { height: 6px; background: var(--paper); border-radius: 3px; overflow: hidden; border: 1px solid var(--rule); }
+.bar .fill { height: 100%; background: var(--accent); }
+.bar .val { font: 500 12.5px var(--f-mono); text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 460px) { .score { grid-template-columns: minmax(0, 1fr); justify-items: center; } .bars { width: 100%; } }
+
+/* Checks */
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.checks li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; padding: 8px 0; border-top: 1px solid var(--rule); font-size: 13.5px; }
+.checks li:first-child { border-top: 0; }
+.checks b { font-weight: 600; }
+.checks .d { color: var(--muted); display: block; }
+.dot { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font: 600 11px var(--f-mono); margin-top: 1px; }
+.dot.ok { background: var(--ok-soft); color: var(--ok); }
+.dot.warn { background: var(--warn-soft); color: var(--warn); }
+.dot.bad { background: var(--pen-soft); color: var(--pen); }
+
+/* Keywords */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12.5px var(--f-mono); padding: 3px 9px; border-radius: 4px; border: 1px solid var(--rule); }
+.chip.hit { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.chip.miss { background: var(--pen-soft); color: var(--pen); border-color: transparent; }
+.chip small { opacity: 0.75; margin-left: 4px; }
+
+/* Red pen proof */
+.proof { font-family: var(--f-doc); font-size: 15px; line-height: 1.75; white-space: pre-wrap; word-wrap: break-word; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; max-height: 560px; overflow: auto; }
+.proof del { color: var(--pen); text-decoration-thickness: 1.5px; }
+.proof ins { text-decoration: none; font: italic 600 0.82em var(--f-body); color: var(--accent); vertical-align: 0.45em; margin-left: 2px; }
+.proof mark { background: var(--hl); color: inherit; border-bottom: 2px solid var(--warn); padding: 0 1px; cursor: help; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.legend del { color: var(--pen); }
+.legend ins { text-decoration: none; color: var(--accent); font-style: italic; font-weight: 600; }
+.legend mark { background: var(--hl); color: var(--ink); border-bottom: 2px solid var(--warn); }
+.tbl-wrap { overflow-x: auto; }
+table.slop { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.slop th { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); }
+table.slop td { padding: 7px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.slop td.n { font-family: var(--f-mono); text-align: right; font-variant-numeric: tabular-nums; }
+.kind { font: 500 11px var(--f-mono); padding: 2px 6px; border-radius: 3px; white-space: nowrap; }
+.kind.swap { background: var(--accent-soft); color: var(--accent); }
+.kind.cut { background: var(--pen-soft); color: var(--pen); }
+.kind.flag { background: var(--warn-soft); color: var(--warn); }
+pre.clean { font-family: var(--f-mono); font-size: 13px; white-space: pre-wrap; word-wrap: break-word; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; margin: 0; max-height: 520px; overflow: auto; }
+.toast { font-size: 13px; color: var(--ok); min-height: 1.2em; }
+
+/* Builder */
+.bgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 20px; align-items: start; }
+@media (max-width: 960px) { .bgrid { grid-template-columns: minmax(0, 1fr); } }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.fields .full { grid-column: 1 / -1; }
+@media (max-width: 520px) { .fields { grid-template-columns: minmax(0, 1fr); } }
+fieldset { border: 1px solid var(--rule); border-radius: 6px; padding: 12px; margin: 0; display: grid; gap: 10px; min-width: 0; }
+legend.sec { font: 600 12px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 0 6px; }
+.entry { border-top: 1px dashed var(--rule); padding-top: 10px; display: grid; gap: 10px; }
+.entry:first-of-type { border-top: 0; padding-top: 0; }
+.cv { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: clamp(18px, 4vw, 40px); font-family: var(--f-doc); font-size: 14.5px; line-height: 1.5; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.cv .nm { font: 600 24px var(--f-doc); margin: 0; }
+.cv .tt { margin: 2px 0 4px; font-size: 15px; }
+.cv .ct { font-size: 13px; color: var(--muted); word-break: break-word; }
+.cv h4 { font: 600 13px var(--f-doc); text-transform: uppercase; letter-spacing: 0.08em; margin: 18px 0 6px; padding-bottom: 3px; border-bottom: 1px solid var(--ink); }
+.cv p { margin: 0 0 4px; }
+.cv ul { margin: 2px 0 10px; padding-left: 18px; }
+.cv li { margin-bottom: 2px; }
+.cv .jh { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-weight: 600; }
+.cv .jh span:last-child { font-weight: 400; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.cv mark { background: var(--hl); color: inherit; border-bottom: 2px solid var(--warn); }
+.slopcount { font: 500 13px var(--f-mono); }
+.slopcount.zero { color: var(--ok); }
+.slopcount.some { color: var(--pen); }
+@media (prefers-reduced-motion: no-preference) { .bar .fill { transition: width 0.4s ease; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Plain CV <span class="strike">Spearheaded</span> Scanner</h1>
+      <p class="lede">Score a CV the way an ATS reads it, match it against a job description, and strike out the AI-sounding filler that recruiters skim past.</p>
+    </div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-scan" aria-selected="true" aria-controls="view-scan">Scan a CV</button>
+      <button role="tab" id="tab-build" aria-selected="false" aria-controls="view-build">Build a CV</button>
+    </div>
+  </header>
+
+  <!-- SCAN VIEW -->
+  <section id="view-scan" role="tabpanel" aria-labelledby="tab-scan">
+    <div class="grid2">
+      <div class="stack">
+        <div class="panel">
+          <div class="row between">
+            <h2>Your CV</h2>
+            <span class="example-tag" id="exampleTag">Example loaded</span>
+          </div>
+          <div class="row">
+            <label class="btn file-label">Upload PDF, DOCX or TXT<input type="file" id="file" accept=".pdf,.docx,.txt,.md,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
+            <button class="btn" id="loadExample">Load example</button>
+            <button class="btn" id="clearAll">Clear</button>
+          </div>
+          <p class="note" id="fileNote">Or paste the text. Everything runs in your browser; nothing is uploaded anywhere.</p>
+          <textarea class="resume" id="resume" spellcheck="false" aria-label="CV text"></textarea>
+        </div>
+        <div class="panel">
+          <h2>Job description</h2>
+          <p class="note">Paste the posting to get a keyword match. Leave empty to check the CV on its own.</p>
+          <textarea class="jd" id="jd" aria-label="Job description"></textarea>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="panel">
+          <h2>ATS score</h2>
+          <div class="score">
+            <svg class="ring" viewBox="0 0 128 128" role="img" aria-label="ATS score">
+              <circle cx="64" cy="64" r="52" fill="none" stroke="var(--rule)" stroke-width="10"></circle>
+              <circle id="ringArc" cx="64" cy="64" r="52" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 400" transform="rotate(-90 64 64)"></circle>
+              <text id="ringNum" x="64" y="68" text-anchor="middle" font-size="34" font-weight="700">0</text>
+              <text class="sub" x="64" y="88" text-anchor="middle">OUT OF 100</text>
+            </svg>
+            <div class="bars" id="bars"></div>
+          </div>
+          <p class="note" id="scoreNote"></p>
+        </div>
+        <div class="panel" id="kwPanel">
+          <div class="row between"><h2>Keyword match</h2><span class="slopcount" id="kwCount"></span></div>
+          <div id="kwBody"></div>
+        </div>
+        <div class="panel">
+          <h2>Parse and format checks</h2>
+          <ul class="checks" id="checks"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <div class="row between">
+        <h2>Red-pen proof</h2>
+        <span class="slopcount" id="slopCount"></span>
+      </div>
+      <div class="legend">
+        <span><del>leveraged</del><ins>used</ins> swapped for a plain word</span>
+        <span><del>successfully</del> cut, adds nothing</span>
+        <span><mark>passionate about</mark> rewrite with proof (hover for a tip)</span>
+      </div>
+      <div class="proof" id="proof"></div>
+      <div class="tbl-wrap">
+        <table class="slop" id="slopTable"></table>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <div class="row between">
+        <h2>Clean copy</h2>
+        <div class="row">
+          <button class="btn" id="copyClean">Copy clean text</button>
+          <button class="btn primary" id="useClean">Replace my CV with this</button>
+        </div>
+      </div>
+      <p class="note">Swaps and cuts are applied automatically. Highlighted phrases stay as they are because only you know the real numbers to put there.</p>
+      <div class="toast" id="cleanToast" aria-live="polite"></div>
+      <pre class="clean" id="clean"></pre>
+    </div>
+  </section>
+
+  <!-- BUILD VIEW -->
+  <section id="view-build" role="tabpanel" aria-labelledby="tab-build" hidden>
+    <div class="bgrid">
+      <div class="panel" id="builderForm"></div>
+      <div class="stack">
+        <div class="row between">
+          <span class="slopcount" id="bSlop"></span>
+          <div class="row">
+            <button class="btn pen" id="bClean">Clean all fields</button>
+            <button class="btn" id="bCopy">Copy as text</button>
+            <button class="btn primary" id="bScan">Scan this CV</button>
+          </div>
+        </div>
+        <div class="toast" id="bToast" aria-live="polite"></div>
+        <article class="cv" id="cvPreview" aria-label="CV preview"></article>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- AI slop dictionary ----------
+   swap: replace with a plain word
+   cut:  delete, it carries no information
+   flag: needs a rewrite with real facts */
+const SLOP_DEF = [
+  ['spearheaded','swap','led'],['spearheading','swap','leading'],['spearheads','swap','leads'],['spearhead','swap','lead'],
+  ['leveraged','swap','used'],['leveraging','swap','using'],['leverages','swap','uses'],
+  ['utilized','swap','used'],['utilizing','swap','using'],['utilizes','swap','uses'],['utilize','swap','use'],['utilization','swap','use'],
+  ['utilised','swap','used'],['utilising','swap','using'],['utilise','swap','use'],
+  ['harnessed','swap','used'],['harnessing','swap','using'],
+  ['orchestrated','swap','coordinated'],['orchestrating','swap','coordinating'],
+  ['facilitated','swap','ran'],['facilitating','swap','running'],
+  ['fostered','swap','built'],['fostering','swap','building'],['foster','swap','build'],
+  ['championed','swap','pushed for'],['honed','swap','built'],['garnered','swap','earned'],
+  ['elevated','swap','improved'],['elevating','swap','improving'],['elevate','swap','improve'],
+  ['empowered','swap','enabled'],['empowering','swap','enabling'],['empower','swap','enable'],
+  ['showcasing','swap','showing'],['showcased','swap','showed'],['showcase','swap','show'],
+  ['embarked on','swap','started'],['commenced','swap','started'],
+  ['delved into','swap','studied'],['delving into','swap','studying'],['delve into','swap','study'],
+  ['endeavors','swap','projects'],['endeavours','swap','projects'],['endeavor','swap','project'],['endeavour','swap','project'],
+  ['a plethora of','swap','many'],['plethora of','swap','many'],['a myriad of','swap','many'],['myriad','swap','many'],
+  ['a wide array of','swap','many'],['a wide range of','swap','many'],['a diverse range of','swap','many'],['a diverse array of','swap','many'],
+  ['meticulously','swap','carefully'],['meticulous','swap','careful'],
+  ['pivotal','swap','key'],['paramount','swap','essential'],['in order to','swap','to'],
+  ['deep dive','swap','review'],['key stakeholders','swap','stakeholders'],['adept at','swap','skilled at'],
+  ['successfully','cut'],['seamlessly','cut'],['seamless','cut'],['effectively','cut'],
+  ['highly motivated','cut'],['self-motivated','cut'],['results-driven','cut'],['results-oriented','cut'],['goal-oriented','cut'],
+  ['dynamic','cut'],['hardworking','cut'],['seasoned','cut'],['multifaceted','cut'],['holistic','cut'],['transformative','cut'],
+  ['cutting-edge','cut'],['state-of-the-art','cut'],['best-in-class','cut'],['world-class','cut'],['ever-evolving','cut'],['ever-changing','cut'],
+  ['furthermore,','cut'],['moreover,','cut'],['additionally,','cut'],['notably,','cut'],
+  [/in today['’]s (?:fast[\s-]paced|ever[\s-]evolving|digital|competitive|rapidly changing)[^,.\n]*[,.]?[ \t]*/gi,'cut',null,null,"in today's fast-paced ..."],
+  ['passionate about','flag',null,'Show it instead: name a project, contribution or result.'],
+  ['passionate','flag',null,'Show it instead: name a project, contribution or result.'],
+  ['detail-oriented','flag',null,'Every CV says this. Prove it with a catch, e.g. "found 40 defects before UAT".'],
+  ['team player','flag',null,'Replace with one concrete collaboration example.'],
+  ['self-starter','flag',null,'Replace with something you started without being asked.'],
+  ['go-getter','flag',null,'Replace with a result.'],
+  ['proven track record','flag',null,'Give the record: numbers, dates, outcomes.'],
+  ['think outside the box','flag',null,'Cliché. Describe the unusual approach you took.'],
+  ['out-of-the-box','flag',null,'Cliché. Describe what was different.'],
+  ['synergy','flag',null,'Say who worked with whom and what came out of it.'],['synergies','flag',null,'Say who worked with whom and what came out of it.'],
+  ['game-changer','flag',null,'Hype. State the measurable change.'],['game-changing','flag',null,'Hype. State the measurable change.'],
+  ['innovative','flag',null,'Say what was new about it.'],['visionary','flag',null,'Hype. Remove or back it up.'],['thought leader','flag',null,'Hype. Link a talk or article instead.'],
+  ['tapestry','flag',null,'AI tell. Remove.'],['testament to','flag',null,'AI tell. State the fact directly.'],['realm','flag',null,'AI tell. Name the actual area.'],
+  ['landscape','flag',null,'Metaphor filler. Name the actual field or market.'],
+  [/navigat\w* (?:the )?complexit\w*/gi,'flag',null,'AI tell. Say what was complex and what you did.','navigating the complexities'],
+  [/(?:drive|drove|driving|drives) innovation/gi,'flag',null,'Vague. Name the change you made.','drove innovation'],
+  [/(?:strong|excellent|exceptional|outstanding|superb) (?:communication|interpersonal|leadership|problem[\s-]solving|analytical|organi[sz]ational) skills/gi,'flag',null,'Unprovable claim. Show a doc, demo or training you delivered.','excellent ... skills'],
+  ['unlock','flag',null,'Hype verb. Say what became possible.'],['unlocked','flag',null,'Hype verb. Say what became possible.'],['unlocking','flag',null,'Hype verb. Say what became possible.'],
+  ['excellence','flag',null,'Abstract. Replace with a standard you met.'],['impactful','flag',null,'Show the impact with a number.'],
+  ['resonate','flag',null,'AI tell. Remove.'],['boasts','flag',null,'AI tell. Use "has".'],
+  ['instrumental in','flag',null,'Say what you personally did.'],
+  ['responsible for','flag',null,'Weak opener. Start with what you did: Built, Ran, Cut, Fixed.'],
+  ['duties included','flag',null,'Weak opener. List results, not duties.'],
+  ['worked on','flag',null,'Vague. Say what you built or fixed.'],['involved in','flag',null,'Vague. Say what your part was.'],
+  ['wealth of experience','flag',null,'Give years and scope instead.'],['extensive experience','flag',null,'Give years and scope instead.'],
+  ['actionable insights','flag',null,'Name the insight and the decision it changed.'],['data-driven','flag',null,'Name the data and the decision it changed.'],
+  ['streamlined','flag',null,'Say what got faster and by how much.'],
+  ['robust','flag',null,'Robust how? Name the property: retries, coverage, uptime.'],
+  ['delve','flag',null,'AI tell. Use "study" or "look at".'],['delves','flag',null,'AI tell. Use "studies" or "looks at".'],
+  ['not only','flag',null,'"Not only X but also Y" is a common AI pattern. Write two plain statements.']
+];
+
+function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+const SLOP = SLOP_DEF.map(([p, type, rep, note, label]) => {
+  if (p instanceof RegExp) return { re: p, type, rep, note, label };
+  const body = escRe(p).replace(/[ -]+/g, '[\\s-]+').replace(/'/g, "['’]");
+  const re = new RegExp((/^\w/.test(p) ? '\\b' : '') + body + (/\w$/.test(p) ? '\\b' : ''), 'gi');
+  return { re, type, rep, note: note || (type === 'cut' ? 'Adds no information. Cut it.' : 'Plain word reads better.'), label: p };
+});
+
+function findSlop(text) {
+  const found = [];
+  for (const entry of SLOP) {
+    entry.re.lastIndex = 0;
+    let m;
+    while ((m = entry.re.exec(text))) {
+      if (!m[0]) { entry.re.lastIndex++; continue; }
+      found.push({ s: m.index, e: m.index + m[0].length, entry, text: m[0] });
+    }
+  }
+  found.sort((a, b) => a.s - b.s || (b.e - b.s) - (a.e - a.s));
+  const out = [];
+  let end = -1;
+  for (const f of found) { if (f.s >= end) { out.push(f); end = f.e; } }
+  return out;
+}
+
+function matchCase(src, rep) {
+  if (src.length > 1 && src === src.toUpperCase() && /[A-Z]/.test(src)) return rep.toUpperCase();
+  if (/^[A-Z]/.test(src)) return rep.charAt(0).toUpperCase() + rep.slice(1);
+  return rep;
+}
+
+function article(art, next) {
+  const w = next.toLowerCase();
+  const an = /^[aeiou]/.test(w) && !/^(?:uni|use|usu|uti|eu|one|once)/.test(w) || /^(?:hour|honest|honou?r)/.test(w);
+  const r = an ? 'an' : 'a';
+  return art[0] === art[0].toUpperCase() ? r.charAt(0).toUpperCase() + r.slice(1) : r;
+}
+
+const CUT = '\u0000';
+function cleanText(text) {
+  const matches = findSlop(text);
+  let out = '', i = 0;
+  for (const m of matches) {
+    out += text.slice(i, m.s);
+    if (m.entry.type === 'swap') out += matchCase(m.text, m.entry.rep);
+    else if (m.entry.type === 'cut') out += CUT;
+    else out += m.text;
+    i = m.e;
+  }
+  out += text.slice(i);
+  // merge runs of cuts like "highly motivated, results-driven"
+  out = out.replace(/\u0000(?:[ \t,]*(?:and[ \t]+)?\u0000)+/g, CUT);
+  // fix "a" / "an" in front of a cut adjective
+  out = out.replace(/\b(a|an)([ \t]+)\u0000[ \t]*(?:and[ \t]+)?(?=([A-Za-z]+))/gi, (m, art, sp, nx) => article(art, nx) + ' ');
+  // drop a comma that trailed the cut word when nothing meaningful precedes it
+  out = out.replace(/(^|[^\n]*?)(\S?)([ \t]*)\u0000[ \t]*(,?)/gm, (m, pre, last, sp, comma) => {
+    const prevWord = (pre + last).trim().split(/\s+/).pop() || '';
+    const dropComma = !prevWord || /,$/.test(prevWord) || /^(?:a|an|the|[-•*·▪◦])$/i.test(prevWord);
+    return pre + last + sp + (comma && !dropComma ? ',' : '');
+  });
+  // em-dashes between words become commas (dates like "2022 — Present" are left alone)
+  out = out.replace(/(?<=[A-Za-z,)])[ \t]*—[ \t]*(?=[a-z])/g, ', ');
+  const origLines = text.split('\n');
+  return out.split('\n').map((line, idx) => {
+    let l = line.replace(/(\S)[ \t]{2,}/g, '$1 ').replace(/[ \t]+([,.;:])/g, '$1').replace(/,{2,}/g, ',').replace(/[ \t]+$/, '');
+    l = l.replace(/^([ \t]*(?:[-•*·▪◦–][ \t]+)?)[ \t]*,?[ \t]*/, '$1');
+    const orig = origLines[idx] || '';
+    const origFirst = (orig.match(/[A-Za-z]/) || [''])[0];
+    if (origFirst && origFirst === origFirst.toUpperCase()) {
+      l = l.replace(/^([ \t]*(?:[-•*·▪◦–][ \t]+)?)([a-z])/, (m, p, c) => p + c.toUpperCase());
+    }
+    l = l.replace(/([.!?][ \t]+)([a-z])/g, (m, p, c) => p + c.toUpperCase());
+    return l;
+  }).join('\n');
+}
+
+function esc(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+function proofHTML(text, matches) {
+  let out = '', i = 0;
+  for (const m of matches) {
+    out += esc(text.slice(i, m.s));
+    const t = esc(m.text);
+    if (m.entry.type === 'swap') out += `<del>${t}</del><ins>${esc(matchCase(m.text, m.entry.rep))}</ins>`;
+    else if (m.entry.type === 'cut') out += `<del title="${esc(m.entry.note)}">${t}</del>`;
+    else out += `<mark title="${esc(m.entry.note)}">${t}</mark>`;
+    i = m.e;
+  }
+  return out + esc(text.slice(i));
+}
+
+function markOnly(text) {
+  const ms = findSlop(text);
+  let out = '', i = 0;
+  for (const m of ms) { out += esc(text.slice(i, m.s)) + `<mark title="${esc(m.entry.note)}">${esc(m.text)}</mark>`; i = m.e; }
+  return out + esc(text.slice(i));
+}
+
+/* ---------- ATS analysis ---------- */
+const SKILLS = {
+  'java': [], 'python': [], 'javascript': ['js'], 'typescript': [], 'c#': ['csharp'], 'c++': [], 'go': ['golang'], 'kotlin': [], 'swift': [],
+  'sql': [], 'mysql': [], 'postgresql': ['postgres'], 'mongodb': ['mongo'], 'oracle': [],
+  'selenium': ['selenium webdriver', 'webdriver'], 'testng': [], 'junit': [], 'pytest': [], 'mockito': [], 'cucumber': [], 'gherkin': [],
+  'bdd': ['behavior driven', 'behaviour driven'], 'tdd': ['test driven'], 'rest assured': ['restassured'], 'postman': [], 'soapui': [],
+  'api testing': ['api test', 'api automation'], 'rest api': ['restful', 'rest apis', 'rest services'], 'graphql': [],
+  'playwright': [], 'cypress': [], 'appium': [], 'webdriverio': [], 'robot framework': [], 'karate': [],
+  'jmeter': [], 'gatling': [], 'loadrunner': [], 'k6': [],
+  'maven': [], 'gradle': [], 'jenkins': [], 'github actions': [], 'gitlab ci': [], 'azure devops': [],
+  'ci/cd': ['ci cd', 'cicd', 'continuous integration', 'ci pipelines', 'ci pipeline'], 'git': ['github', 'gitlab', 'bitbucket'],
+  'docker': [], 'kubernetes': ['k8s'], 'aws': ['amazon web services'], 'azure': [], 'gcp': ['google cloud'], 'linux': ['unix'],
+  'jira': [], 'confluence': [], 'testrail': [], 'zephyr': [], 'xray': [], 'allure': [], 'extent reports': [], 'log4j': [],
+  'agile': [], 'scrum': [], 'kanban': [], 'sdlc': [], 'stlc': [],
+  'page object model': ['page object', 'pom'], 'regression testing': ['regression'], 'smoke testing': ['smoke test', 'smoke tests'],
+  'manual testing': [], 'test automation': ['automation testing', 'automated testing', 'automated tests'], 'performance testing': ['load testing'],
+  'mobile testing': [], 'unit testing': ['unit tests'], 'integration testing': ['integration tests'], 'e2e testing': ['end-to-end', 'end to end'],
+  'uat': ['user acceptance'], 'test planning': ['test plan', 'test plans'], 'test cases': ['test case'], 'defect tracking': ['bug tracking', 'defect management'],
+  'react': ['react.js', 'reactjs'], 'angular': [], 'vue': ['vue.js'], 'node.js': ['nodejs'], 'spring boot': ['spring'], 'microservices': [],
+  'html': [], 'css': [], 'kafka': [], 'redis': [], 'terraform': [], 'ansible': [],
+  'excel': [], 'power bi': [], 'tableau': [], 'machine learning': ['ml'], 'data analysis': [], 'pandas': [], 'figma': [], 'salesforce': [], 'sap': []
+};
+const STOP = new Set(('a about above across after again against all also am an and any are as at be because been before being below between both but by can could did do does doing down during each few for from further had has have having he her here hers him his how i if in into is it its itself just me more most my no nor not now of off on once only or other our ours out over own same she should so some such than that the their theirs them then there these they this those through to too under until up very was we were what when where which while who whom why will with would you your yours ' +
+  'ability able across apply applicants candidate candidates role roles position job jobs work working team teams company experience experienced years year strong excellent good great knowledge understanding skills skill required requirements preferred plus bonus must nice etc including include includes using use used responsibilities responsible looking join help ensure within across new well like based level opportunity opportunities environment day days time per various key make making across best equal employer benefits salary location remote hybrid office full part please us our we youll you’ll youre you’re will able what who').split(/\s+/));
+
+function norm(s) { return ' ' + s.toLowerCase().replace(/[“”’]/g, "'").replace(/\s+/g, ' ') + ' '; }
+function termRe(t) { return new RegExp('(?<![a-z0-9+#])' + escRe(t).replace(/ /g, '[\\s-]+') + '(?![a-z0-9+#])', 'g'); }
+function countTerm(hay, t) { const m = hay.match(termRe(t)); return m ? m.length : 0; }
+function stem(w) { return w.replace(/(?:ations?|ments?|ings?|ers?|ed|es|s)$/, '').slice(0, 7); }
+
+function extractKeywords(jd) {
+  const hay = norm(jd);
+  const skills = [];
+  for (const [k, aliases] of Object.entries(SKILLS)) {
+    const n = [k, ...aliases].reduce((a, t) => a + countTerm(hay, t), 0);
+    if (n) skills.push({ term: k, forms: [k, ...aliases], jdCount: n, weight: 2, kind: 'skill' });
+  }
+  const covered = new Set();
+  skills.forEach(s => s.forms.forEach(f => f.split(/[\s/.-]+/).forEach(w => covered.add(stem(w)))));
+  const words = jd.toLowerCase().replace(/[“”’]/g, "'").match(/[a-z][a-z0-9+#.-]*[a-z0-9+#]/g) || [];
+  const freq = new Map(), bi = new Map();
+  for (let i = 0; i < words.length; i++) {
+    const w = words[i];
+    if (w.length < 4 || STOP.has(w) || covered.has(stem(w))) continue;
+    freq.set(w, (freq.get(w) || 0) + 1);
+    const nx = words[i + 1];
+    if (nx && nx.length > 3 && !STOP.has(nx) && !covered.has(stem(nx))) { const b = w + ' ' + nx; bi.set(b, (bi.get(b) || 0) + 1); }
+  }
+  const bigrams = [...bi].filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1]).slice(0, 6)
+    .map(([t, n]) => ({ term: t, forms: [t], jdCount: n, weight: 1.5, kind: 'phrase' }));
+  const inBigram = new Set(bigrams.flatMap(b => b.term.split(' ')));
+  const singles = [...freq].filter(([w, n]) => n >= 2 && !inBigram.has(w)).sort((a, b) => b[1] - a[1]).slice(0, 12)
+    .map(([t, n]) => ({ term: t, forms: [t], jdCount: n, weight: 1, kind: 'term', stemmed: true }));
+  return [...skills.sort((a, b) => b.jdCount - a.jdCount), ...bigrams, ...singles];
+}
+
+function cvHasTerm(cvNorm, cvStems, kw) {
+  let n = kw.forms.reduce((a, t) => a + countTerm(cvNorm, t), 0);
+  if (!n && kw.stemmed) n = cvStems.get(stem(kw.term)) || 0;
+  return n;
+}
+
+const HEADINGS = {
+  summary: /^(?:professional\s+)?(?:summary|profile|objective|about(?: me)?|career objective|professional profile)$/,
+  experience: /^(?:work |professional |relevant )?(?:experience|employment(?: history)?|work history|career history)$/,
+  education: /^(?:education|academic(?:s| background| qualifications)?|qualifications)$/,
+  skills: /^(?:technical |key |core |professional )?(?:skills|competencies|skill set|tech stack|technologies|tools)(?: (?:&|and) (?:tools|technologies))?$/,
+  projects: /^(?:key |personal |academic )?projects$/,
+  certifications: /^(?:certifications?|licen[cs]es(?: (?:&|and) certifications)?|courses)$/
+};
+const MONTH = '(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\\.?';
+
+function analyze(cv, jd) {
+  const lines = cv.split('\n');
+  const trimmed = lines.map(l => l.trim()).filter(Boolean);
+  const words = (cv.match(/\b[\w'’+#.-]+\b/g) || []).length;
+  const checks = [];
+  const add = (st, title, d) => checks.push({ st, title, d });
+
+  // sections
+  const found = {};
+  for (const l of trimmed) {
+    const h = l.toLowerCase().replace(/[:|_*#=]+/g, '').replace(/\s+/g, ' ').trim();
+    if (h.split(' ').length > 5) continue;
+    for (const [k, re] of Object.entries(HEADINGS)) if (re.test(h)) found[k] = true;
+  }
+  const req = ['experience', 'education', 'skills'];
+  const missing = req.filter(k => !found[k]);
+  const structScore = (req.length - missing.length) / req.length * 80 + (found.summary ? 10 : 0) + (found.projects || found.certifications ? 10 : 0);
+  if (!missing.length) add('ok', 'Standard section headings found', 'Experience, Education and Skills are labelled the way parsers expect.');
+  else add('bad', `Missing heading: ${missing.map(cap).join(', ')}`, 'Parsers sort your text by headings. Use the plain names: "Experience", "Education", "Skills".');
+  if (!found.summary) add('warn', 'No summary section', 'Optional, but 2–3 lines of plain facts (role, years, main stack) help recruiters and keyword search.');
+
+  // contact
+  const email = /[\w.+-]+@[\w-]+\.[\w.-]+/.test(cv);
+  const phone = /(?:\+?\d[\d\s().-]{8,}\d)/.test(cv);
+  const linkedin = /linkedin\.com\/in\//i.test(cv);
+  const contactScore = (email ? 45 : 0) + (phone ? 35 : 0) + (linkedin ? 20 : 0);
+  if (email && phone) add(linkedin ? 'ok' : 'warn', linkedin ? 'Contact details complete' : 'No LinkedIn URL', linkedin ? 'Email, phone and LinkedIn are all present.' : 'Add your linkedin.com/in/ URL. Many ATS link it to your profile.');
+  else add('bad', `Missing ${[!email && 'email', !phone && 'phone'].filter(Boolean).join(' and ')}`, 'Put contact details in the body text, not in a header or footer, which some parsers skip.');
+
+  // bullets and impact
+  const bullets = trimmed.filter(l => /^[-•*·▪◦–►✓]\s*\S/.test(l)).map(l => l.replace(/^[-•*·▪◦–►✓]\s*/, ''));
+  const quant = bullets.filter(b => /\d|%/.test(b));
+  const weak = bullets.filter(b => /^(?:responsible for|worked on|helped|involved in|duties|tasks included|assisted)/i.test(b));
+  let impactScore = 0;
+  if (!bullets.length) add('bad', 'No bullet points found', 'Write each achievement as its own line starting with "-" or "•". Paragraphs bury your keywords.');
+  else {
+    const pct = Math.round(quant.length / bullets.length * 100);
+    impactScore = Math.min(100, pct / 0.6) - weak.length / bullets.length * 30;
+    add(pct >= 50 ? 'ok' : pct >= 25 ? 'warn' : 'bad', `${quant.length} of ${bullets.length} bullets have a number (${pct}%)`, 'Aim for at least half. Counts, percentages, time saved and money all work.');
+    if (weak.length) add('warn', `${weak.length} bullet${weak.length > 1 ? 's' : ''} open weakly`, `e.g. "${weak[0].slice(0, 60)}${weak[0].length > 60 ? '…' : ''}". Start with an action verb: Built, Cut, Automated, Fixed.`);
+  }
+
+  // dates
+  const dateRe = new RegExp(`(?:${MONTH}\\s*\\d{4}|\\b\\d{1,2}/\\d{4}\\b|\\b(?:19|20)\\d{2}\\b)\\s*(?:[-–—]|to)\\s*(?:${MONTH}\\s*\\d{4}|\\b\\d{1,2}/\\d{4}\\b|\\b(?:19|20)\\d{2}\\b|present|current|now|date)`, 'gi');
+  const ranges = cv.match(dateRe) || [];
+  const styles = new Set(ranges.map(r => /[a-z]{3}/i.test(r.split(/[-–—]|to/i)[0]) ? 'month' : /\//.test(r) ? 'numeric' : 'year'));
+  if (!ranges.length) add(found.experience ? 'bad' : 'warn', 'No date ranges found', 'Use "Jan 2022 – Present" on each job. ATS computes your years of experience from these.');
+  else if (styles.size > 1) add('warn', 'Mixed date formats', 'Pick one format, e.g. "Jan 2022 – Mar 2024", and use it everywhere.');
+  else add('ok', `${ranges.length} date range${ranges.length > 1 ? 's' : ''} in one format`, 'Parsers can calculate your tenure.');
+
+  // parse hazards
+  let formatScore = 100;
+  const pipes = trimmed.filter(l => (l.match(/\|/g) || []).length >= 3 && !/@|linkedin|\+?\d{5}/i.test(l)).length;
+  const tabs = lines.filter(l => /\S\t+\S|\S {6,}\S/.test(l)).length;
+  const glyphs = cv.match(/[-☀-➿]|[\u{1F300}-\u{1FAFF}]/gu) || [];
+  if (pipes || tabs > 2) { formatScore -= 40; add('warn', 'Possible table or column layout', 'Multi-column layouts get read across rows and scramble your text. Use one column.'); }
+  if (glyphs.length) { formatScore -= 25; add('warn', `${glyphs.length} icon or symbol character${glyphs.length > 1 ? 's' : ''}`, 'Icons for phone, email or ratings often parse as junk. Use plain words.'); }
+  const firstPerson = (cv.match(/\b(?:I|my|me)\b/g) || []).length;
+  if (firstPerson > 2) { formatScore -= 15; add('warn', `First person used ${firstPerson} times`, 'CV convention drops "I" and "my". "Built a framework", not "I built my framework".'); }
+  if (words < 200) { formatScore -= 30; add('bad', `Only ${words} words`, 'Too thin for keyword matching. Most one-page CVs land between 400 and 700 words.'); }
+  else if (words > 1100) { formatScore -= 20; add('warn', `${words} words`, 'Long for most roles. Two pages (about 1,000 words) is the usual ceiling outside academia.'); }
+  else add('ok', `${words} words`, words <= 750 ? 'Fits one page.' : 'About two pages, fine for 5+ years of experience.');
+  if (!pipes && tabs <= 2 && !glyphs.length) add('ok', 'Single-column plain text', 'Nothing here should confuse a parser.');
+
+  // slop
+  const slop = findSlop(cv);
+  const emd = (cv.match(/—/g) || []).length;
+  const slopScore = Math.max(0, 100 - slop.length * 8 - Math.max(0, emd - 2) * 5);
+  if (emd > 2) add('warn', `${emd} em-dashes`, 'Heavy em-dash use is a common tell of AI-written text. The clean copy turns them into commas.');
+
+  // keywords
+  let kw = null, kwScore = null, jdNotes = [];
+  if (jd.trim().length > 40) {
+    const list = extractKeywords(jd);
+    const cvNorm = norm(cv);
+    const cvStems = new Map();
+    (cv.toLowerCase().match(/[a-z][a-z0-9+#.-]*[a-z0-9+#]/g) || []).forEach(w => { const s = stem(w); cvStems.set(s, (cvStems.get(s) || 0) + 1); });
+    let tot = 0, got = 0;
+    kw = list.map(k => { const n = cvHasTerm(cvNorm, cvStems, k); const w = k.weight * Math.min(3, k.jdCount); tot += w; if (n) got += w; return { ...k, cvCount: n }; });
+    kwScore = tot ? got / tot * 100 : 0;
+    const yrs = jd.match(/(\d{1,2})\s*\+?\s*(?:(?:-|–|to)\s*\d{1,2}\s*)?(?:years|yrs)/i);
+    if (yrs) jdNotes.push(`The posting asks for ${yrs[0].replace(/\s+/g, ' ')}. Knockout questions often check this, so make sure your dates add up.`);
+    if (/\b(?:bachelor'?s?|b\.?\s?tech|b\.?e\b|b\.?sc|degree|master'?s?)\b/i.test(jd)) jdNotes.push('A degree is mentioned. Write it out in full in Education, e.g. "B.Tech, Computer Science".');
+  }
+
+  const parts = [
+    { k: 'Keywords', v: kwScore, w: 0.4 },
+    { k: 'Structure', v: structScore, w: 0.17 },
+    { k: 'Contact', v: contactScore, w: 0.08 },
+    { k: 'Measurable impact', v: Math.max(0, impactScore), w: 0.15 },
+    { k: 'Parse safety', v: Math.max(0, formatScore), w: 0.1 },
+    { k: 'Plain language', v: slopScore, w: 0.1 }
+  ];
+  const active = parts.filter(p => p.v !== null);
+  const wsum = active.reduce((a, p) => a + p.w, 0);
+  const total = Math.round(active.reduce((a, p) => a + p.v * p.w, 0) / wsum);
+  return { total, parts, checks, kw, jdNotes, slop };
+}
+
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+/* ---------- Rendering: scan ---------- */
+const $ = id => document.getElementById(id);
+const resumeEl = $('resume'), jdEl = $('jd');
+
+function renderScan() {
+  const cv = resumeEl.value, jd = jdEl.value;
+  const r = analyze(cv, jd);
+  const C = 2 * Math.PI * 52;
+  const col = r.total >= 75 ? 'var(--ok)' : r.total >= 55 ? 'var(--warn)' : 'var(--pen)';
+  $('ringArc').setAttribute('stroke-dasharray', `${C * r.total / 100} ${C}`);
+  $('ringArc').setAttribute('stroke', col);
+  $('ringNum').textContent = cv.trim() ? r.total : '–';
+  $('bars').innerHTML = r.parts.map(p => {
+    const v = p.v === null ? null : Math.round(p.v);
+    return `<div class="bar"><span>${p.k}</span><div class="track"><div class="fill" style="width:${v ?? 0}%"></div></div><span class="val">${v === null ? 'n/a' : v}</span></div>`;
+  }).join('');
+  $('scoreNote').textContent = !cv.trim() ? 'Paste or upload a CV to start.'
+    : r.kw ? (r.total >= 75 ? 'Strong match. A recruiter searching for this role should find you.' : r.total >= 55 ? 'Decent, but some missing keywords or weak bullets will push you down the ranking.' : 'Likely to rank low for this posting. Start with the missing keywords below.')
+    : 'No job description, so the keyword part is skipped. Paste one for a full score.';
+
+  if (!r.kw) {
+    $('kwCount').textContent = '';
+    $('kwBody').innerHTML = '<p class="note">Paste a job description to see which of its keywords your CV covers.</p>';
+  } else {
+    const hits = r.kw.filter(k => k.cvCount), miss = r.kw.filter(k => !k.cvCount);
+    $('kwCount').textContent = `${hits.length} / ${r.kw.length} found`;
+    $('kwCount').className = 'slopcount ' + (miss.length ? 'some' : 'zero');
+    $('kwBody').innerHTML =
+      (miss.length ? `<h3>Missing</h3><div class="chips">${miss.map(k => `<span class="chip miss">${esc(k.term)}<small>×${k.jdCount} in JD</small></span>`).join('')}</div>` : '') +
+      (hits.length ? `<h3 style="margin-top:6px">Found</h3><div class="chips">${hits.map(k => `<span class="chip hit">${esc(k.term)}<small>×${k.cvCount}</small></span>`).join('')}</div>` : '') +
+      `<p class="note">Add a missing keyword only where it's true, ideally inside a bullet that shows you used it. Recruiters search the ATS with these exact words.</p>` +
+      r.jdNotes.map(n => `<p class="note">• ${esc(n)}</p>`).join('');
+  }
+
+  $('checks').innerHTML = r.checks.map(c => `<li><span class="dot ${c.st}">${c.st === 'ok' ? '✓' : c.st === 'warn' ? '!' : '×'}</span><div><b>${esc(c.title)}</b><span class="d">${esc(c.d)}</span></div></li>`).join('');
+
+  $('proof').innerHTML = cv.trim() ? proofHTML(cv, r.slop) : '<span class="note">Your CV will appear here with filler words marked.</span>';
+  const n = r.slop.length;
+  $('slopCount').textContent = n ? `${n} slop phrase${n > 1 ? 's' : ''} marked` : 'No slop found';
+  $('slopCount').className = 'slopcount ' + (n ? 'some' : 'zero');
+  const groups = new Map();
+  for (const m of r.slop) { const key = m.entry.label; const g = groups.get(key) || { m, n: 0 }; g.n++; groups.set(key, g); }
+  $('slopTable').innerHTML = groups.size ? `<thead><tr><th>Phrase</th><th>Action</th><th>Fix</th><th style="text-align:right">Count</th></tr></thead><tbody>` +
+    [...groups.values()].sort((a, b) => b.n - a.n).map(({ m, n }) => `<tr><td>${esc(m.text.toLowerCase())}</td><td><span class="kind ${m.entry.type}">${m.entry.type}</span></td><td>${m.entry.type === 'swap' ? `Use “${esc(m.entry.rep)}”.` : esc(m.entry.note)}</td><td class="n">${n}</td></tr>`).join('') + '</tbody>' : '';
+
+  $('clean').textContent = cv.trim() ? cleanText(cv) : '';
+  $('exampleTag').hidden = cv !== EXAMPLE_CV;
+  save();
+}
+
+/* ---------- File upload ---------- */
+function loadScript(src) {
+  return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Could not load ' + src)); document.head.appendChild(s); });
+}
+async function readPdf(buf) {
+  if (!window.pdfjsLib) {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js');
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+  }
+  const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+  const pages = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const tc = await (await pdf.getPage(p)).getTextContent();
+    let lastY = null, line = '', out = [];
+    for (const it of tc.items) {
+      const y = Math.round(it.transform[5]);
+      if (lastY !== null && Math.abs(y - lastY) > 2) { out.push(line); line = ''; }
+      line += (line && !line.endsWith(' ') && it.str && !it.str.startsWith(' ') ? ' ' : '') + it.str;
+      lastY = y;
+      if (it.hasEOL) { out.push(line); line = ''; lastY = null; }
+    }
+    if (line) out.push(line);
+    pages.push(out.map(l => l.replace(/\s+/g, ' ').trim()).join('\n'));
+  }
+  return pages.join('\n\n').replace(/\n{3,}/g, '\n\n');
+}
+async function readDocx(buf) {
+  if (!window.mammoth) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+  const r = await window.mammoth.extractRawText({ arrayBuffer: buf });
+  return r.value.replace(/\n{3,}/g, '\n\n');
+}
+$('file').addEventListener('change', async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const note = $('fileNote');
+  note.textContent = `Reading ${f.name}…`;
+  try {
+    const name = f.name.toLowerCase();
+    let text;
+    if (name.endsWith('.pdf')) text = await readPdf(await f.arrayBuffer());
+    else if (name.endsWith('.docx')) text = await readDocx(await f.arrayBuffer());
+    else text = await f.text();
+    if (!text.trim()) throw new Error('No text found. If this is a scanned image, an ATS cannot read it either. Export a text-based PDF.');
+    resumeEl.value = text;
+    note.textContent = `Loaded ${f.name}. This is roughly what a parser extracts, so check that nothing came out scrambled.`;
+    renderScan();
+  } catch (err) {
+    note.textContent = `Couldn't read ${f.name}: ${err.message}`;
+  }
+  e.target.value = '';
+});
+
+/* ---------- Clipboard ---------- */
+function copyText(text, toastEl, fallbackEl) {
+  const done = msg => { toastEl.textContent = msg; setTimeout(() => { toastEl.textContent = ''; }, 2500); };
+  try {
+    navigator.clipboard.writeText(text).then(() => done('Copied.'), () => { selectEl(fallbackEl); done('Text selected. Press Ctrl+C or Cmd+C to copy.'); });
+  } catch (e) { selectEl(fallbackEl); done('Text selected. Press Ctrl+C or Cmd+C to copy.'); }
+}
+function selectEl(el) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+$('copyClean').addEventListener('click', () => copyText($('clean').textContent, $('cleanToast'), $('clean')));
+$('useClean').addEventListener('click', () => { resumeEl.value = $('clean').textContent; renderScan(); $('cleanToast').textContent = 'Your CV now uses the clean copy. Rewrite the highlighted phrases next.'; });
+
+/* ---------- Examples ---------- */
+const EXAMPLE_CV = `PRIYA NAIR (EXAMPLE)
+QA Automation Engineer
+Pune, India | +91 98765 43210 | priya.nair@example.com | linkedin.com/in/priya-nair-example
+
+SUMMARY
+Results-driven and highly motivated QA Automation Engineer with a proven track record of delivering cutting-edge test solutions. Passionate about quality and adept at navigating the complexities of the ever-evolving software landscape.
+
+SKILLS
+Java, Selenium WebDriver, TestNG, Maven, Jenkins, Git, Postman, SQL, MySQL, Jira, Agile
+
+EXPERIENCE
+QA Automation Engineer, Finlytics Software (example), Pune
+Jun 2022 – Present
+• Spearheaded the development of a robust Selenium and TestNG framework, leveraging the Page Object Model to seamlessly automate 600+ regression test cases.
+• Successfully utilized Jenkins pipelines to run nightly suites, cutting regression time from 3 days to 6 hours.
+• Responsible for API testing using Postman for a wide array of payment services.
+• Collaborated with key stakeholders to foster a culture of quality excellence.
+
+Software Test Engineer, Brightline Tech (example), Bengaluru
+Jul 2020 – May 2022
+• Meticulously executed 1,200 manual test cases across web and mobile releases.
+• Was instrumental in reducing production defects by 35% through a holistic test planning approach.
+• Worked on SQL queries to validate data in MySQL.
+
+EDUCATION
+B.Tech, Computer Science, Example Institute of Technology, 2020`;
+
+const EXAMPLE_JD = `SDET, Payments Platform (example posting)
+
+We are looking for an SDET with 3+ years of experience in test automation to join our payments team.
+
+Requirements
+- Strong Java skills and hands-on test automation with Selenium and TestNG
+- API testing with REST Assured or Postman; experience testing REST APIs
+- CI/CD pipelines with Jenkins or GitHub Actions
+- Docker for test environments
+- Writing SQL to validate payments data
+- Working in Agile / Scrum teams, tracking defects in Jira
+- Experience with Cucumber BDD is a plus
+- Bachelor's degree in Computer Science or related field
+
+You will design the automation framework for payments services, own regression and smoke suites, and report test results to the payments engineering team.`;
+
+$('loadExample').addEventListener('click', () => { resumeEl.value = EXAMPLE_CV; jdEl.value = EXAMPLE_JD; $('fileNote').textContent = 'Example loaded. Paste or upload your own CV to replace it.'; renderScan(); });
+$('clearAll').addEventListener('click', () => { resumeEl.value = ''; jdEl.value = ''; renderScan(); resumeEl.focus(); });
+
+let t;
+[resumeEl, jdEl].forEach(el => el.addEventListener('input', () => { clearTimeout(t); t = setTimeout(renderScan, 220); }));
+
+/* ---------- Builder ---------- */
+const EXAMPLE_BUILD = {
+  name: 'Priya Nair (Example)', title: 'QA Automation Engineer', location: 'Pune, India', phone: '+91 98765 43210', email: 'priya.nair@example.com',
+  links: 'linkedin.com/in/priya-nair-example | github.com/priya-example',
+  summary: 'QA automation engineer with 4 years of experience testing payment and web applications. Builds Java, Selenium and TestNG frameworks and runs them in Jenkins CI.',
+  skills: 'Languages: Java, SQL\nTesting: Selenium WebDriver, TestNG, REST Assured, Postman, Cucumber\nTools: Maven, Jenkins, Git, Jira, Docker',
+  exp: [
+    { role: 'QA Automation Engineer', company: 'Finlytics Software (example)', place: 'Pune', start: 'Jun 2022', end: 'Present',
+      bullets: 'Built a Selenium and TestNG framework using the Page Object Model that automates 600+ regression tests.\nMoved nightly suites to Jenkins pipelines, cutting regression time from 3 days to 6 hours.\nSpearheaded API testing for 14 payment services using REST Assured and Postman.' },
+    { role: 'Software Test Engineer', company: 'Brightline Tech (example)', place: 'Bengaluru', start: 'Jul 2020', end: 'May 2022',
+      bullets: 'Ran 1,200 manual test cases per quarter across web and mobile releases.\nReduced production defects by 35% by adding risk-based test plans for each release.' }
+  ],
+  projects: [{ name: 'Open-source TestNG retry listener', tech: 'Java, TestNG', bullets: 'Published a retry analyzer used in 3 internal projects; cut flaky-test reruns by half.' }],
+  edu: [{ degree: 'B.Tech, Computer Science', school: 'Example Institute of Technology', year: '2020' }],
+  certs: 'ISTQB Certified Tester, Foundation Level (2021)'
+};
+let B = JSON.parse(JSON.stringify(EXAMPLE_BUILD));
+const BLANK = { exp: { role: '', company: '', place: '', start: '', end: '', bullets: '' }, projects: { name: '', tech: '', bullets: '' }, edu: { degree: '', school: '', year: '' } };
+
+function inp(path, label, val, opts = {}) {
+  const id = 'b-' + path.replace(/\./g, '-');
+  const field = opts.area
+    ? `<textarea id="${id}" data-path="${path}" rows="${opts.rows || 3}">${esc(val)}</textarea>`
+    : `<input type="text" id="${id}" data-path="${path}" value="${esc(val)}">`;
+  return `<div class="${opts.full ? 'full' : ''}"><label class="lbl" for="${id}">${label}</label>${field}</div>`;
+}
+function renderForm() {
+  const f = $('builderForm');
+  f.innerHTML = `
+    <div class="row between"><h2>Your details</h2><button class="btn small" id="bReset">Reset to example</button></div>
+    <p class="note">One fact per bullet, starting with a verb, with a number where you have one. The preview marks filler as you type.</p>
+    <fieldset><legend class="sec">Header</legend><div class="fields">
+      ${inp('name', 'Full name', B.name)}${inp('title', 'Target job title', B.title)}
+      ${inp('email', 'Email', B.email)}${inp('phone', 'Phone', B.phone)}
+      ${inp('location', 'City, country', B.location)}${inp('links', 'Links (LinkedIn, GitHub)', B.links)}
+    </div></fieldset>
+    <fieldset><legend class="sec">Summary</legend>${inp('summary', '2–3 lines: role, years, main stack', B.summary, { area: 1, rows: 3 })}</fieldset>
+    <fieldset><legend class="sec">Skills</legend>${inp('skills', 'One group per line, e.g. "Testing: Selenium, TestNG"', B.skills, { area: 1, rows: 4 })}</fieldset>
+    ${listSection('exp', 'Experience', e => `<div class="fields">${inp(e.p + 'role', 'Job title', e.v.role)}${inp(e.p + 'company', 'Company', e.v.company)}${inp(e.p + 'place', 'City', e.v.place)}<div class="fields" style="grid-template-columns:repeat(2,minmax(0,1fr))">${inp(e.p + 'start', 'Start (Jan 2022)', e.v.start)}${inp(e.p + 'end', 'End (or Present)', e.v.end)}</div>${inp(e.p + 'bullets', 'Achievements, one per line', e.v.bullets, { area: 1, rows: 4, full: 1 })}</div>`)}
+    ${listSection('projects', 'Projects', e => `<div class="fields">${inp(e.p + 'name', 'Project', e.v.name)}${inp(e.p + 'tech', 'Tech used', e.v.tech)}${inp(e.p + 'bullets', 'What it does and the result, one per line', e.v.bullets, { area: 1, rows: 2, full: 1 })}</div>`)}
+    ${listSection('edu', 'Education', e => `<div class="fields">${inp(e.p + 'degree', 'Degree and subject', e.v.degree, { full: 1 })}${inp(e.p + 'school', 'Institution', e.v.school)}${inp(e.p + 'year', 'Year', e.v.year)}</div>`)}
+    <fieldset><legend class="sec">Certifications</legend>${inp('certs', 'One per line', B.certs, { area: 1, rows: 2 })}</fieldset>`;
+  $('bReset').addEventListener('click', () => { B = JSON.parse(JSON.stringify(EXAMPLE_BUILD)); renderForm(); renderCV(); });
+}
+function listSection(key, title, body) {
+  const items = B[key].map((v, i) => `<div class="entry">${body({ v, p: `${key}.${i}.` })}<div><button class="btn small" data-remove="${key}.${i}">Remove</button></div></div>`).join('');
+  return `<fieldset><legend class="sec">${title}</legend>${items}<div><button class="btn small" data-add="${key}">Add ${title === 'Experience' ? 'job' : title === 'Education' ? 'degree' : 'project'}</button></div></fieldset>`;
+}
+$('builderForm').addEventListener('input', e => {
+  const p = e.target.dataset.path;
+  if (!p) return;
+  const parts = p.split('.');
+  let o = B;
+  while (parts.length > 1) o = o[parts.shift()];
+  o[parts[0]] = e.target.value;
+  renderCV();
+});
+$('builderForm').addEventListener('click', e => {
+  const add = e.target.dataset.add, rem = e.target.dataset.remove;
+  if (add) { B[add].push({ ...BLANK[add] }); renderForm(); renderCV(); }
+  if (rem) { const [k, i] = rem.split('.'); B[k].splice(+i, 1); renderForm(); renderCV(); }
+});
+
+const lines = s => (s || '').split('\n').map(l => l.replace(/^[-•*·▪◦–]\s*/, '').trim()).filter(Boolean);
+function dates(a, b) { return [a, b].filter(Boolean).join(' – '); }
+
+function buildText() {
+  const o = [];
+  if (B.name) o.push(B.name.toUpperCase());
+  if (B.title) o.push(B.title);
+  const contact = [B.location, B.phone, B.email, ...(B.links || '').split(/\s*\|\s*/)].filter(s => s && s.trim());
+  if (contact.length) o.push(contact.join(' | '));
+  const sec = (h, body) => { if (body.length) o.push('', h, ...body); };
+  sec('SUMMARY', B.summary.trim() ? [B.summary.trim()] : []);
+  sec('SKILLS', lines(B.skills));
+  const ex = [];
+  B.exp.forEach((e, i) => {
+    if (!e.role && !e.company) return;
+    if (i && ex.length) ex.push('');
+    ex.push([e.role, e.company, e.place].filter(Boolean).join(', '));
+    if (e.start || e.end) ex.push(dates(e.start, e.end));
+    lines(e.bullets).forEach(b => ex.push('- ' + b));
+  });
+  sec('EXPERIENCE', ex);
+  const pr = [];
+  B.projects.forEach((p, i) => {
+    if (!p.name) return;
+    if (i && pr.length) pr.push('');
+    pr.push(p.tech ? `${p.name} | ${p.tech}` : p.name);
+    lines(p.bullets).forEach(b => pr.push('- ' + b));
+  });
+  sec('PROJECTS', pr);
+  sec('EDUCATION', B.edu.filter(e => e.degree || e.school).map(e => [e.degree, e.school, e.year].filter(Boolean).join(', ')));
+  sec('CERTIFICATIONS', lines(B.certs).map(c => '- ' + c));
+  return o.join('\n');
+}
+
+function renderCV() {
+  const m = markOnly;
+  const contact = [B.location, B.phone, B.email, ...(B.links || '').split(/\s*\|\s*/)].filter(s => s && s.trim()).map(esc).join(' · ');
+  let h = `<p class="nm">${esc(B.name || 'Your Name')}</p>${B.title ? `<p class="tt">${m(B.title)}</p>` : ''}<p class="ct">${contact}</p>`;
+  if (B.summary.trim()) h += `<h4>Summary</h4><p>${m(B.summary.trim())}</p>`;
+  const sk = lines(B.skills);
+  if (sk.length) h += `<h4>Skills</h4>` + sk.map(s => `<p>${m(s)}</p>`).join('');
+  const ex = B.exp.filter(e => e.role || e.company);
+  if (ex.length) h += `<h4>Experience</h4>` + ex.map(e => `<div class="jh"><span>${esc([e.role, e.company].filter(Boolean).join(', '))}${e.place ? `, ${esc(e.place)}` : ''}</span><span>${esc(dates(e.start, e.end))}</span></div><ul>${lines(e.bullets).map(b => `<li>${m(b)}</li>`).join('')}</ul>`).join('');
+  const pr = B.projects.filter(p => p.name);
+  if (pr.length) h += `<h4>Projects</h4>` + pr.map(p => `<div class="jh"><span>${esc(p.name)}</span><span>${esc(p.tech)}</span></div><ul>${lines(p.bullets).map(b => `<li>${m(b)}</li>`).join('')}</ul>`).join('');
+  const ed = B.edu.filter(e => e.degree || e.school);
+  if (ed.length) h += `<h4>Education</h4>` + ed.map(e => `<div class="jh"><span>${esc([e.degree, e.school].filter(Boolean).join(', '))}</span><span>${esc(e.year)}</span></div>`).join('');
+  const ce = lines(B.certs);
+  if (ce.length) h += `<h4>Certifications</h4><ul>${ce.map(c => `<li>${m(c)}</li>`).join('')}</ul>`;
+  $('cvPreview').innerHTML = h;
+  const n = findSlop(buildText()).length;
+  $('bSlop').textContent = n ? `${n} slop phrase${n > 1 ? 's' : ''} in your CV` : 'No slop found';
+  $('bSlop').className = 'slopcount ' + (n ? 'some' : 'zero');
+  save();
+}
+
+$('bClean').addEventListener('click', () => {
+  const c = s => cleanText(s || '');
+  ['title', 'summary', 'skills', 'certs'].forEach(k => { B[k] = c(B[k]); });
+  B.exp.forEach(e => { e.bullets = c(e.bullets); });
+  B.projects.forEach(p => { p.bullets = c(p.bullets); });
+  renderForm(); renderCV();
+  const left = findSlop(buildText()).length;
+  $('bToast').textContent = left ? `Cleaned. ${left} highlighted phrase${left > 1 ? 's need' : ' needs'} a rewrite with your real numbers.` : 'Cleaned. No slop left.';
+});
+$('bCopy').addEventListener('click', () => {
+  const pre = document.createElement('pre'); pre.textContent = buildText();
+  copyText(buildText(), $('bToast'), $('cvPreview'));
+});
+$('bScan').addEventListener('click', () => { resumeEl.value = buildText(); selectTab('scan'); renderScan(); window.scrollTo({ top: 0 }); });
+
+/* ---------- Tabs and storage ---------- */
+function selectTab(name) {
+  ['scan', 'build'].forEach(n => { $('tab-' + n).setAttribute('aria-selected', String(n === name)); $('view-' + n).hidden = n !== name; });
+  try { localStorage.setItem('plaincv-tab', name); } catch (e) {}
+}
+$('tab-scan').addEventListener('click', () => selectTab('scan'));
+$('tab-build').addEventListener('click', () => selectTab('build'));
+
+let st;
+function save() {
+  clearTimeout(st);
+  st = setTimeout(() => { try { localStorage.setItem('plaincv-draft', JSON.stringify({ cv: resumeEl.value, jd: jdEl.value, b: B })); } catch (e) {} }, 400);
+}
+function restore() {
+  try {
+    const d = JSON.parse(localStorage.getItem('plaincv-draft') || 'null');
+    if (d && typeof d.cv === 'string') { resumeEl.value = d.cv; jdEl.value = d.jd || ''; if (d.b && d.b.exp) B = d.b; return true; }
+  } catch (e) {}
+  return false;
+}
+
+if (!restore()) { resumeEl.value = EXAMPLE_CV; jdEl.value = EXAMPLE_JD; }
+renderForm(); renderCV(); renderScan();
+let startTab = location.hash === '#build' ? 'build' : 'scan';
+try { if (!location.hash) startTab = localStorage.getItem('plaincv-tab') || 'scan'; } catch (e) {}
+selectTab(startTab === 'build' ? 'build' : 'scan');
+})();
+</script>
