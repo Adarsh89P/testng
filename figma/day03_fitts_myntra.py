@@ -178,14 +178,28 @@ SHUDDH = [
     "ऐसे ही और नियम सीखने के लिए, डिज़ाइन विद राखी से जुड़े रहिए।",
 ]
 
+# Everyday (normal) Hindi: conversational, keeps only words people really say (फ़ोन, बटन, स्क्रीन).
+NORMAL = [
+    "पैंतालीस दिन, पैंतालीस यू एक्स नियम। आज तीसरा दिन।",
+    "क्या आप डिज़ाइनर हैं? तो बताइए, फिट्स का नियम क्या है?",
+    "प्रिया मेट्रो में खड़ी है। एक हाथ से डंडा पकड़ा है, और दूसरे हाथ में फ़ोन। मिंत्रा पर उसे जूते पसंद आ गए।",
+    "अब सोचिए, अगर बैग में डालने वाला बटन ऊपर कोने में छोटा सा होता। अंगूठा वहाँ तक पहुँचता ही नहीं, और उंगली गलत जगह दब जाती।",
+    "हमारा अंगूठा स्क्रीन के नीचे वाले हिस्से तक सबसे आसानी से पहुँचता है। इसे अंगूठे का दायरा कहते हैं।",
+    "यही है फिट्स का नियम। बटन जितना बड़ा और जितना पास होगा, उसे दबाना उतना ही आसान और जल्दी होगा।",
+    "इसीलिए मिंत्रा में बैग वाला बटन नीचे होता है, बड़ा और चौड़ा। और नीचे जाते हुए भी वहीं टिका रहता है।",
+    "डिज़ाइनर के लिए सलाह। ज़रूरी बटन बड़े रखिए, और अंगूठे की पहुँच में। कम से कम अड़तालीस डी पी का।",
+    "ऐसे ही और नियमों के लिए, डिज़ाइन विद राखी को फ़ॉलो कीजिए।",
+]
+
 if __name__ == "__main__":
-    # usage: day03_fitts_myntra.py OUT [voice] [--shuddh]
+    # usage: day03_fitts_myntra.py OUT [voice] [--shuddh | --normal]
     voice = next((a for a in sys.argv[2:] if not a.startswith("--")), "hf_beta")
     scenes = SCENES
-    if "--shuddh" in sys.argv:
+    alt = SHUDDH if "--shuddh" in sys.argv else NORMAL if "--normal" in sys.argv else None
+    if alt:
         import copy
         scenes = [copy.copy(sc) for sc in SCENES]
-        for sc, t in zip(scenes, SHUDDH):
+        for sc, t in zip(scenes, alt):
             sc.spoken = t
     kw = dict(voice_fx=False) if voice.startswith("indic_") else dict(lang="hi", natural=False, voice_fx=False)
     print("duration", round(render(scenes, sys.argv[1], W, H, cap_y=None, voice=voice, **kw), 1), "s")
