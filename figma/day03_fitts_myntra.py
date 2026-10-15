@@ -165,6 +165,27 @@ SCENES = [
           clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
+# Pure (shuddh) Hindi narration: no English words except names (Myntra, Fitts, Design with Rakhi).
+SHUDDH = [
+    "पैंतालीस दिन, उपयोगकर्ता अनुभव के पैंतालीस नियम। आज तीसरा दिन।",
+    "क्या आप उपयोगकर्ता अनुभव के रचनाकार हैं? तो बताइए, फिट्स का नियम क्या है?",
+    "प्रिया मेट्रो में खड़ी है। एक हाथ से डंडा थामा है, और दूसरे हाथ से खरीदारी कर रही है। मिंत्रा पर उसे जूते पसंद आ गए।",
+    "अब सोचिए, अगर थैले में डालने वाला बटन ऊपर कोने में, छोटा सा होता। अंगूठा वहाँ पहुँचता ही नहीं, और उंगली गलत जगह दब जाती।",
+    "हमारा अंगूठा परदे के निचले हिस्से तक सबसे आसानी से पहुँचता है। इसे अंगूठे का दायरा कहते हैं।",
+    "यही है फिट्स का नियम। बटन जितना बड़ा, और जितना पास, उसे दबाना उतना ही आसान और तेज़।",
+    "इसीलिए मिंत्रा में थैले में डालने का बटन नीचे होता है, बड़ा और चौड़ा, और पन्ना सरकाने पर भी वहीं टिका रहता है।",
+    "रचनाकारों के लिए सलाह। ज़रूरी बटन बड़े रखिए, और अंगूठे की पहुँच में। छूने की जगह कम से कम अड़तालीस डी पी की हो।",
+    "ऐसे ही और नियम सीखने के लिए, डिज़ाइन विद राखी से जुड़े रहिए।",
+]
+
 if __name__ == "__main__":
-    print("duration", round(render(SCENES, sys.argv[1], W, H, cap_y=None, voice="hf_beta", lang="hi",
-                                   natural=False, voice_fx=False), 1), "s")
+    # usage: day03_fitts_myntra.py OUT [voice] [--shuddh]
+    voice = next((a for a in sys.argv[2:] if not a.startswith("--")), "hf_beta")
+    scenes = SCENES
+    if "--shuddh" in sys.argv:
+        import copy
+        scenes = [copy.copy(sc) for sc in SCENES]
+        for sc, t in zip(scenes, SHUDDH):
+            sc.spoken = t
+    kw = dict(voice_fx=False) if voice.startswith("indic_") else dict(lang="hi", natural=False, voice_fx=False)
+    print("duration", round(render(scenes, sys.argv[1], W, H, cap_y=None, voice=voice, **kw), 1), "s")
