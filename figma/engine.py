@@ -16,6 +16,21 @@ LANGS = {"h": "hi", "a": "en-us", "b": "en-gb"}
 NATURAL = True              # phrase-by-phrase synthesis with human-like, slightly varied pauses
 
 
+WARM_FX = ("asetrate=24000*1.05,aresample=24000,atempo=0.952381,"
+           "equalizer=f=220:t=q:w=1:g=2,equalizer=f=3000:t=q:w=1.5:g=2,equalizer=f=7500:t=q:w=2:g=-3")
+
+
+def warm_hi(text, speed=None):
+    """'warm_hi': 60/40 blend of Kokoro's hf_alpha + hf_beta styles, slightly slower with longer pauses,
+    pitch +5% (duration kept), warm/sweet EQ. A new voice of its own - not a copy of any person."""
+    style = (0.6 * _K.get_voice_style("hf_alpha") + 0.4 * _K.get_voice_style("hf_beta")).astype(np.float32)
+    s, sr = _K.create(text, voice=style, speed=speed or 0.95, lang="hi", sentence_pause=0.35, clause_pause=0.15)
+    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(sr), "-ac", "1", "-i", "-", "-af", WARM_FX,
+                          "-f", "f32le", "-ar", str(sr), "-ac", "1", "-"], input=s.astype(np.float32).tobytes(),
+                         capture_output=True, check=True).stdout
+    return np.frombuffer(out, np.float32).copy()
+
+
 def natural_tts(text, voice, speed, lang):
     """Split at phrase boundaries and rejoin with varied pauses, so delivery breathes like a person talking."""
     import re
@@ -36,6 +51,8 @@ def natural_tts(text, voice, speed, lang):
 def tts(text, voice=VOICE, speed=None, lang=None):
     global _K
     if _K is None: _K = Kokoro(f"{M}/kokoro-v1.0.onnx", f"{M}/voices-v1.0.bin")
+    if voice == "warm_hi":                      # custom warm, soft Indian-female Hindi voice (blend + gentle shaping)
+        return warm_hi(text, speed)
     lang = lang or DEFAULT_LANG or LANGS.get(voice[0], "en-us")
     speed = speed or (0.97 if lang == "hi" else 1.0)
     if NATURAL:
