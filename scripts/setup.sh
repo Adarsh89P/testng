@@ -42,3 +42,13 @@ import kokoro_onnx, moviepy, cv2, numpy, soundfile, pydub
 print("all python imports ok, raqm", features.version('raqm'))
 PY
 echo "setup complete"
+
+echo "== optional: AI4Bharat Indic-TTS Hindi voices (more natural; ~6 GB with PyTorch). Set INDIC=1 to install."
+if [ "${INDIC:-0}" = "1" ]; then
+  python3 -m venv /home/user/venv-tts
+  /home/user/venv-tts/bin/pip install -q --upgrade pip setuptools wheel
+  /home/user/venv-tts/bin/pip install -q coqui-tts torch torchaudio torchcodec "transformers>=4.43,<4.58"
+  mkdir -p "$MODELS/indic" && cd "$MODELS/indic"
+  [ -d hi ] || { curl -sSL -o hi.zip https://github.com/AI4Bharat/Indic-TTS/releases/download/v1-checkpoints-release/hi.zip && unzip -q hi.zip && rm hi.zip; }
+  cd "$ROOT"
+fi

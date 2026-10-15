@@ -31,6 +31,25 @@ def warm_hi(text, speed=None):
     return np.frombuffer(out, np.float32).copy()
 
 
+VENV_PY = "/home/user/venv-tts/bin/python"
+INDIC = os.path.join(os.path.dirname(__file__), "..", "tools", "indic_tts.py")
+
+
+def indic_batch(texts, speaker="female"):
+    """AI4Bharat Indic-TTS Hindi (native-speaker FastPitch + HiFi-GAN) via the isolated venv; resampled to SR."""
+    import json, tempfile
+    d = tempfile.mkdtemp(); js = os.path.join(d, "lines.json")
+    json.dump([[speaker, t or "।"] for t in texts], open(js, "w"), ensure_ascii=False)
+    subprocess.run([VENV_PY, "-W", "ignore", INDIC, "--batch", js, d], check=True, capture_output=True)
+    out = []
+    for i, t in enumerate(texts):
+        if not t: out.append(np.zeros(1, np.float32)); continue
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(d, f"{i:03d}.wav"), "-af", "highpass=f=70",
+                              "-ac", "1", "-ar", str(SR), "-f", "f32le", "-"], capture_output=True, check=True).stdout
+        out.append(np.frombuffer(raw, np.float32).copy())
+    return out
+
+
 def natural_tts(text, voice, speed, lang):
     """Split at phrase boundaries and rejoin with varied pauses, so delivery breathes like a person talking."""
     import re
@@ -211,7 +230,10 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir
     global NATURAL
     _nat = NATURAL
     if natural is not None: NATURAL = natural
-    voices = [tts(s.spoken, voice, speed=(1.05 if natural is False else None), lang=lang) if s.spoken else np.zeros(1, np.float32) for s in scenes]
+    if voice.startswith("indic_"):
+        voices = indic_batch([s.spoken for s in scenes], voice.split("_", 1)[1])
+    else:
+      voices = [tts(s.spoken, voice, speed=(1.05 if natural is False else None), lang=lang) if s.spoken else np.zeros(1, np.float32) for s in scenes]
     durs = [max(len(v) / SR + s.pad + s.hold, s.min_dur) for v, s in zip(voices, scenes)]
     total = sum(durs) + 0.8
     audio = np.zeros(int(SR * total) + SR, np.float32)
