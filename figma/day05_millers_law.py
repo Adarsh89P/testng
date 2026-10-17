@@ -203,12 +203,6 @@ SCENES = [
           clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
-VO = os.path.join(os.path.dirname(__file__), "..", "assets", "voice", "day05", "full.mp3")
-
 if __name__ == "__main__":
-    # usage: day05_millers_law.py OUT          -> uses the ElevenLabs voice-over if assets/voice/day05/full.mp3 exists,
-    #                                             otherwise an hf_beta TTS preview
-    clips = split_audio(VO, "auto", n=len(SCENES)) if os.path.exists(VO) else None
-    print("voice:", "ElevenLabs VO" if clips else "TTS preview")
-    print("duration", round(render(SCENES, sys.argv[1], W, H, cap_y=None, voice="hf_beta", lang="hi",
-                                   natural=False, voice_fx=False, voice_clips=clips), 1), "s")
+    import daily
+    daily.run(5, "Miller's Law", SCENES, "day05_millers_law")

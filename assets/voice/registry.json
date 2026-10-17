@@ -1,0 +1,12 @@
+{
+  "day04": {
+    "day": "day04",
+    "topic": "Jakob's Law",
+    "file": "assets/voice/day04/full.mp3",
+    "sha256": "35441e93fb9bebd9dd2cc9005c2e3348e156822ba86c214eca60365177fb90c1",
+    "duration": 56.45,
+    "script_cost": 0.473,
+    "other_days": {},
+    "module": "day04_jakobs_law"
+  }
+}

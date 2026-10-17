@@ -252,12 +252,9 @@ SCENES = [
           clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
-# ElevenLabs voice-over supplied by the user (Tisha K), split at the pause between script lines.
-VO = os.path.join(os.path.dirname(__file__), "..", "assets", "voice", "day04", "full.mp3")
+# The Day 04 voice-over (ElevenLabs Tisha K) has no long pauses, so it is split at measured cut times.
 VO_CUTS = [8.28, 12.40, 20.71, 28.51, 35.89, 44.87, 52.73]
 
 if __name__ == "__main__":
-    # usage: day04_jakobs_law.py OUT [--vo]   (--vo = use the supplied voice-over instead of TTS)
-    clips = split_audio(VO, VO_CUTS) if "--vo" in sys.argv else None
-    print("duration", round(render(SCENES, sys.argv[1], W, H, cap_y=None, voice="hf_beta", lang="hi",
-                                   natural=False, voice_fx=False, voice_clips=clips), 1), "s")
+    import daily
+    daily.run(4, "Jakob's Law", SCENES, "day04_jakobs_law", cuts=VO_CUTS)
