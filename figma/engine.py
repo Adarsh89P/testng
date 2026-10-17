@@ -224,11 +224,35 @@ VOICE_FX = ("highpass=f=75,equalizer=f=180:t=q:w=1.2:g=2.5,equalizer=f=3200:t=q:
             "aecho=0.85:0.6:22|37:0.06|0.04")
 
 
-def split_audio(path, cuts):
-    """Load a recorded / generated voice-over and split it at the given times (s) into per-scene clips."""
+def auto_cuts(y, n, min_gap=0.25):
+    """Pick the n-1 longest pauses in a voice-over as line boundaries (returns their midpoints, in time order)."""
+    hop = int(0.01 * SR)
+    rms = np.sqrt(np.convolve(y ** 2, np.ones(hop * 3) / (hop * 3), "same")[::hop])
+    quiet = rms < max(0.004, 0.06 * np.percentile(rms, 95))
+    gaps, i = [], 0
+    while i < len(quiet):
+        if quiet[i]:
+            j = i
+            while j < len(quiet) and quiet[j]: j += 1
+            if i > 0 and j < len(quiet) and (j - i) * 0.01 >= min_gap: gaps.append(((j - i) * 0.01, (i + j) / 2 * 0.01))
+            i = j
+        else: i += 1
+    best = sorted(gaps, reverse=True)[:n - 1]
+    if len(best) < n - 1 or best[-1][0] < 0.7:
+        print(f"WARNING auto_cuts: only {sum(g >= 0.7 for g, _ in gaps)} pauses >= 0.7 s for {n - 1} cuts; "
+              "check the split or pass explicit cut times")
+    return sorted(m for _, m in best)
+
+
+def split_audio(path, cuts, n=None):
+    """Load a recorded / generated voice-over and split it into per-scene clips.
+    cuts: list of times (s), or "auto" to cut at the n-1 longest pauses (leave ~1 s silence between lines)."""
     raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", path, "-ac", "1", "-ar", str(SR), "-af", "highpass=f=60",
                           "-f", "f32le", "-"], capture_output=True, check=True).stdout
     y = np.frombuffer(raw, np.float32).copy()
+    if cuts == "auto":
+        cuts = auto_cuts(y, n)
+        print("auto cuts:", [round(c, 2) for c in cuts])
     edges = [0.0] + list(cuts) + [len(y) / SR]
     out = []
     for a, b in zip(edges, edges[1:]):
