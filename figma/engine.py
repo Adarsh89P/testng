@@ -224,13 +224,32 @@ VOICE_FX = ("highpass=f=75,equalizer=f=180:t=q:w=1.2:g=2.5,equalizer=f=3200:t=q:
             "aecho=0.85:0.6:22|37:0.06|0.04")
 
 
-def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=None, lang=None, natural=None, voice_fx=True):
+def split_audio(path, cuts):
+    """Load a recorded / generated voice-over and split it at the given times (s) into per-scene clips."""
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", path, "-ac", "1", "-ar", str(SR), "-af", "highpass=f=60",
+                          "-f", "f32le", "-"], capture_output=True, check=True).stdout
+    y = np.frombuffer(raw, np.float32).copy()
+    edges = [0.0] + list(cuts) + [len(y) / SR]
+    out = []
+    for a, b in zip(edges, edges[1:]):
+        seg = y[int(a * SR):int(b * SR)]
+        nz = np.where(np.abs(seg) > 0.01)[0]                 # trim leading / trailing silence
+        seg = seg[max(0, nz[0] - int(0.03 * SR)):nz[-1] + int(0.08 * SR)] if len(nz) else seg
+        out.append(seg.astype(np.float32))
+    return out
+
+
+def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=None, lang=None, natural=None, voice_fx=True,
+           voice_clips=None):
+    """voice_clips: optional list of float32 arrays (one per scene, at SR), e.g. from split_audio(), used instead of TTS."""
     workdir = workdir or os.path.dirname(out)
     os.makedirs(workdir, exist_ok=True)
     global NATURAL
     _nat = NATURAL
     if natural is not None: NATURAL = natural
-    if voice.startswith("indic_"):
+    if voice_clips is not None:
+        voices = list(voice_clips)
+    elif voice.startswith("indic_"):
         voices = indic_batch([s.spoken for s in scenes], voice.split("_", 1)[1])
     else:
       voices = [tts(s.spoken, voice, speed=(1.05 if natural is False else None), lang=lang) if s.spoken else np.zeros(1, np.float32) for s in scenes]

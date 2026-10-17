@@ -3,7 +3,7 @@
 Users spend most of their time in OTHER apps, so they expect yours to work the same way: swipe up for the next
 video, double-tap to like, actions on the right. Same Day 02 pattern and the Hinglish hf_beta voice (Days 1-3).
 """
-import sys, math
+import os, sys, math
 from engine import *
 from fx import Stage, dot_text, flash, ring
 import day02_hicks_law as D
@@ -252,6 +252,12 @@ SCENES = [
           clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
+# ElevenLabs voice-over supplied by the user (Tisha K), split at the pause between script lines.
+VO = os.path.join(os.path.dirname(__file__), "..", "assets", "voice", "day04", "full.mp3")
+VO_CUTS = [8.28, 12.40, 20.71, 28.51, 35.89, 44.87, 52.73]
+
 if __name__ == "__main__":
+    # usage: day04_jakobs_law.py OUT [--vo]   (--vo = use the supplied voice-over instead of TTS)
+    clips = split_audio(VO, VO_CUTS) if "--vo" in sys.argv else None
     print("duration", round(render(SCENES, sys.argv[1], W, H, cap_y=None, voice="hf_beta", lang="hi",
-                                   natural=False, voice_fx=False), 1), "s")
+                                   natural=False, voice_fx=False, voice_clips=clips), 1), "s")
