@@ -3,7 +3,8 @@
 Before a day's video is rendered with a supplied voice-over:
   1. sha256 of the audio is compared with every registered day: an identical file registered to another day is rejected.
   2. Duration must be plausible for the script (0.6x - 1.8x of a TTS reading of the same lines).
-  3. Content: the audio is aligned (MFCC + DTW) against a TTS reading of TODAY's script and of every other registered
+  3. Voice: timbre similarity to the Day 04 master (Tisha K) must be >= VOICE_MIN (different words are expected).
+  4. Content: the audio is aligned (MFCC + DTW) against a TTS reading of TODAY's script and of every other registered
      day's script. It must match today's script below COST_MAX and better than any other day's script.
      This is an acoustic alignment check, not a transcript (no speech-recognition model is reachable here).
 After rendering, check_output() runs the same content check on the final video's audio track.
@@ -15,6 +16,8 @@ import numpy as np
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 REG = os.path.join(ROOT, "assets", "voice", "registry.json")
 COST_MAX = 0.55          # Day 04 audio vs its own script: 0.47; vs Day 05 script: 0.62
+MASTER = os.path.join(ROOT, "assets", "voice", "day04", "full.mp3")   # master voice reference (Tisha K), never reused
+VOICE_MIN = 0.96         # master half vs other half: 0.995; Kokoro hf_beta / hf_alpha vs master: 0.89 / 0.90
 
 
 class VoiceError(Exception):
@@ -66,6 +69,18 @@ def match_cost(y, scenes):
     return float(D[-1, -1] / len(wp)), len(_script_audio(scenes)) / engine.SR
 
 
+def voice_profile(y, sr):
+    """Speaker timbre profile: MFCC mean + spread over the whole clip (content-independent enough for one speaker)."""
+    import librosa
+    m = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=20)[1:]
+    return np.concatenate([m.mean(1), m.std(1)])
+
+
+def voice_similarity(y, sr, master=MASTER):
+    a, b = voice_profile(y, sr), voice_profile(_load(master, sr), sr)
+    return float(a @ b / np.linalg.norm(a) / np.linalg.norm(b))
+
+
 def _day_scenes(day):
     """SCENES of another registered day's module (for the 'better than other days' check)."""
     mod = load_registry().get(f"day{day:02d}", {}).get("module")
@@ -88,14 +103,18 @@ def verify(day, topic, path, scenes, module):
     cost, ref_dur = match_cost(y, scenes)
     if not (0.6 * ref_dur <= dur <= 1.8 * ref_dur):
         raise VoiceError(f"{key} ({topic}): audio is {dur:.1f}s but the script reads in ~{ref_dur:.1f}s; wrong file?")
+    vsim = voice_similarity(y, engine.SR) if key != "day04" else 1.0
     others = {}
     for k in load_registry():
         if k != key:
             sc = _day_scenes(int(k[3:]))
             if sc: others[k] = match_cost(y, sc)[0]
     report = dict(day=key, topic=topic, file=os.path.relpath(path, ROOT), sha256=h, duration=round(dur, 2),
-                  script_cost=round(cost, 3), other_days={k: round(v, 3) for k, v in others.items()})
+                  script_cost=round(cost, 3), voice_similarity=round(vsim, 3), other_days={k: round(v, 3) for k, v in others.items()})
     print("voice check:", report)
+    if vsim < VOICE_MIN:
+        raise VoiceError(f"{key} ({topic}): voice does not match the Day 04 Tisha K master (similarity {vsim:.3f} < "
+                         f"{VOICE_MIN}). Wrong voice or settings?")
     if cost > COST_MAX:
         raise VoiceError(f"{key} ({topic}): audio does not match today's script (cost {cost:.3f} > {COST_MAX}).")
     better = [k for k, v in others.items() if v <= cost]
