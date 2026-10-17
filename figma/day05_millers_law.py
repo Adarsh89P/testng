@@ -1,8 +1,8 @@
 """Day 05/45 · Miller's Law (chunking), explained with PhonePe's OTP boxes and 4-4-4-4 card number input.
 
 We hold roughly 7±2 items in working memory, so long information is easier when it is broken into chunks:
-98765 43210 instead of 9876543210. Day 02 pattern. Voice: ElevenLabs "Tisha K" voice-over supplied by the user
-(assets/voice/day05/full.mp3, generated from the script in docs/scripts/day05.md); hf_beta TTS is only a preview.
+98765 43210 instead of 9876543210. Day 02 pattern. Voice: a NEW Day 05 voice-over (offline --generate in the reference voice, or Rakhi's own
+recording) at assets/voice/day05/full.*; see docs/voice_workflow.md.
 """
 import os, sys, math
 from engine import *
@@ -183,7 +183,7 @@ def s6(cv, t, d, st):                                     # designer tip: DON'T 
     hud(cv)
 
 
-# Narration (Hinglish). The ElevenLabs voice-over is generated from docs/scripts/day05.md, same lines and order.
+# Narration (Hinglish): the approved Day 05 script. Generated / recorded voice-overs use exactly these lines.
 SCENES = [
     Scene("पैंतालीस दिन, पैंतालीस यू एक्स लॉज़। डे फाइव।", "", D.s0, min_dur=4.0, sfx=[(0.0, "riser"), (1.5, "pop_hi")]),
     Scene("यू एक्स डिज़ाइनर हो? तो बताओ, मिलर्स लॉ क्या है?", "", s1, min_dur=4.8, whoosh=True, sfx=[(1.3, "drop"), (2.5, "pop")]),

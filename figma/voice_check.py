@@ -76,7 +76,14 @@ def voice_profile(y, sr):
     return np.concatenate([m.mean(1), m.std(1)])
 
 
-def voice_similarity(y, sr, master=MASTER):
+def master_voice():
+    """Voice the series must sound like: the configured clone reference if any, else the Day 04 master."""
+    cfg = os.path.join(ROOT, "assets", "voice", "reference.json")
+    return os.path.join(ROOT, json.load(open(cfg))["file"]) if os.path.exists(cfg) else MASTER
+
+
+def voice_similarity(y, sr, master=None):
+    master = master or master_voice()
     a, b = voice_profile(y, sr), voice_profile(_load(master, sr), sr)
     return float(a @ b / np.linalg.norm(a) / np.linalg.norm(b))
 
@@ -113,7 +120,7 @@ def verify(day, topic, path, scenes, module):
                   script_cost=round(cost, 3), voice_similarity=round(vsim, 3), other_days={k: round(v, 3) for k, v in others.items()})
     print("voice check:", report)
     if vsim < VOICE_MIN:
-        raise VoiceError(f"{key} ({topic}): voice does not match the Day 04 Tisha K master (similarity {vsim:.3f} < "
+        raise VoiceError(f"{key} ({topic}): voice does not match the series reference voice (similarity {vsim:.3f} < "
                          f"{VOICE_MIN}). Wrong voice or settings?")
     if cost > COST_MAX:
         raise VoiceError(f"{key} ({topic}): audio does not match today's script (cost {cost:.3f} > {COST_MAX}).")

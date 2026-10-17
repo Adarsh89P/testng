@@ -51,4 +51,7 @@ if [ "${INDIC:-0}" = "1" ]; then
   mkdir -p "$MODELS/indic" && cd "$MODELS/indic"
   [ -d hi ] || { curl -sSL -o hi.zip https://github.com/AI4Bharat/Indic-TTS/releases/download/v1-checkpoints-release/hi.zip && unzip -q hi.zip && rm hi.zip; }
   cd "$ROOT"
+  # FreeVC24 voice conversion (MIT) + WavLM, from coqui's GitHub releases, for offline reference-voice generation
+  TTS_HOME="$MODELS/coqui" COQUI_TOS_AGREED=1 /home/user/venv-tts/bin/python -c \
+    "from TTS.api import TTS; TTS('voice_conversion_models/multilingual/vctk/freevc24', progress_bar=False)"
 fi

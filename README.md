@@ -19,7 +19,7 @@ Installs ffmpeg, Devanagari + display fonts, Python libs, the offline Kokoro TTS
 | Audio edits | pydub, soundfile | |
 
 ## Network limits in this environment
-Blocked by egress policy: Microsoft Edge TTS, Hugging Face, Pexels, Pixabay, ElevenLabs, OpenAI.
+Blocked by egress policy: Microsoft Edge TTS, Hugging Face, Pexels, Pixabay, ElevenLabs (not used: voice-overs are generated offline or recorded), OpenAI.
 GitHub and PyPI work. Stock footage/music must come from the user, connectors, or be generated.
 
 ## Carried over from chat 1 ("Youtubeautomation")

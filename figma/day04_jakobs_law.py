@@ -252,7 +252,7 @@ SCENES = [
           clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
-# The Day 04 voice-over (ElevenLabs Tisha K) has no long pauses, so it is split at measured cut times.
+# The Day 04 voice-over (Tisha K master, supplied by Rakhi) has no long pauses, so it is split at measured cut times.
 VO_CUTS = [8.28, 12.40, 20.71, 28.51, 35.89, 44.87, 52.73]
 
 if __name__ == "__main__":
