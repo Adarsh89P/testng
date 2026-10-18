@@ -5,7 +5,7 @@ Video: `figma/day05_millers_law.py`.
 
 ```
 45 din, 45 UX laws. Day five.
-UX designer ho? Miller's Law kya hai?
+Kya aapko pata hai, Miller's Law kya hai? Hum padhte toh hain, lekin bhool jaate hain. Chalo, aaj ek live app ke through samajhte hain.
 Ek lesson mein 500 naye words? Das ke baad hi dimaag full.
 Ab wahi course chhote units mein, aur har lesson mein bas kuch words.
 Yahi hai Miller's Law. Dimaag ek baar mein lagbhag saat cheezein hi yaad rakhta hai.

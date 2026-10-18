@@ -23,6 +23,32 @@ PX, PY, PW, PH = W / 2, 1060, 480, 880
 X0, Y0 = PX - PW / 2, PY - PH / 2
 
 
+def s1(cv, t, d, st):                                     # hook: "kya aapko pata hai?" -> padhte hain, bhool jaate hain -> live app
+    def world(c):
+        mono(c, "kya aapko pata hai?", 700, DOT, 58, chars=int(t * 16))
+        if t > 1.2:
+            dot_text(c, "MILLER'S LAW", 112, W / 2, 880, ease(1 - (t - 1.2) / 0.8), col=P.TEAL)
+            c.glow(W / 2, 880, 400, 0.08)
+        if t > 2.2: mono(c, "kya hai?", 1020, DOT, 58, chars=int((t - 2.2) * 14))
+        if t > 3.2:                                          # read it ... forget it: an open book whose dots fall away
+            bx, by = W / 2, 1230
+            c.dots_path([(bx - 160, by - 50), (bx, by - 20), (bx + 160, by - 50), (bx + 160, by + 60), (bx, by + 90),
+                         (bx - 160, by + 60), (bx - 160, by - 50)], spacing=8, r=2.2, col=DOT)
+            c.dots_path([(bx, by - 20), (bx, by + 90)], spacing=8, r=2.0, col=DIM)
+            for i in range(24):
+                k = max(0, min(1, (t - 3.8 - (i % 8) * 0.06) / 1.2))
+                c._dot(bx - 130 + (i % 12) * 23, by - 10 + (i // 12) * 40 + 420 * k * k, 4, COLS[i % 6], 1 - k)
+            c.pill(W / 2, 1380, "padhte hain... bhool jaate hain", size=30, fam=MONO, col=RED if t > 4.2 else DOT)
+        if t > 5.4:
+            c.pill(W / 2, 1490, "aaj live app se samjhein →", size=34, fam=SANS, col=DARK, bg=DGREEN, bold=True)
+        for i in range(12):
+            ang = t * 0.8 + i / 12 * 6.283
+            c._dot(W / 2 + math.cos(ang) * 470, 880 + math.sin(ang) * 300, 5, COLS[i % 6], 0.8)
+    stage.compose(cv, t, d, world, K((0, (W / 2, 880), 1.35), (1.2, (W / 2, 880), 1.35), (2.1, (W / 2, 960), 1.0),
+                                     (3.0, (W / 2, 1100), 1.0), (5.2, (W / 2, 1150), 1.05)), seed=2)
+    hud(cv); flash(cv, t, 1.2)
+
+
 def s2(cv, t, d, st):                                     # story: 500 words in ONE lesson
     n = int(max(0, t - 0.8) * 40)
     def world(c):
@@ -109,7 +135,8 @@ def s5(cv, t, d, st):                                     # Duolingo app: unit b
 
 SCENES = [
     Scene("पैंतालीस दिन, पैंतालीस यू एक्स लॉज़। डे फाइव।", "", D.s0, min_dur=4.0, sfx=[(0.0, "riser"), (1.5, "pop_hi")]),
-    Scene("यू एक्स डिज़ाइनर हो? मिलर्स लॉ क्या है?", "", P.s1, min_dur=4.8, whoosh=True, sfx=[(1.3, "drop"), (2.5, "pop")]),
+    Scene("क्या आपको पता है, मिलर्स लॉ क्या है? हम पढ़ते तो हैं, लेकिन भूल जाते हैं। चलो, आज एक लाइव ऐप के थ्रू समझते हैं।", "", s1,
+          min_dur=7.2, whoosh=True, sfx=[(1.2, "drop"), (2.2, "pop"), (3.8, "riser"), (4.2, "buzz"), (5.4, "pop_hi")]),
     Scene("एक लेसन में पाँच सौ नए वर्ड्स? दस के बाद ही दिमाग फुल।", "", s2,
           min_dur=6.0, whoosh=True, sfx=[(0.8 + i * 0.2, "tick") for i in range(10)] + [(3.0, "buzz")]),
     Scene("अब वही कोर्स छोटे यूनिट्स में, और हर लेसन में बस कुछ वर्ड्स।", "", s3,
