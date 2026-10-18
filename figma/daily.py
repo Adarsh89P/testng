@@ -20,7 +20,8 @@ def run(day, topic, scenes, module, out=None, cuts="auto"):
     out = out or sys.argv[1]
     if "--preview" in sys.argv:
         print(f"day{day:02d} PREVIEW with stand-in TTS (not the final voice)")
-        d = engine.render(scenes, out, W, H, cap_y=None, voice="hf_beta", lang="hi", natural=False, voice_fx=False)
+        d = engine.render(scenes, out, W, H, cap_y=None, voice="hf_beta", lang="hi", natural=False, voice_fx=False,
+                          fit_voice=True)
         print("duration", round(d, 1), "s"); return
     if "--generate" in sys.argv and not os.path.exists(vo_path(day)):
         import voice_gen
@@ -33,6 +34,6 @@ def run(day, topic, scenes, module, out=None, cuts="auto"):
         sys.exit(f"STOP: {e}")
     clips = engine.split_audio(path, cuts, n=len(scenes))
     d = engine.render(scenes, out, W, H, cap_y=None, voice="hf_beta", lang="hi", natural=False, voice_fx=False,
-                      voice_clips=clips)
+                      voice_clips=clips, fit_voice=True)
     voice_check.check_output(out, scenes, f"day{day:02d}")
     print("duration", round(d, 1), "s ·", out)

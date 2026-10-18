@@ -244,6 +244,9 @@ def auto_cuts(y, n, min_gap=0.25):
     return sorted(m for _, m in best)
 
 
+FIT_PAD = 0.45               # breath after each line when fit_voice=True
+
+
 def split_audio(path, cuts, n=None):
     """Load a recorded / generated voice-over and split it into per-scene clips.
     cuts: list of times (s), or "auto" to cut at the n-1 longest pauses (leave ~1 s silence between lines)."""
@@ -264,8 +267,10 @@ def split_audio(path, cuts, n=None):
 
 
 def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir=None, bgm=None, lang=None, natural=None, voice_fx=True,
-           voice_clips=None):
-    """voice_clips: optional list of float32 arrays (one per scene, at SR), e.g. from split_audio(), used instead of TTS."""
+           voice_clips=None, fit_voice=False):
+    """voice_clips: optional list of float32 arrays (one per scene, at SR), e.g. from split_audio(), used instead of TTS.
+    fit_voice: each scene lasts exactly its voice line (+ a short breath) instead of min_dur; the scene's animation,
+    clicks and SFX are time-scaled to fit, so there is no silent stretch while the visuals keep going."""
     workdir = workdir or os.path.dirname(out)
     os.makedirs(workdir, exist_ok=True)
     global NATURAL
@@ -277,19 +282,26 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir
         voices = indic_batch([s.spoken for s in scenes], voice.split("_", 1)[1])
     else:
       voices = [tts(s.spoken, voice, speed=(1.05 if natural is False else None), lang=lang) if s.spoken else np.zeros(1, np.float32) for s in scenes]
-    durs = [max(len(v) / SR + s.pad + s.hold, s.min_dur) for v, s in zip(voices, scenes)]
+    nominal = [max(len(v) / SR + s.pad + s.hold, s.min_dur) for v, s in zip(voices, scenes)]   # timeline the scene was authored for
+    if fit_voice:
+        durs = [len(v) / SR + 0.1 + FIT_PAD + s.hold if len(v) > 1 else n for v, s, n in zip(voices, scenes, nominal)]
+    else:
+        durs = list(nominal)
+    speed = [n / d for n, d in zip(nominal, durs)]            # >1: animation plays faster to match a shorter voice line
     total = sum(durs) + 0.8
     audio = np.zeros(int(SR * total) + SR, np.float32)
     vo_bus = np.zeros_like(audio)
     starts, t0 = [], 0.25
-    for v, d, s in zip(voices, durs, scenes):
+    for v, d, s, k in zip(voices, durs, scenes, speed):
         starts.append(t0); mix_into(audio, v, t0 + 0.1); mix_into(vo_bus, v, t0 + 0.1)
         if s.whoosh: mix_into(audio, whoosh(), max(0, t0 - 0.15), 0.5)
-        for c in s.clicks: mix_into(audio, mouse_click(), t0 + c, 0.7)
-        for ft, kind in s.sfx: mix_into(audio, SFX[kind](), t0 + ft, 0.8)
+        for c in s.clicks:
+            if c / k < d: mix_into(audio, mouse_click(), t0 + c / k, 0.7)
+        for ft, kind in s.sfx:
+            if ft / k < d: mix_into(audio, SFX[kind](), t0 + ft / k, 0.8)
         for a, b in s.type_spans:
-            tt = t0 + a
-            while tt < t0 + b: mix_into(audio, click(), tt, 0.5); tt += random.uniform(0.045, 0.085)
+            tt = t0 + a / k
+            while tt < t0 + b / k: mix_into(audio, click(), tt, 0.5); tt += random.uniform(0.045, 0.085)
         t0 += d
     # bgm: None = no background (default), "synth" = generated pad, or a file path (e.g. BGM_DEFAULT) ducked under voice
     if bgm == "synth":
@@ -310,7 +322,7 @@ def render(scenes, out, W=1080, H=1920, FPS=30, voice=VOICE, cap_y=None, workdir
         while si + 1 < len(scenes) and t >= starts[si + 1]: si += 1
         s = scenes[si]; lt = t - starts[si]
         cv.clear()
-        s.draw(cv, max(0, lt), durs[si], state)
+        s.draw(cv, max(0, lt) * speed[si], nominal[si], state)
         if cap_y: caption(cv, s.caption, cap_y)
         p.stdin.write(cv.raw())
     p.stdin.close(); p.wait()
