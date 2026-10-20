@@ -10,6 +10,18 @@
     "module": "day04_jakobs_law"
   },
   "day06": {
+    "day": "day06",
+    "topic": "Zeigarnik Effect",
+    "file": "assets/voice/day06/full.mp3",
+    "sha256": "517a47bdfda520324cd7825fb85cce12b1e4f05f1a468b3e3b748af7149ce23b",
+    "duration": 50.23,
+    "script_cost": 0.614,
+    "voice_similarity": 0.975,
+    "other_days": {
+      "day04": 0.663
+    },
+    "vs_previous_take": 0.246,
+    "module": "day06_zeigarnik_effect",
     "previous": [
       {
         "day": "day06",
