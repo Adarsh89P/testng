@@ -19,6 +19,7 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 REG = os.path.join(ROOT, "assets", "voice", "registry.json")
 COST_MAX = 0.55          # Day 04 audio vs its own script: 0.47; vs Day 05 script: 0.62
 COST_SOFT = 0.60         # between COST_MAX and this, accept only if the line-by-line check confirms (long pauses inflate
+TAKE_MAX = 0.35          # new take vs this day's earlier verified take: 0.25 (Day 06 v2); different content ~0.65
 LINE_MIN = 0.75          # the whole-file cost); fraction of pieces whose best-matching script line is their own line
 MASTER = os.path.join(ROOT, "assets", "voice", "day04", "full.mp3")   # master voice reference (Tisha K), never reused
 VOICE_MIN = 0.96         # master half vs other half: 0.995; Kokoro hf_beta / hf_alpha vs master: 0.89 / 0.90
@@ -126,7 +127,8 @@ def verify(day, topic, path, scenes, module):
         raise VoiceError(f"{key} ({topic}): voice-over missing. Required file: {os.path.relpath(path, ROOT)}")
     h = sha256(path)
     for k, e in load_registry().items():
-        if k != key and e.get("sha256") == h:
+        shas = [e.get("sha256")] + [p.get("sha256") for p in e.get("previous", [])]
+        if k != key and h in shas:
             raise VoiceError(f"{key} ({topic}): {os.path.basename(path)} is byte-identical to the {k} voice-over "
                              f"({e['topic']}). Refusing to reuse another day's recording.")
     y = _load(path, engine.SR)
@@ -146,7 +148,16 @@ def verify(day, topic, path, scenes, module):
     if vsim < VOICE_MIN:
         raise VoiceError(f"{key} ({topic}): voice does not match the series reference voice (similarity {vsim:.3f} < "
                          f"{VOICE_MIN}). Wrong voice or settings?")
-    if cost > COST_MAX:
+    take = None
+    for p in load_registry().get(key, {}).get("previous", []):
+        pf = os.path.join(ROOT, p["file"])
+        if os.path.exists(pf):
+            import librosa
+            D, wp = librosa.sequence.dtw(_feat(_load(pf, engine.SR), engine.SR), _feat(y, engine.SR), metric="cosine")
+            take = float(D[-1, -1] / len(wp)); report["vs_previous_take"] = round(take, 3); break
+    if cost > COST_MAX and take is not None and take <= TAKE_MAX:
+        print(f"content confirmed against this day's earlier verified take (cost {take:.3f} <= {TAKE_MAX})")
+    elif cost > COST_MAX:
         if cost > COST_SOFT:
             raise VoiceError(f"{key} ({topic}): audio does not match today's script (cost {cost:.3f} > {COST_SOFT}).")
         frac, best = line_check(y, scenes)
@@ -159,7 +170,9 @@ def verify(day, topic, path, scenes, module):
     if better:
         raise VoiceError(f"{key} ({topic}): audio matches the {', '.join(better)} script as well or better "
                          f"than today's ({report['other_days']} vs {cost:.3f}). Wrong topic?")
-    reg = load_registry(); reg[key] = dict(report, module=module); save_registry(reg)
+    reg = load_registry(); prev = reg.get(key, {})
+    history = prev.get("previous", []) + ([{k: v for k, v in prev.items() if k != "previous"}] if prev.get("sha256") else [])
+    reg[key] = dict(report, module=module, previous=history) if history else dict(report, module=module); save_registry(reg)
     return report
 
 
