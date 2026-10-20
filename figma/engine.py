@@ -253,6 +253,11 @@ def split_audio(path, cuts, n=None):
     raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", path, "-ac", "1", "-ar", str(SR), "-af", "highpass=f=60",
                           "-f", "f32le", "-"], capture_output=True, check=True).stdout
     y = np.frombuffer(raw, np.float32).copy()
+    return split_audio_array(y, cuts, n)
+
+
+def split_audio_array(y, cuts, n=None):
+    """split_audio() for audio already loaded at SR."""
     if cuts == "auto":
         cuts = auto_cuts(y, n)
         print("auto cuts:", [round(c, 2) for c in cuts])

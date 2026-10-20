@@ -4,7 +4,9 @@ Before a day's video is rendered with a supplied voice-over:
   1. sha256 of the audio is compared with every registered day: an identical file registered to another day is rejected.
   2. Duration must be plausible for the script (0.6x - 1.8x of a TTS reading of the same lines).
   3. Voice: timbre similarity to the Day 04 master (Tisha K) must be >= VOICE_MIN (different words are expected).
-  4. Content: the audio is aligned (MFCC + DTW) against a TTS reading of TODAY's script and of every other registered
+  4. Content (borderline whole-file cost 0.55-0.60 falls back to a line-by-line check: >= 75% of the pieces must match
+     their own script line best).
+  5. Content: the audio is aligned (MFCC + DTW) against a TTS reading of TODAY's script and of every other registered
      day's script. It must match today's script below COST_MAX and better than any other day's script.
      This is an acoustic alignment check, not a transcript (no speech-recognition model is reachable here).
 After rendering, check_output() runs the same content check on the final video's audio track.
@@ -16,6 +18,8 @@ import numpy as np
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 REG = os.path.join(ROOT, "assets", "voice", "registry.json")
 COST_MAX = 0.55          # Day 04 audio vs its own script: 0.47; vs Day 05 script: 0.62
+COST_SOFT = 0.60         # between COST_MAX and this, accept only if the line-by-line check confirms (long pauses inflate
+LINE_MIN = 0.75          # the whole-file cost); fraction of pieces whose best-matching script line is their own line
 MASTER = os.path.join(ROOT, "assets", "voice", "day04", "full.mp3")   # master voice reference (Tisha K), never reused
 VOICE_MIN = 0.96         # master half vs other half: 0.995; Kokoro hf_beta / hf_alpha vs master: 0.89 / 0.90
 
@@ -88,6 +92,26 @@ def voice_similarity(y, sr, master=None):
     return float(a @ b / np.linalg.norm(a) / np.linalg.norm(b))
 
 
+def line_check(y, scenes):
+    """Split the voice-over at its pauses and test each piece against every script line.
+    Returns (fraction of pieces whose closest line is their own line, per-piece best-line list)."""
+    import librosa, engine
+    import numpy as _np
+    sr = engine.SR
+    clips = engine.split_audio_array(y, "auto", n=len(scenes))
+    nat = engine.NATURAL; engine.NATURAL = False
+    refs = [_feat(engine.tts(s.spoken, voice="hf_beta", speed=1.05, lang="hi"), sr) for s in scenes]
+    engine.NATURAL = nat
+    best = []
+    for c in clips:
+        B = _feat(c, sr); costs = []
+        for A in refs:
+            D, wp = librosa.sequence.dtw(A, B, metric="cosine"); costs.append(D[-1, -1] / len(wp))
+        best.append(int(_np.argmin(costs)))
+    hits = sum(1 for i, b in enumerate(best) if b == i)
+    return hits / len(scenes), [b + 1 for b in best]
+
+
 def _day_scenes(day):
     """SCENES of another registered day's module (for the 'better than other days' check)."""
     mod = load_registry().get(f"day{day:02d}", {}).get("module")
@@ -123,7 +147,14 @@ def verify(day, topic, path, scenes, module):
         raise VoiceError(f"{key} ({topic}): voice does not match the series reference voice (similarity {vsim:.3f} < "
                          f"{VOICE_MIN}). Wrong voice or settings?")
     if cost > COST_MAX:
-        raise VoiceError(f"{key} ({topic}): audio does not match today's script (cost {cost:.3f} > {COST_MAX}).")
+        if cost > COST_SOFT:
+            raise VoiceError(f"{key} ({topic}): audio does not match today's script (cost {cost:.3f} > {COST_SOFT}).")
+        frac, best = line_check(y, scenes)
+        report["line_check"] = dict(own_line_fraction=round(frac, 3), best_line_per_piece=best)
+        print("line check:", report["line_check"])
+        if frac < LINE_MIN:
+            raise VoiceError(f"{key} ({topic}): whole-file cost {cost:.3f} is borderline and only {frac:.0%} of the "
+                             f"pieces match their own script line (need {LINE_MIN:.0%}): {best}")
     better = [k for k, v in others.items() if v <= cost]
     if better:
         raise VoiceError(f"{key} ({topic}): audio matches the {', '.join(better)} script as well or better "
