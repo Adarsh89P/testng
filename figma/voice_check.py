@@ -163,11 +163,22 @@ def verify(day, topic, path, scenes, module):
     return report
 
 
-def check_output(video, scenes, key):
-    """Post-render: the final video's audio track must still match the day's script."""
-    import engine
-    cost, _ = match_cost(_load(video, engine.SR), scenes)
-    print(f"output check {key}: script cost {cost:.3f}")
-    if cost > COST_MAX + 0.05:
-        raise VoiceError(f"{key}: final video audio does not match the script (cost {cost:.3f}).")
-    return cost
+OUT_MAX = 0.30           # final video vs its own verified voice-over: 0.12 (Day 06); vs another day's voice-over: 0.65
+
+
+def check_output(video, scenes, key, source=None):
+    """Post-render: the final video's soundtrack must contain the verified voice-over of this day.
+    Compared against the source file (SFX and loudness levelling are on top), and it must be closer to it than to any
+    other registered day's voice-over."""
+    import librosa, engine
+    sr = engine.SR
+    B = _feat(_load(video, sr), sr)
+    def cost(path):
+        D, wp = librosa.sequence.dtw(_feat(_load(path, sr), sr), B, metric="cosine"); return float(D[-1, -1] / len(wp))
+    own = cost(source)
+    others = {k: cost(os.path.join(ROOT, e["file"])) for k, e in load_registry().items()
+              if k != key and os.path.exists(os.path.join(ROOT, e["file"]))}
+    print(f"output check {key}: vs its voice-over {own:.3f}; vs other days {{{', '.join(f'{k}: {v:.3f}' for k, v in others.items())}}}")
+    if own > OUT_MAX or any(v <= own for v in others.values()):
+        raise VoiceError(f"{key}: final video soundtrack does not match its verified voice-over (cost {own:.3f}).")
+    return own
