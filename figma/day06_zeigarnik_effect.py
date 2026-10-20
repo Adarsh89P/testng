@@ -231,10 +231,6 @@ SCENES = [
           clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
-# Take 2 (day62.mp3) has only 2 long pauses: line cuts mapped from the verified take 1 by alignment, each snapped to
-# the quietest point within 0.5 s (all land in silence).
-VO_CUTS = [4.08, 13.24, 20.04, 25.12, 32.0, 37.94, 46.28]
-
 if __name__ == "__main__":
     import daily
-    daily.run(6, "Zeigarnik Effect", SCENES, "day06_zeigarnik_effect", cuts=VO_CUTS)
+    daily.run(6, "Zeigarnik Effect", SCENES, "day06_zeigarnik_effect")

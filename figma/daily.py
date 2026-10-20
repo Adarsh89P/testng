@@ -31,7 +31,7 @@ def run(day, topic, scenes, module, out=None, cuts="auto"):
         except voice_gen.RefError as e: sys.exit(f"STOP: {e}")
     path = vo_path(day)
     try:
-        voice_check.verify(day, topic, path, scenes, module)
+        voice_check.verify(day, topic, path, scenes, module, cuts=cuts)
     except voice_check.VoiceError as e:
         sys.exit(f"STOP: {e}")
     import day02_hicks_law as D

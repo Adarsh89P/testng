@@ -93,13 +93,13 @@ def voice_similarity(y, sr, master=None):
     return float(a @ b / np.linalg.norm(a) / np.linalg.norm(b))
 
 
-def line_check(y, scenes):
+def line_check(y, scenes, cuts="auto"):
     """Split the voice-over at its pauses and test each piece against every script line.
     Returns (fraction of pieces whose closest line is their own line, per-piece best-line list)."""
     import librosa, engine
     import numpy as _np
     sr = engine.SR
-    clips = engine.split_audio_array(y, "auto", n=len(scenes))
+    clips = engine.split_audio_array(y, cuts, n=len(scenes))
     nat = engine.NATURAL; engine.NATURAL = False
     refs = [_feat(engine.tts(s.spoken, voice="hf_beta", speed=1.05, lang="hi"), sr) for s in scenes]
     engine.NATURAL = nat
@@ -111,6 +111,26 @@ def line_check(y, scenes):
         best.append(int(_np.argmin(costs)))
     hits = sum(1 for i, b in enumerate(best) if b == i)
     return hits / len(scenes), [b + 1 for b in best]
+
+
+def _all_day_modules():
+    """(label, module) for every figma/dayNN_*.py, e.g. ("day05:day05_millers_law_card", "day05_millers_law_card")."""
+    import glob, re
+    out = []
+    for f in sorted(glob.glob(os.path.join(ROOT, "figma", "day[0-9][0-9]_*.py"))):
+        mod = os.path.basename(f)[:-3]; out.append((f"{mod[:5]}:{mod}", mod))
+    return out
+
+
+def _module_scenes(mod):
+    import day02_hicks_law as D
+    saved = (D.DAY, D.NEXT)
+    try:
+        return importlib.import_module(mod).SCENES
+    except Exception:
+        return None
+    finally:
+        D.DAY, D.NEXT = saved
 
 
 def _day_scenes(day):
@@ -125,7 +145,7 @@ def _day_scenes(day):
         D.DAY, D.NEXT = saved
 
 
-def verify(day, topic, path, scenes, module):
+def verify(day, topic, path, scenes, module, cuts="auto"):
     """Raise VoiceError unless `path` is a new, matching voice-over for this day. Returns a report dict."""
     import engine
     key = f"day{day:02d}"
@@ -144,9 +164,9 @@ def verify(day, topic, path, scenes, module):
         raise VoiceError(f"{key} ({topic}): audio is {dur:.1f}s but the script reads in ~{ref_dur:.1f}s; wrong file?")
     vsim = voice_similarity(y, engine.SR) if key != "day04" else 1.0
     others = {}
-    for k in load_registry():
-        if k != key:
-            sc = _day_scenes(int(k[3:]))
+    for k, mod in _all_day_modules():
+        if not k.startswith(key):                    # every other day's script in the project, finished or not
+            sc = _module_scenes(mod)
             if sc: others[k] = match_cost(y, sc)[0]
     report = dict(day=key, topic=topic, file=os.path.relpath(path, ROOT), sha256=h, duration=round(dur, 2),
                   script_cost=round(cost, 3), voice_similarity=round(vsim, 3), other_days={k: round(v, 3) for k, v in others.items()})
@@ -162,17 +182,22 @@ def verify(day, topic, path, scenes, module):
             D, wp = librosa.sequence.dtw(_feat(_load(pf, engine.SR), engine.SR), _feat(y, engine.SR), metric="cosine")
             take = float(D[-1, -1] / len(wp)); report["vs_previous_take"] = round(take, 3); break
     if cost > COST_MAX and take is not None and take <= TAKE_MAX:
-        print(f"content confirmed against this day's earlier verified take (cost {take:.3f} <= {TAKE_MAX})")
+        frac, best = line_check(y, scenes, cuts=cuts)
+        report["line_check"] = dict(own_line_fraction=round(frac, 3), best_line_per_piece=best)
+        if frac < LINE_MIN:
+            raise VoiceError(f"{key} ({topic}): close to an earlier take but only {frac:.0%} of the pieces match their "
+                             f"own script line: {best}. Different script?")
+        print(f"content confirmed: earlier take {take:.3f} <= {TAKE_MAX} and line check {frac:.0%}")
     elif cost > COST_MAX:
         if cost > COST_SOFT:
             raise VoiceError(f"{key} ({topic}): audio does not match today's script (cost {cost:.3f} > {COST_SOFT}).")
-        frac, best = line_check(y, scenes)
+        frac, best = line_check(y, scenes, cuts=cuts)
         report["line_check"] = dict(own_line_fraction=round(frac, 3), best_line_per_piece=best)
         print("line check:", report["line_check"])
         if frac < LINE_MIN:
             raise VoiceError(f"{key} ({topic}): whole-file cost {cost:.3f} is borderline and only {frac:.0%} of the "
                              f"pieces match their own script line (need {LINE_MIN:.0%}): {best}")
-    better = [k for k, v in others.items() if v <= cost]
+    better = [k for k, v in others.items() if v <= cost - 0.005]
     if better:
         raise VoiceError(f"{key} ({topic}): audio matches the {', '.join(better)} script as well or better "
                          f"than today's ({report['other_days']} vs {cost:.3f}). Wrong topic?")

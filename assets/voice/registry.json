@@ -8,47 +8,5 @@
     "script_cost": 0.473,
     "other_days": {},
     "module": "day04_jakobs_law"
-  },
-  "day06": {
-    "day": "day06",
-    "topic": "Zeigarnik Effect",
-    "file": "assets/voice/day06/full.mp3",
-    "sha256": "517a47bdfda520324cd7825fb85cce12b1e4f05f1a468b3e3b748af7149ce23b",
-    "duration": 50.23,
-    "script_cost": 0.614,
-    "voice_similarity": 0.975,
-    "other_days": {
-      "day04": 0.663
-    },
-    "vs_previous_take": 0.246,
-    "module": "day06_zeigarnik_effect",
-    "previous": [
-      {
-        "day": "day06",
-        "topic": "Zeigarnik Effect",
-        "file": "assets/voice/day06/full_v1.mp3",
-        "sha256": "0b0a2f25a9b3fc8b52a4c2d1c51387e029e13025f69e27c29f3cdf28b22f7be1",
-        "duration": 56.37,
-        "script_cost": 0.561,
-        "voice_similarity": 0.968,
-        "other_days": {
-          "day04": 0.6
-        },
-        "line_check": {
-          "own_line_fraction": 0.75,
-          "best_line_per_piece": [
-            5,
-            2,
-            1,
-            4,
-            5,
-            6,
-            7,
-            8
-          ]
-        },
-        "module": "day06_zeigarnik_effect"
-      }
-    ]
   }
 }
