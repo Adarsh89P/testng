@@ -51,6 +51,14 @@ def test_reference_requires_rights():
     expect_error(voice_gen.reference, voice_gen.RefError, ["rights"])
 
 
+def test_comparison_import_keeps_on_screen_day():
+    import importlib, sys as _s, day02_hicks_law as D
+    _s.modules.pop("day04_jakobs_law", None)             # force a fresh import (its import sets DAY 4)
+    D.DAY, D.NEXT = 6, "Goal-Gradient Effect"
+    V._day_scenes(4)                                     # loads day04 for comparison
+    assert (D.DAY, D.NEXT) == (6, "Goal-Gradient Effect"), (D.DAY, D.NEXT)
+
+
 if __name__ == "__main__":
     fails = 0
     for name, fn in [(k, v) for k, v in globals().items() if k.startswith("test_")]:

@@ -19,6 +19,8 @@ def vo_path(day):
 def run(day, topic, scenes, module, out=None, cuts="auto"):
     out = out or sys.argv[1]
     if "--preview" in sys.argv:
+        import day02_hicks_law as D
+        if D.DAY != day: sys.exit(f"STOP: on-screen day is {D.DAY} but rendering day {day}")
         print(f"day{day:02d} PREVIEW with stand-in TTS (not the final voice)")
         d = engine.render(scenes, out, W, H, cap_y=None, voice="hf_beta", lang="hi", natural=False, voice_fx=False,
                           fit_voice=True)
@@ -32,6 +34,9 @@ def run(day, topic, scenes, module, out=None, cuts="auto"):
         voice_check.verify(day, topic, path, scenes, module)
     except voice_check.VoiceError as e:
         sys.exit(f"STOP: {e}")
+    import day02_hicks_law as D
+    if D.DAY != day:                                # the badge / intro / outro must show the day being rendered
+        sys.exit(f"STOP: on-screen day is {D.DAY} but rendering day {day}")
     clips = engine.split_audio(path, cuts, n=len(scenes))
     d = engine.render(scenes, out, W, H, cap_y=None, voice="hf_beta", lang="hi", natural=False, voice_fx=False,
                       voice_clips=clips, fit_voice=True)

@@ -116,7 +116,13 @@ def line_check(y, scenes):
 def _day_scenes(day):
     """SCENES of another registered day's module (for the 'better than other days' check)."""
     mod = load_registry().get(f"day{day:02d}", {}).get("module")
-    return importlib.import_module(mod).SCENES if mod else None
+    if not mod: return None
+    import day02_hicks_law as D                     # day modules set the shared HUD day / next law on import:
+    saved = (D.DAY, D.NEXT)                         # importing another day for comparison must not change ours
+    try:
+        return importlib.import_module(mod).SCENES
+    finally:
+        D.DAY, D.NEXT = saved
 
 
 def verify(day, topic, path, scenes, module):
@@ -151,7 +157,7 @@ def verify(day, topic, path, scenes, module):
     take = None
     for p in load_registry().get(key, {}).get("previous", []):
         pf = os.path.join(ROOT, p["file"])
-        if os.path.exists(pf):
+        if p.get("sha256") != h and os.path.exists(pf):    # an earlier, different take only
             import librosa
             D, wp = librosa.sequence.dtw(_feat(_load(pf, engine.SR), engine.SR), _feat(y, engine.SR), metric="cosine")
             take = float(D[-1, -1] / len(wp)); report["vs_previous_take"] = round(take, 3); break
@@ -171,7 +177,9 @@ def verify(day, topic, path, scenes, module):
         raise VoiceError(f"{key} ({topic}): audio matches the {', '.join(better)} script as well or better "
                          f"than today's ({report['other_days']} vs {cost:.3f}). Wrong topic?")
     reg = load_registry(); prev = reg.get(key, {})
-    history = prev.get("previous", []) + ([{k: v for k, v in prev.items() if k != "previous"}] if prev.get("sha256") else [])
+    history = [p for p in prev.get("previous", []) if p.get("sha256") != h]
+    if prev.get("sha256") and prev["sha256"] != h:
+        history.append({k: v for k, v in prev.items() if k != "previous"})
     reg[key] = dict(report, module=module, previous=history) if history else dict(report, module=module); save_registry(reg)
     return report
 
