@@ -30,5 +30,28 @@
       "day06:day06_zeigarnik_effect": 0.614
     },
     "module": "day07_goal_gradient"
+  },
+  "day08": {
+    "day": "day08",
+    "topic": "Peak-End Rule",
+    "file": "assets/voice/day08/full.mp3",
+    "sha256": "dc3f58b2d84f0e448e4ea6efdf7050d2cf47c91c64ef4a1f20785ada85cb6d6d",
+    "duration": 53.26,
+    "script_cost": 0.499,
+    "voice_similarity": 0.972,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.666,
+      "day02:day02_hicks_law": 0.647,
+      "day03:day03_fitts_law": 0.647,
+      "day03:day03_fitts_myntra": 0.651,
+      "day04:day04_jakobs_law": 0.653,
+      "day05:day05_millers_law": 0.619,
+      "day05:day05_millers_law_card": 0.643,
+      "day05:day05_millers_law_netflix": 0.643,
+      "day05:day05_millers_law_phonepe": 0.635,
+      "day06:day06_zeigarnik_effect": 0.627,
+      "day07:day07_goal_gradient": 0.635
+    },
+    "module": "day08_peak_end"
   }
 }
