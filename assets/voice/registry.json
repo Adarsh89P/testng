@@ -53,5 +53,29 @@
       "day07:day07_goal_gradient": 0.635
     },
     "module": "day08_peak_end"
+  },
+  "day09": {
+    "day": "day09",
+    "topic": "Von Restorff Effect",
+    "file": "assets/voice/day09/full.mp3",
+    "sha256": "f403f284ba4ab25a64b9f4947443466e71da306b6c038f8bed09459457edcb22",
+    "duration": 49.97,
+    "script_cost": 0.493,
+    "voice_similarity": 0.972,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.653,
+      "day02:day02_hicks_law": 0.658,
+      "day03:day03_fitts_law": 0.662,
+      "day03:day03_fitts_myntra": 0.657,
+      "day04:day04_jakobs_law": 0.656,
+      "day05:day05_millers_law": 0.616,
+      "day05:day05_millers_law_card": 0.649,
+      "day05:day05_millers_law_netflix": 0.653,
+      "day05:day05_millers_law_phonepe": 0.641,
+      "day06:day06_zeigarnik_effect": 0.612,
+      "day07:day07_goal_gradient": 0.605,
+      "day08:day08_peak_end": 0.636
+    },
+    "module": "day09_von_restorff"
   }
 }
