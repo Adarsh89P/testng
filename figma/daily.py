@@ -40,5 +40,7 @@ def run(day, topic, scenes, module, out=None, cuts="auto"):
     clips = engine.split_audio(path, cuts, n=len(scenes))
     d = engine.render(scenes, out, W, H, cap_y=None, voice="hf_beta", lang="hi", natural=False, voice_fx=False,
                       voice_clips=clips, fit_voice=True)
+    if D.DAY != day:                                # a scene changed the on-screen day while rendering
+        sys.exit(f"STOP: on-screen day changed to {D.DAY} during the render of day {day}; video is wrong")
     voice_check.check_output(out, scenes, f"day{day:02d}", source=path)
     print("duration", round(d, 1), "s ·", out)
