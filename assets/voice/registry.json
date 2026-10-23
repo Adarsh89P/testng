@@ -77,5 +77,30 @@
       "day08:day08_peak_end": 0.636
     },
     "module": "day09_von_restorff"
+  },
+  "day10": {
+    "day": "day10",
+    "topic": "Serial Position Effect",
+    "file": "assets/voice/day10/full.mp3",
+    "sha256": "118ed33fc780626382d861851b9a2fa2a6df79ce54c614a65f2eb0eadb4175f1",
+    "duration": 59.6,
+    "script_cost": 0.507,
+    "voice_similarity": 0.971,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.662,
+      "day02:day02_hicks_law": 0.648,
+      "day03:day03_fitts_law": 0.637,
+      "day03:day03_fitts_myntra": 0.642,
+      "day04:day04_jakobs_law": 0.643,
+      "day05:day05_millers_law": 0.622,
+      "day05:day05_millers_law_card": 0.641,
+      "day05:day05_millers_law_netflix": 0.646,
+      "day05:day05_millers_law_phonepe": 0.636,
+      "day06:day06_zeigarnik_effect": 0.631,
+      "day07:day07_goal_gradient": 0.623,
+      "day08:day08_peak_end": 0.629,
+      "day09:day09_von_restorff": 0.619
+    },
+    "module": "day10_serial_position"
   }
 }
