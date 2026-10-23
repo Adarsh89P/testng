@@ -27,3 +27,16 @@ Isiliye Instagram sabse zaroori buttons, Home aur Profile, ko pehli aur aakhri j
 Designer tip. Sabse important actions ko list ki shuruaat ya end mein rakho. Beech mein kam zaroori cheezein. <break time="1.5s" />
 Aise aur UX laws ke liye, Design with Rakhi ko follow karo.
 ```
+
+## ElevenLabs paste version, Devanagari (same words, Hindi script)
+
+```
+पैंतालीस दिन, पैंतालीस यू एक्स लॉज़। डे टेन। <break time="1.5s" />
+क्या आपको पता है, सीरियल पोज़िशन इफ़ेक्ट क्या है? लिस्ट की पहली और आख़िरी चीज़ सबसे ज़्यादा याद रहती है। चलो, आज एक लाइव ऐप के थ्रू समझते हैं। <break time="1.5s" />
+इंस्टाग्राम का नीचे वाला बार देखो। पाँच बटन्स हैं। <break time="1.5s" />
+सबसे पहले होम, और सबसे आख़िर में आपकी प्रोफ़ाइल। बीच वाले बटन्स? शायद याद भी न हों। <break time="1.5s" />
+यही है सीरियल पोज़िशन इफ़ेक्ट। हम लिस्ट की शुरुआत और एंड को सबसे अच्छे से याद रखते हैं, बीच का भूल जाते हैं। <break time="1.5s" />
+इसीलिए इंस्टाग्राम सबसे ज़रूरी बटन्स, होम और प्रोफ़ाइल, को पहली और आख़िरी जगह पे रखता है। <break time="1.5s" />
+डिज़ाइनर टिप। सबसे इम्पॉर्टेंट एक्शन्स को लिस्ट की शुरुआत या एंड में रखो। बीच में कम ज़रूरी चीज़ें। <break time="1.5s" />
+ऐसे और यू एक्स लॉज़ के लिए, डिज़ाइन विद राखी को फ़ॉलो करो।
+```
