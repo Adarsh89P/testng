@@ -38,3 +38,8 @@ rejected for Day 05, master refused as clone reference, reference must state rig
 
 ## Setup (new session)
 `INDIC=1 bash scripts/setup.sh` installs the venv, Indic-TTS and the FreeVC24 + WavLM weights (GitHub-hosted, ~2.6 GB).
+
+## Upload name check
+`voice_check.check_upload_name(upload)` runs on every upload before it is copied: an ElevenLabs file whose name shows a
+voice other than Tisha K (e.g. "Tripti") is stopped. The timbre check alone cannot separate two similar ElevenLabs
+voices (Tripti scored 0.968 against the 0.96 threshold).

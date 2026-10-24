@@ -29,6 +29,22 @@ class VoiceError(Exception):
     pass
 
 
+MASTER_VOICE = "Tisha K"
+
+
+def check_upload_name(path):
+    """ElevenLabs downloads are named ElevenLabs_<date>_<Voice name>_..._pvc_<settings>.mp3. If the name says another
+    voice, stop: the timbre check alone can't separate two similar ElevenLabs voices (Tripti scored 0.968 vs 0.96)."""
+    import re
+    name = os.path.basename(path)
+    m = re.search(r"ElevenLabs_[0-9T_:-]+_(.+?)_(?:pvc|ivc|premade)?_?sp\d", name)
+    if name.startswith(("ElevenLabs_", "ElevenLabs-")) or "ElevenLabs_" in name:
+        voice = (m.group(1) if m else name).replace("_", " ")
+        if MASTER_VOICE.lower() not in voice.lower():
+            raise VoiceError(f"{name}: generated with a different ElevenLabs voice ({voice.strip()}), not {MASTER_VOICE}.")
+    return True
+
+
 def sha256(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
