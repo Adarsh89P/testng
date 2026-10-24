@@ -256,6 +256,26 @@ def split_audio(path, cuts, n=None):
     return split_audio_array(y, cuts, n)
 
 
+def shrink_pauses(seg, max_gap=0.7, keep=0.35):
+    """Shorten silences inside one line that are longer than max_gap to `keep` seconds (no dead air mid-scene)."""
+    hop = int(0.01 * SR)
+    if len(seg) < hop * 10: return seg
+    rms = np.sqrt(np.convolve(seg ** 2, np.ones(hop * 3) / (hop * 3), "same")[::hop])
+    quiet = rms < max(0.004, 0.06 * np.percentile(rms, 95))
+    out, i, last = [], 0, 0
+    while i < len(quiet):
+        if quiet[i]:
+            j = i
+            while j < len(quiet) and quiet[j]: j += 1
+            if (j - i) * 0.01 > max_gap and i > 0 and j < len(quiet):
+                a, b = i * hop, j * hop; k = int(keep * SR / 2)
+                out.append(seg[last:a + k]); last = b - k
+            i = j
+        else: i += 1
+    out.append(seg[last:])
+    return np.concatenate(out)
+
+
 def split_audio_array(y, cuts, n=None):
     """split_audio() for audio already loaded at SR."""
     if cuts == "auto":
@@ -267,7 +287,7 @@ def split_audio_array(y, cuts, n=None):
         seg = y[int(a * SR):int(b * SR)]
         nz = np.where(np.abs(seg) > 0.01)[0]                 # trim leading / trailing silence
         seg = seg[max(0, nz[0] - int(0.03 * SR)):nz[-1] + int(0.08 * SR)] if len(nz) else seg
-        out.append(seg.astype(np.float32))
+        out.append(shrink_pauses(seg).astype(np.float32))
     return out
 
 

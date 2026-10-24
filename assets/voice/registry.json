@@ -102,5 +102,31 @@
       "day09:day09_von_restorff": 0.619
     },
     "module": "day10_serial_position"
+  },
+  "day11": {
+    "day": "day11",
+    "topic": "Aesthetic-Usability Effect",
+    "file": "assets/voice/day11/full.mp3",
+    "sha256": "4aca9f2f37b04e83232b1632ca980a0d8351bc1d69b7e3c4b5852a0543a8e3e8",
+    "duration": 57.76,
+    "script_cost": 0.429,
+    "voice_similarity": 0.999,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.578,
+      "day02:day02_hicks_law": 0.579,
+      "day03:day03_fitts_law": 0.565,
+      "day03:day03_fitts_myntra": 0.572,
+      "day04:day04_jakobs_law": 0.58,
+      "day05:day05_millers_law": 0.531,
+      "day05:day05_millers_law_card": 0.558,
+      "day05:day05_millers_law_netflix": 0.565,
+      "day05:day05_millers_law_phonepe": 0.56,
+      "day06:day06_zeigarnik_effect": 0.545,
+      "day07:day07_goal_gradient": 0.542,
+      "day08:day08_peak_end": 0.538,
+      "day09:day09_von_restorff": 0.544,
+      "day10:day10_serial_position": 0.551
+    },
+    "module": "day11_aesthetic_usability"
   }
 }
