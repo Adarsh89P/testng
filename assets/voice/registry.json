@@ -128,5 +128,32 @@
       "day10:day10_serial_position": 0.551
     },
     "module": "day11_aesthetic_usability"
+  },
+  "day12": {
+    "day": "day12",
+    "topic": "Doherty Threshold",
+    "file": "assets/voice/day12/full.mp3",
+    "sha256": "cc09c3cdeed2e747d756b95a606812272ef5cd914ea824bbd8399c1e2ba77adc",
+    "duration": 54.15,
+    "script_cost": 0.405,
+    "voice_similarity": 0.996,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.551,
+      "day02:day02_hicks_law": 0.553,
+      "day03:day03_fitts_law": 0.542,
+      "day03:day03_fitts_myntra": 0.549,
+      "day04:day04_jakobs_law": 0.559,
+      "day05:day05_millers_law": 0.5,
+      "day05:day05_millers_law_card": 0.534,
+      "day05:day05_millers_law_netflix": 0.54,
+      "day05:day05_millers_law_phonepe": 0.535,
+      "day06:day06_zeigarnik_effect": 0.518,
+      "day07:day07_goal_gradient": 0.517,
+      "day08:day08_peak_end": 0.533,
+      "day09:day09_von_restorff": 0.525,
+      "day10:day10_serial_position": 0.527,
+      "day11:day11_aesthetic_usability": 0.527
+    },
+    "module": "day12_doherty_threshold"
   }
 }
