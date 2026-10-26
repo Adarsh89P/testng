@@ -30,6 +30,8 @@ class VoiceError(Exception):
 
 
 MASTER_VOICE = "Tisha K"
+MASTER_STYLE = "Expressive"                     # the master is "Tisha K - Expressive, Lively Vlogger"; other Tisha K
+                                                # styles (e.g. "History E-Learning Professor") are different voices
 
 
 def check_upload_name(path):
@@ -40,8 +42,9 @@ def check_upload_name(path):
     m = re.search(r"ElevenLabs_[0-9T_:-]+_(.+?)_(?:pvc|ivc|premade)?_?sp\d", name)
     if name.startswith(("ElevenLabs_", "ElevenLabs-")) or "ElevenLabs_" in name:
         voice = (m.group(1) if m else name).replace("_", " ")
-        if MASTER_VOICE.lower() not in voice.lower():
-            raise VoiceError(f"{name}: generated with a different ElevenLabs voice ({voice.strip()}), not {MASTER_VOICE}.")
+        if MASTER_VOICE.lower() not in voice.lower() or MASTER_STYLE.lower() not in voice.lower():
+            raise VoiceError(f"{name}: generated with a different ElevenLabs voice ({voice.strip()}), not "
+                             f"{MASTER_VOICE} - {MASTER_STYLE}, Lively Vlogger.")
     return True
 
 
