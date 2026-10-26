@@ -40,8 +40,8 @@ def check_upload_name(path):
     import re
     name = os.path.basename(path)
     m = re.search(r"ElevenLabs_[0-9T_:-]+_(.+?)_(?:pvc|ivc|premade)?_?sp\d", name)
-    if name.startswith(("ElevenLabs_", "ElevenLabs-")) or "ElevenLabs_" in name:
-        voice = (m.group(1) if m else name).replace("_", " ")
+    if m:                                           # only when the name actually carries a voice name
+        voice = m.group(1).replace("_", " ")
         if MASTER_VOICE.lower() not in voice.lower() or MASTER_STYLE.lower() not in voice.lower():
             raise VoiceError(f"{name}: generated with a different ElevenLabs voice ({voice.strip()}), not "
                              f"{MASTER_VOICE} - {MASTER_STYLE}, Lively Vlogger.")
