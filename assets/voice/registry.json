@@ -155,5 +155,33 @@
       "day11:day11_aesthetic_usability": 0.527
     },
     "module": "day12_doherty_threshold"
+  },
+  "day13": {
+    "day": "day13",
+    "topic": "Tesler's Law",
+    "file": "assets/voice/day13/full.mp3",
+    "sha256": "1e6dbd5a3f67c9c0188bf05cf0e0d61d701af22df90dc0849a7a2dc7ebc81ade",
+    "duration": 55.95,
+    "script_cost": 0.536,
+    "voice_similarity": 0.987,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.68,
+      "day02:day02_hicks_law": 0.668,
+      "day03:day03_fitts_law": 0.663,
+      "day03:day03_fitts_myntra": 0.663,
+      "day04:day04_jakobs_law": 0.666,
+      "day05:day05_millers_law": 0.632,
+      "day05:day05_millers_law_card": 0.664,
+      "day05:day05_millers_law_netflix": 0.663,
+      "day05:day05_millers_law_phonepe": 0.661,
+      "day06:day06_zeigarnik_effect": 0.653,
+      "day07:day07_goal_gradient": 0.649,
+      "day08:day08_peak_end": 0.659,
+      "day09:day09_von_restorff": 0.651,
+      "day10:day10_serial_position": 0.653,
+      "day11:day11_aesthetic_usability": 0.639,
+      "day12:day12_doherty_threshold": 0.656
+    },
+    "module": "day13_teslers_law"
   }
 }
