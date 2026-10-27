@@ -183,5 +183,34 @@
       "day12:day12_doherty_threshold": 0.656
     },
     "module": "day13_teslers_law"
+  },
+  "day14": {
+    "day": "day14",
+    "topic": "Postel's Law",
+    "file": "assets/voice/day14/full.mp3",
+    "sha256": "ba4c221058472c6c083f4430f56be0bbad0c35c971184132cdbdd399c3b8f2d2",
+    "duration": 57.63,
+    "script_cost": 0.525,
+    "voice_similarity": 0.986,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.687,
+      "day02:day02_hicks_law": 0.675,
+      "day03:day03_fitts_law": 0.667,
+      "day03:day03_fitts_myntra": 0.674,
+      "day04:day04_jakobs_law": 0.668,
+      "day05:day05_millers_law": 0.648,
+      "day05:day05_millers_law_card": 0.665,
+      "day05:day05_millers_law_netflix": 0.655,
+      "day05:day05_millers_law_phonepe": 0.659,
+      "day06:day06_zeigarnik_effect": 0.65,
+      "day07:day07_goal_gradient": 0.658,
+      "day08:day08_peak_end": 0.647,
+      "day09:day09_von_restorff": 0.643,
+      "day10:day10_serial_position": 0.664,
+      "day11:day11_aesthetic_usability": 0.642,
+      "day12:day12_doherty_threshold": 0.655,
+      "day13:day13_teslers_law": 0.659
+    },
+    "module": "day14_postels_law"
   }
 }
