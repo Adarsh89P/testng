@@ -77,8 +77,8 @@ def s2(cv, t, d, st):                                     # strict app: "+91 987
         if bad:
             c.font(SANS, 20, True); c.text(X0 + 30, Y0 + 405, "⚠ Invalid number", RED)
             c.font(SANS, 17, True); c.text(X0 + 30, Y0 + 435, "Sirf 10 digits daalein, bina space ke", RED)
-        if t > 1.2: c.pill(PX + 330, Y0 + 270, "+91 ke saath", size=24, fam=MONO, col=DARK, bg=APP, bold=True)
-        if t > 2.2: c.pill(PX + 330, Y0 + 350, "beech mein space", size=24, fam=MONO, col=DARK, bg=APP, bold=True)
+        if t > 1.2: c.pill(PX - 100, Y0 + 520, "+91 ke saath", size=24, fam=MONO, col=DARK, bg=APP, bold=True)
+        if t > 2.2: c.pill(PX + 90, Y0 + 590, "beech mein space", size=24, fam=MONO, col=DARK, bg=APP, bold=True)
         c.fill_rrect(X0 + 30, Y0 + PH - 140, PW - 60, 80, 40, (0.25, 0.25, 0.28)); c.font(SANS, 26, True)
         c.text(PX - c.text_w("Continue") / 2, Y0 + PH - 90, "Continue", DIM)
         if t > ERR + 0.9: white_pill(c, W / 2, 1640, "gussa aata hai na? 😤", 36)
@@ -101,12 +101,12 @@ def s3(cv, t, d, st):                                     # forgiving app: every
               DOT, lw=2.4 if clean else 1.6)
         if clean: c.font(SANS, 26, True); c.text(X0 + PW - 72, Y0 + 346, "✓", GREEN)
         for j, lab in enumerate(["+91 likho ✓", "0 lagao ✓", "space daalo ✓"]):
-            if t > j * STEP + 0.75: c.pill(PX + 330, Y0 + 270 + j * 85, lab, size=24, fam=SANS, col=DARK, bg=GREEN, bold=True)
+            if t > j * STEP + 0.75: c.pill(PX, Y0 + 470 + j * 80, lab, size=24, fam=SANS, col=DARK, bg=GREEN, bold=True)
         ok = t > 3 * STEP + 0.2
         c.fill_rrect(X0 + 30, Y0 + PH - 140, PW - 60, 80, 40, TEAL if ok else (0.25, 0.25, 0.28))
         c.font(SANS, 26, True); c.text(PX - c.text_w("Continue") / 2, Y0 + PH - 90, "Continue", DARK if ok else DIM)
         if t > 3 * STEP + 0.8: white_pill(c, W / 2, 1640, "app khud saaf kar leta hai", 36)
-    stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.5, (PX + 120, Y0 + 400), 1.25), (3 * STEP, (PX + 120, Y0 + 400), 1.25),
+    stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.5, (PX, Y0 + 460), 1.25), (3 * STEP, (PX, Y0 + 460), 1.25),
                                      (3 * STEP + 0.6, ANCHOR, 1.0), (d - 0.4, ANCHOR, 1.0)),
                   punch=0.04 * max(0, 1 - abs(t - 3 * STEP - 0.2) / 0.12), seed=4)
     hud(cv); flash(cv, t, 3 * STEP + 0.2, 0.1)
@@ -135,22 +135,22 @@ OPEN = 0.6
 def s5(cv, t, d, st):                                     # behind the form: every format -> one stored format
     def world(c):
         c.font(SANS, 52, True); c.text(W / 2 - c.text_w("form ke peeche") / 2, 540, "form ke peeche", TEAL)
-        sx, ex = W / 2 - 260, W / 2 + 250
+        sx, ex = W / 2 - 250, W / 2 + 270
         for i, v in enumerate(VARIANTS):
             k = ease(min(1, max(0, (t - OPEN - i * 0.45) / 0.5)))
             if k <= 0: continue
             y = 720 + i * 150
-            c.fill_rrect(sx - 200, y - 40, 400, 72, 14, (0.12, 0.13, 0.15), k)
+            c.fill_rrect(sx - 180, y - 40, 360, 72, 14, (0.12, 0.13, 0.15), k)
             c.font(MONO, 24, True); c.text(sx - c.text_w(v) / 2, y + 6, v, DOT, k)
             kk = ease(min(1, max(0, (t - OPEN - i * 0.45 - 0.4) / 0.5)))
-            c.dots_path([(sx + 210, y - 4), (ex - 200, 945)], spacing=9, r=2.4, col=TEAL, a=kk, reveal=kk)
+            c.dots_path([(sx + 190, y - 4), (ex - 170, 945)], spacing=9, r=2.4, col=TEAL, a=kk, reveal=kk)
         if t > OPEN + 2.0:
             k = ease(min(1, (t - OPEN - 2.0) / 0.5))
-            c.fill_rrect(ex - 190, 900, 380, 90, 18, TEAL, k)
+            c.fill_rrect(ex - 160, 900, 320, 90, 18, TEAL, k)
             c.font(MONO, 28, True); c.text(ex - c.text_w("+919876543210") / 2, 957, "+919876543210", DARK, k)
             c.font(SANS, 20, True); c.text(ex - c.text_w("ek hi format") / 2, 1030, "ek hi format", TEAL, k)
         if t > OPEN + 2.8: c.pill(W / 2, 1420, "har format apnao · peeche saaf karo", size=28, fam=MONO, col=DARK, bg=TEAL, bold=True)
-    stage.compose(cv, t, d, world, K((0, (W / 2, 900), 1.15), (OPEN + 1.8, (W / 2, 950), 1.1), (OPEN + 2.4, (W / 2 + 120, 950), 1.2),
+    stage.compose(cv, t, d, world, K((0, (W / 2, 900), 1.15), (OPEN + 1.8, (W / 2, 950), 1.1), (OPEN + 2.4, (W / 2 + 60, 950), 1.1),
                                      (d - 0.4, (W / 2, 1050), 1.0)), seed=6)
     hud(cv)
 
@@ -164,7 +164,7 @@ def s6(cv, t, d, st):                                     # designer tip: DON'T 
         field(c, lx - 200, 700, 400, "+91 98765 43210", RED, RED, lw=2.4)
         c.font(SANS, 18, True); c.text(lx - 200, 805, "Format: XXXXXXXXXX only", RED)
         c.font(SANS, 18, True); c.text(lx - 200, 835, "No spaces, no +91, no 0", RED)
-        c.pill(lx, 1160, "user ko format sikhao ✗", size=24, fam=MONO, col=RED)
+        c.pill(lx, 1160, "user ko format sikhao ✗", size=24, fam=SANS, col=RED)
         field(c, rx - 200, 700, 400, "+91 98765 43210", GREY)
         c.dots_path([(rx, 790), (rx, 870)], spacing=8, r=2.6, col=TEAL)
         field(c, rx - 200, 890, 400, CLEAN, GREEN, lw=2.4)
