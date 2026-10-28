@@ -212,5 +212,35 @@
       "day13:day13_teslers_law": 0.659
     },
     "module": "day14_postels_law"
+  },
+  "day15": {
+    "day": "day15",
+    "topic": "Law of Proximity",
+    "file": "assets/voice/day15/full.mp3",
+    "sha256": "b07cf94c4fb2000f537caf392a9a7cd77935a71ad0a60e6396d3b96cb7d9f5a9",
+    "duration": 60.76,
+    "script_cost": 0.519,
+    "voice_similarity": 0.986,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.684,
+      "day02:day02_hicks_law": 0.652,
+      "day03:day03_fitts_law": 0.667,
+      "day03:day03_fitts_myntra": 0.666,
+      "day04:day04_jakobs_law": 0.667,
+      "day05:day05_millers_law": 0.641,
+      "day05:day05_millers_law_card": 0.654,
+      "day05:day05_millers_law_netflix": 0.655,
+      "day05:day05_millers_law_phonepe": 0.647,
+      "day06:day06_zeigarnik_effect": 0.652,
+      "day07:day07_goal_gradient": 0.646,
+      "day08:day08_peak_end": 0.636,
+      "day09:day09_von_restorff": 0.64,
+      "day10:day10_serial_position": 0.663,
+      "day11:day11_aesthetic_usability": 0.657,
+      "day12:day12_doherty_threshold": 0.647,
+      "day13:day13_teslers_law": 0.651,
+      "day14:day14_postels_law": 0.653
+    },
+    "module": "day15_law_of_proximity"
   }
 }
