@@ -33,7 +33,7 @@ def product(c, y, a=1.0):
     c.fill_rrect(X0 + 30, y, PW - 60, 230, 16, CARD, a)
     c.dellipse(PX, y + 130, 80, 80, a0=180, a1=360, spacing=6, r=2.6, col=DOT, a=a)
     c.fill_rrect(PX - 100, y + 120, 40, 70, 12, AMBER, a); c.fill_rrect(PX + 60, y + 120, 40, 70, 12, AMBER, a)
-    c.font(SANS, 22, True); c.text(X0 + 30, y + 270, "boAt Rockerz Headphones", DOT, a)
+    c.font(SANS, 22, True); c.text(X0 + 30, y + 270, "Wireless Headphones", DOT, a)
 
 
 def price(c, x, y, a=1.0):
@@ -92,7 +92,7 @@ def s1(cv, t, d, st):                                     # hook: paas-paas = ek
 
 
 def s2(cv, t, d, st):                                     # scattered page: eye zig-zags between price, offer, delivery
-    PT, OF, DL = (X0 + 40, Y0 + 140), (X0 + 30, Y0 + 720), (X0 + PW - 200, Y0 + 470)
+    PT, OF, DL = (X0 + 40, Y0 + 140), (X0 + 30, Y0 + 740), (X0 + PW - 180, Y0 + 590)
     def world(c):
         phone(c, PX, PY, PW, PH)
         price(c, *PT)
@@ -127,18 +127,18 @@ def s3(cv, t, d, st):                                     # Amazon: price + disc
         c.text(X0 + 30, Y0 + 88, "amazon.in", DOT)
         product(c, Y0 + 130)
         k = ease(min(1, max(0, (t - 0.4) / (SNAP - 0.4))))
-        gy = Y0 + 450
-        price(c, X0 + 40, lerp(gy + 300, gy + 40, k))
+        gy = Y0 + 440
+        price(c, X0 + 40, lerp(gy + 230, gy + 40, k))
         offer(c, X0 + 30, lerp(Y0 + 60, gy + 100, k), a=k)
-        delivery(c, lerp(X0 + PW - 200, X0 + 40, k), lerp(Y0 + 820, gy + 200, k))
+        delivery(c, lerp(X0 + PW - 180, X0 + 40, k), lerp(Y0 + 600, gy + 200, k))
         if t > SNAP:
             kk = ease(min(1, (t - SNAP) / 0.4))
-            c.drrect(X0 + 18, gy - 10, PW - 36, 260, 16, spacing=7, r=2, col=AMBER, a=kk)
+            c.drrect(X0 + 18, gy - 10, PW - 36, 250, 16, spacing=7, r=2, col=AMBER, a=kk)
             c.c.set_source_rgba(1, 1, 1, 0.9 * kk); c.c.arc(X0 + 170, gy + 120, 16, 0, 6.3); c.c.set_line_width(3); c.c.stroke()
-        c.fill_rrect(X0 + 30, Y0 + PH - 210, PW - 60, 70, 35, YELLOW); c.font(SANS, 24, True)
-        c.text(PX - c.text_w("Add to Cart") / 2, Y0 + PH - 165, "Add to Cart", DARK)
-        c.fill_rrect(X0 + 30, Y0 + PH - 125, PW - 60, 70, 35, AMBER)
-        c.text(PX - c.text_w("Buy Now") / 2, Y0 + PH - 80, "Buy Now", DARK)
+        c.fill_rrect(X0 + 30, Y0 + PH - 160, PW - 60, 60, 30, YELLOW); c.font(SANS, 24, True)
+        c.text(PX - c.text_w("Add to Cart") / 2, Y0 + PH - 121, "Add to Cart", DARK)
+        c.fill_rrect(X0 + 30, Y0 + PH - 90, PW - 60, 60, 30, AMBER)
+        c.text(PX - c.text_w("Buy Now") / 2, Y0 + PH - 51, "Buy Now", DARK)
         for i, lab in enumerate(["price", "discount", "bank offer"]):
             if t > SNAP + 0.5 + i * 0.35: c.pill(PX + 330, gy + 40 + i * 80, lab + " ✓", size=24, fam=SANS, col=DARK, bg=GREEN, bold=True)
         if t > SNAP + 2.4: white_pill(c, W / 2, 1640, "ek nazar mein poori deal", 38)
