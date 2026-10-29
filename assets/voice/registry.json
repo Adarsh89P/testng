@@ -242,5 +242,36 @@
       "day14:day14_postels_law": 0.653
     },
     "module": "day15_law_of_proximity"
+  },
+  "day16": {
+    "day": "day16",
+    "topic": "Law of Common Region",
+    "file": "assets/voice/day16/full.mp3",
+    "sha256": "6506a41597adb4181ae1e287e47ecabbf98faadeb735e1bf4e5fc9de6acdd616",
+    "duration": 62.04,
+    "script_cost": 0.532,
+    "voice_similarity": 0.987,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.675,
+      "day02:day02_hicks_law": 0.65,
+      "day03:day03_fitts_law": 0.658,
+      "day03:day03_fitts_myntra": 0.666,
+      "day04:day04_jakobs_law": 0.679,
+      "day05:day05_millers_law": 0.642,
+      "day05:day05_millers_law_card": 0.66,
+      "day05:day05_millers_law_netflix": 0.659,
+      "day05:day05_millers_law_phonepe": 0.653,
+      "day06:day06_zeigarnik_effect": 0.659,
+      "day07:day07_goal_gradient": 0.637,
+      "day08:day08_peak_end": 0.638,
+      "day09:day09_von_restorff": 0.642,
+      "day10:day10_serial_position": 0.649,
+      "day11:day11_aesthetic_usability": 0.644,
+      "day12:day12_doherty_threshold": 0.653,
+      "day13:day13_teslers_law": 0.65,
+      "day14:day14_postels_law": 0.649,
+      "day15:day15_law_of_proximity": 0.648
+    },
+    "module": "day16_common_region"
   }
 }
