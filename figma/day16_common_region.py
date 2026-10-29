@@ -87,7 +87,7 @@ def s2(cv, t, d, st):                                     # flat list: which rat
             c.font(SANS, 22, True); c.text(X0 + 40, Y0 + 160 + i * 52, s, DOT, k)
         if t > Q:
             ry = Y0 + 160 + 5 * 52 - 8                        # second rating row
-            c.c.set_source_rgba(*RED, 1); c.c.arc(X0 + 70, ry, 34, 0, 6.3); c.c.set_line_width(3); c.c.stroke()
+            c.c.new_path(); c.c.set_source_rgba(*RED, 1); c.c.arc(X0 + 70, ry, 34, 0, 6.3); c.c.set_line_width(3); c.c.stroke()
             for ty in (Y0 + 160 - 8, Y0 + 160 + 4 * 52 - 8):
                 c.dots_path([(X0 + 110, ry), (X0 + 260, ty)], spacing=9, r=2.6, col=RED)
                 c.font(SANS, 34, True); c.text(X0 + 266, ty + 12, "?", RED)
