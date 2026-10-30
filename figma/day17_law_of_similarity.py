@@ -28,7 +28,7 @@ X0, Y0 = PX - PW / 2, PY - PH / 2
 # (name, kind, avatar colour); kind: new | seen | cf
 STORIES = [("Your story", "own", (0.55, 0.55, 0.60)), ("priya", "new", (0.85, 0.55, 0.35)),
            ("rahul", "seen", (0.35, 0.55, 0.85)), ("ananya", "cf", (0.80, 0.40, 0.55)),
-           ("kabir", "new", (0.45, 0.75, 0.55)), ("meera", "seen", (0.75, 0.65, 0.30))]
+           ("kabir", "new", (0.40, 0.45, 0.85)), ("meera", "seen", (0.75, 0.65, 0.30))]
 
 
 def grad_col(k):
@@ -60,12 +60,15 @@ def avatar(c, x, y, r, col, kind, name=None, a=1.0, lw=6):
         c.c.new_path(); c.c.set_source_rgba(*BLUE, a); c.c.arc(x + r * 0.72, y + r * 0.72, r * 0.26, 0, 6.2832); c.c.fill()
         c.font(SANS, int(r * 0.42), True); c.text(x + r * 0.72 - r * 0.12, y + r * 0.86, "+", (1, 1, 1), a)
     if name:
-        c.font(SANS, 18, True); c.text(x - c.text_w(name) / 2, y + r + 40, name, DOT, a)
+        c.font(SANS, 15, True); c.text(x - c.text_w(name) / 2, y + r + 34, name, DOT, a)
 
 
-def stories_row(c, y, a=1.0, upto=6, r=42):
+SX = lambda i: X0 + 48 + i * 77
+
+
+def stories_row(c, y, a=1.0, upto=6, r=29):
     for i, (nm, kind, col) in enumerate(STORIES[:upto]):
-        avatar(c, X0 + 62 + i * 108, y, r, col, kind, nm, a)
+        avatar(c, SX(i), y, r, col, kind, nm, a, lw=5)
 
 
 # ------------------------------------------------------------------ scenes
@@ -113,13 +116,13 @@ def s2(cv, t, d, st):                                     # Instagram: stories r
         feed(c, Y0 + 300)
         if t > 2.0:
             for i, (nm, kind, col) in enumerate(STORIES):
-                if kind == "new": ring(c, X0 + 62 + i * 108, Y0 + 190, t, 2.0, col=IGRAD[1])
+                if kind == "new": ring(c, SX(i), Y0 + 190, t, 2.0, col=IGRAD[1])
             c.pill(PX, Y0 + 300 + 440, "rangeen ring", size=26, fam=SANS, col=DARK, bg=IGRAD[1], bold=True)
         if t > 3.4:
             for i, (nm, kind, col) in enumerate(STORIES):
-                if kind == "seen": ring(c, X0 + 62 + i * 108, Y0 + 190, t, 3.4, col=SEEN)
+                if kind == "seen": ring(c, SX(i), Y0 + 190, t, 3.4, col=SEEN)
             c.pill(PX, Y0 + 300 + 510, "grey ring", size=26, fam=SANS, col=DOT, bg=SEEN, bold=True)
-    stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.8, (PX, Y0 + 260), 1.45), (d - 0.4, (PX, Y0 + 320), 1.35)), seed=3)
+    stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.8, (PX, Y0 + 280), 1.4), (d - 0.4, (PX, Y0 + 340), 1.3)), seed=3)
     hud(cv)
 
 
@@ -133,13 +136,14 @@ def s3(cv, t, d, st):                                     # meaning read without
         for j, (kind, lab, col, at) in enumerate(LEG):
             if t < at: continue
             kk = ease(min(1, (t - at) / 0.4))
-            y = 1560 + j * 120
-            avatar(c, W / 2 - 200, y, 38, STORIES[1][2], kind, a=kk, lw=6)
-            c.font(SANS, 34, True); c.text(W / 2 - 120, y + 12, "= " + lab, col if kind != "seen" else DOT, kk)
+            if j == 0: c.fill_rrect(X0 + 16, Y0 + 330, PW - 32, 400, 20, (0.09, 0.09, 0.11), kk)
+            y = Y0 + 420 + j * 115
+            avatar(c, X0 + 90, y, 36, STORIES[1][2], kind, a=kk, lw=6)
+            c.font(SANS, 32, True); c.text(X0 + 160, y + 12, "= " + lab, col if kind != "seen" else DOT, kk)
             for i, (nm, kd, cl) in enumerate(STORIES):
-                if kd == kind: ring(c, X0 + 62 + i * 108, Y0 + 190, t, at, col=col)
-        if t > 4.6: white_pill(c, W / 2, 1460, "bina kuch padhe samajh aa gaya", 34)
-    stage.compose(cv, t, d, world, K((0, (PX, Y0 + 300), 1.2), (0.6, (W / 2, 1300), 0.82), (d - 0.4, (W / 2, 1320), 0.82)),
+                if kd == kind: ring(c, SX(i), Y0 + 190, t, at, col=col)
+        if t > 4.6: white_pill(c, W / 2, 1640, "bina kuch padhe samajh aa gaya", 34)
+    stage.compose(cv, t, d, world, K((0, (PX, Y0 + 300), 1.2), (0.6, (PX, Y0 + 420), 1.15), (d - 0.4, (PX, Y0 + 440), 1.1)),
                   seed=4)
     hud(cv)
 
@@ -174,7 +178,7 @@ def s5(cv, t, d, st):                                     # consistent links & b
     def world(c):
         c.font(SANS, 52, True); c.text(W / 2 - c.text_w("ek jaisa = turant pehchaan") / 2, 560, "ek jaisa = turant pehchaan", PINK)
         c.fill_rrect(W / 2 - 400, 660, 800, 680, 26, CARD)
-        lines = ["Apna order ", "yahan", " track karo. Help ke liye ", "support", " se baat karo,", "ya ", "FAQ", " padho."]
+        lines = ["Apna order ", "yahan", " track karo. Help ke liye ", "support", " se baat karo, ", "ya ", "FAQ", " padho."]
         x, y = W / 2 - 360, 760
         k = ease(min(1, max(0, (t - 0.6) / 0.6)))
         for s in lines:
