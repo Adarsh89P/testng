@@ -273,5 +273,37 @@
       "day15:day15_law_of_proximity": 0.648
     },
     "module": "day16_common_region"
+  },
+  "day17": {
+    "day": "day17",
+    "topic": "Law of Similarity",
+    "file": "assets/voice/day17/full.mp3",
+    "sha256": "53c003bc573432a0ca92717a09ee20c4e437cf3af565a2300739db721d757c01",
+    "duration": 57.08,
+    "script_cost": 0.528,
+    "voice_similarity": 0.99,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.685,
+      "day02:day02_hicks_law": 0.656,
+      "day03:day03_fitts_law": 0.667,
+      "day03:day03_fitts_myntra": 0.673,
+      "day04:day04_jakobs_law": 0.656,
+      "day05:day05_millers_law": 0.646,
+      "day05:day05_millers_law_card": 0.676,
+      "day05:day05_millers_law_netflix": 0.651,
+      "day05:day05_millers_law_phonepe": 0.656,
+      "day06:day06_zeigarnik_effect": 0.644,
+      "day07:day07_goal_gradient": 0.657,
+      "day08:day08_peak_end": 0.651,
+      "day09:day09_von_restorff": 0.649,
+      "day10:day10_serial_position": 0.652,
+      "day11:day11_aesthetic_usability": 0.663,
+      "day12:day12_doherty_threshold": 0.65,
+      "day13:day13_teslers_law": 0.657,
+      "day14:day14_postels_law": 0.645,
+      "day15:day15_law_of_proximity": 0.642,
+      "day16:day16_common_region": 0.64
+    },
+    "module": "day17_law_of_similarity"
   }
 }
