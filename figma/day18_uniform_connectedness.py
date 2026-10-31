@@ -83,10 +83,10 @@ def s1(cv, t, d, st):                                     # hook: "mera parcel a
         ang = t * 2.4
         c.dots_path([(cx, cy), (cx + 50 * math.sin(ang), cy - 50 * math.cos(ang))], spacing=6, r=3, col=FKY)
         c.dots_path([(cx, cy), (cx + 32 * math.sin(ang / 12), cy - 32 * math.cos(ang / 12))], spacing=6, r=3, col=DOT)
-        if t > 1.0: c.pill(PX + 330, Y0 + 280, "har ghante check", size=24, fam=MONO, col=DARK, bg=FKY, bold=True)
+        if t > 1.0: c.pill(PX, Y0 + 460, "har ghante check", size=24, fam=MONO, col=DARK, bg=FKY, bold=True)
         for i, (dx, dy) in enumerate([(-150, 200), (150, 230), (0, 150)]):
             if t > 2.2 + i * 0.3: c.font(SANS, 70, True); c.text(PX + dx - 18, Y0 + dy, "?", FKY)
-        if t > 3.4: white_pill(c, W / 2, 1640, "mera parcel aakhir hai kahan? 📦", 36)
+        if t > 3.4: white_pill(c, W / 2, 1640, "mera parcel aakhir hai kahan?", 36)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.6, (PX, Y0 + 420), 1.25), (d - 0.4, (PX, Y0 + 460), 1.15)), seed=2)
     hud(cv)
 
