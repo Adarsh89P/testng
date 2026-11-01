@@ -338,5 +338,39 @@
       "day17:day17_law_of_similarity": 0.668
     },
     "module": "day18_uniform_connectedness"
+  },
+  "day19": {
+    "day": "day19",
+    "topic": "Law of Prägnanz",
+    "file": "assets/voice/day19/full.mp3",
+    "sha256": "b8b9824404257d361f95aa72b0c4dbc835d7e7eb859a8e68f7df496338240944",
+    "duration": 63.87,
+    "script_cost": 0.526,
+    "voice_similarity": 0.987,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.693,
+      "day02:day02_hicks_law": 0.678,
+      "day03:day03_fitts_law": 0.682,
+      "day03:day03_fitts_myntra": 0.68,
+      "day04:day04_jakobs_law": 0.679,
+      "day05:day05_millers_law": 0.652,
+      "day05:day05_millers_law_card": 0.672,
+      "day05:day05_millers_law_netflix": 0.665,
+      "day05:day05_millers_law_phonepe": 0.675,
+      "day06:day06_zeigarnik_effect": 0.668,
+      "day07:day07_goal_gradient": 0.665,
+      "day08:day08_peak_end": 0.679,
+      "day09:day09_von_restorff": 0.667,
+      "day10:day10_serial_position": 0.678,
+      "day11:day11_aesthetic_usability": 0.67,
+      "day12:day12_doherty_threshold": 0.679,
+      "day13:day13_teslers_law": 0.664,
+      "day14:day14_postels_law": 0.681,
+      "day15:day15_law_of_proximity": 0.67,
+      "day16:day16_common_region": 0.677,
+      "day17:day17_law_of_similarity": 0.666,
+      "day18:day18_uniform_connectedness": 0.673
+    },
+    "module": "day19_pragnanz"
   }
 }

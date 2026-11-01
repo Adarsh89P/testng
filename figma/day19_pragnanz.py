@@ -137,8 +137,7 @@ def s3(cv, t, d, st):                                     # WhatsApp bottom bar:
                 x = X0 + 60 + i * 120
                 ring(c, x, by, t, at, col=WA)
                 c.pill(x, by - 100 - (i % 2) * 60, lab, size=22, fam=MONO, col=DARK, bg=WA, bold=True)
-        if t > 0.6: c.pill(PX, Y0 + 640, "Chats · Updates · Communities · Calls", size=20, fam=SANS, col=DOT)
-    stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.8, (PX, Y0 + PH - 200), 1.45), (d - 0.4, (PX, Y0 + PH - 200), 1.4)), seed=4)
+    stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.8, (PX, Y0 + PH - 290), 1.22), (d - 0.4, (PX, Y0 + PH - 290), 1.2)), seed=4)
     hud(cv)
 
 
@@ -153,7 +152,7 @@ def s4(cv, t, d, st):                                     # labels hidden: still
                 x = X0 + 60 + i * 120
                 c.pill(x, by + 90, nm + " ✓", size=18, fam=SANS, col=DARK, bg=GREEN, bold=True)
         if t > 4.0: white_pill(c, W / 2, 1660, "ek jhalak mein samajh", 38)
-    stage.compose(cv, t, d, world, K((0, (PX, Y0 + PH - 200), 1.4), (d - 0.4, (PX, Y0 + PH - 180), 1.3)), seed=5)
+    stage.compose(cv, t, d, world, K((0, (PX, Y0 + PH - 290), 1.2), (d - 0.4, (PX, Y0 + PH - 280), 1.15)), seed=5)
     hud(cv)
 
 
@@ -167,7 +166,7 @@ def s5(cv, t, d, st):                                     # contrast: busy icons
                 c.font(SANS, 46, True); c.text(X0 + 48 + i * 120, by - 60, "?", RED)
         if t > 1.2: c.pill(PX, Y0 + 560, "detail + shadow + rang", size=26, fam=MONO, col=DARK, bg=RED, bold=True)
         if t > 3.2: white_pill(c, W / 2, 1660, "chhoti screen pe sab dhundhla", 36)
-    stage.compose(cv, t, d, world, K((0, (PX, Y0 + PH - 200), 1.3), (d - 0.4, (PX, Y0 + PH - 160), 1.5)), seed=6)
+    stage.compose(cv, t, d, world, K((0, (PX, Y0 + PH - 280), 1.15), (d - 0.4, (PX, Y0 + PH - 240), 1.3)), seed=6)
     hud(cv)
 
 
