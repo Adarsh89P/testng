@@ -88,7 +88,7 @@ def s2(cv, t, d, st):                                     # then Google: a logo,
             google_home(c, k)
         labels = [("1 logo", 1.6, BY + 330), ("1 search box", 2.3, BY + 478), ("2 button", 3.0, BY + 590)]
         for lab, at, y in labels:
-            if t > at: c.pill(BX + BW - 40, y - 60, lab, size=24, fam=MONO, col=DARK, bg=YELLOW, bold=True)
+            if t > at: c.pill(BX + BW - 130, y - 60, lab, size=24, fam=MONO, col=DARK, bg=YELLOW, bold=True)
         if t > 3.8: c.pill(W / 2, 1600, "bas.", size=60, fam=SANS, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
     stage.compose(cv, t, d, world, K((0, (W / 2, 1070), 1.05), (1.2, (W / 2, 1070), 1.05), (2.0, (W / 2, 1080), 1.12),
                                      (d - 0.4, (W / 2, 1100), 1.05)), punch=0.05 * max(0, 1 - abs(t - 3.8) / 0.12), seed=3)
@@ -132,7 +132,7 @@ def s4(cv, t, d, st):                                     # law named: same job 
         if 0 < bl and t < CUT + 1.2:
             yb = 1040 + 4
             c.dots_path([(W / 2 - 420, yb), (W / 2 - 420 + 840 * bl, yb)], spacing=6, r=3.4, col=RAZ)
-        if t > CUT + 1.0: c.pill(W / 2, 1450, "extra cheezein: kaat do ✂", size=30, fam=SANS, col=DARK, bg=RAZ, bold=True)
+        if t > CUT + 1.0: c.pill(W / 2, 1450, "extra cheezein: kaat do", size=30, fam=SANS, col=DARK, bg=RAZ, bold=True)
     stage.compose(cv, t, d, world, K((0, (W / 2, 700), 1.25), (2.4, (W / 2, 1050), 1.0), (d - 0.4, (W / 2, 1080), 1.03)),
                   punch=0.05 * max(0, 1 - abs(t - CUT) / 0.12), seed=5)
     hud(cv); flash(cv, t, CUT, 0.1)

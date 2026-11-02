@@ -372,5 +372,40 @@
       "day18:day18_uniform_connectedness": 0.673
     },
     "module": "day19_pragnanz"
+  },
+  "day20": {
+    "day": "day20",
+    "topic": "Occam's Razor",
+    "file": "assets/voice/day20/full.mp3",
+    "sha256": "d11db9d50465c3501f4ffd72659e2cfbfe002583c888acc804e7c82926ccb9af",
+    "duration": 60.29,
+    "script_cost": 0.522,
+    "voice_similarity": 0.99,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.689,
+      "day02:day02_hicks_law": 0.667,
+      "day03:day03_fitts_law": 0.669,
+      "day03:day03_fitts_myntra": 0.672,
+      "day04:day04_jakobs_law": 0.654,
+      "day05:day05_millers_law": 0.65,
+      "day05:day05_millers_law_card": 0.661,
+      "day05:day05_millers_law_netflix": 0.658,
+      "day05:day05_millers_law_phonepe": 0.664,
+      "day06:day06_zeigarnik_effect": 0.664,
+      "day07:day07_goal_gradient": 0.653,
+      "day08:day08_peak_end": 0.668,
+      "day09:day09_von_restorff": 0.664,
+      "day10:day10_serial_position": 0.664,
+      "day11:day11_aesthetic_usability": 0.663,
+      "day12:day12_doherty_threshold": 0.671,
+      "day13:day13_teslers_law": 0.665,
+      "day14:day14_postels_law": 0.656,
+      "day15:day15_law_of_proximity": 0.677,
+      "day16:day16_common_region": 0.671,
+      "day17:day17_law_of_similarity": 0.653,
+      "day18:day18_uniform_connectedness": 0.67,
+      "day19:day19_pragnanz": 0.676
+    },
+    "module": "day20_occams_razor"
   }
 }
