@@ -47,8 +47,8 @@ def s1(cv, t, d, st):                                     # your phone: 40-60 ap
         hi = ease(min(1, max(0, (t - 4.4) / 0.6)))
         app_grid(c, n, hi)
         cnt = {0: "", 1: "chaalees?", 2: "saath?"}[0 if t < 1.6 else 1 if t < 2.6 else 2]
-        if cnt: c.pill(PX + 330, Y0 + 200, cnt, size=30, fam=SANS, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
-        if t > 3.4: c.pill(PX + 330, Y0 + 300, "roz kitne?", size=28, fam=MONO, col=DOT)
+        if cnt: c.pill(PX + 300, Y0 + 200, cnt, size=30, fam=SANS, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
+        if t > 3.4: c.pill(PX + 300, Y0 + 300, "roz kitne?", size=28, fam=MONO, col=DOT)
         if t > 5.0: white_pill(c, W / 2, 1640, "shaayad sirf 5-6", 40)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (1.0, (PX + 90, Y0 + 400), 1.12), (d - 0.4, (PX + 60, Y0 + 420), 1.1)),
                   punch=0.04 * max(0, 1 - abs(t - 4.4) / 0.12), seed=2)
@@ -66,7 +66,7 @@ def s2(cv, t, d, st):                                     # WhatsApp has lots of
             k = ease(min(1, (t - at) / 0.4))
             ang = -math.pi / 2 + i / len(FEATS) * 6.2832 + t * 0.15
             fade = 1 - 0.65 * ease(min(1, max(0, (t - CHAT) / 0.6)))
-            c.pill(cx + math.cos(ang) * 330 * k, cy + math.sin(ang) * 280 * k, f, size=28, fam=SANS, col=DOT, a=fade)
+            c.pill(cx + math.cos(ang) * 330 * (0.6 + 0.4 * k), cy + math.sin(ang) * 280 * (0.6 + 0.4 * k), f, size=28, fam=SANS, col=DOT, a=fade)
         if t > 2.6: c.pill(W / 2, 600, "dher saare features", size=30, fam=MONO, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
         s = 1.0 + 0.6 * ease(min(1, max(0, (t - CHAT) / 0.6)))
         P.icon(c, "chats", cx, cy, 1.6 * s, WA)
@@ -83,11 +83,11 @@ def s3(cv, t, d, st):                                     # app opens straight o
         P.wa_screen(c, labels=1.0, sel=0, a=k)
         if t > 0.8:
             c.drrect(X0 + 14, Y0 + 130, PW - 28, 500, 18, spacing=7, r=2.2, col=GOLD)
-            c.pill(PX, Y0 + 660, "sabse pehle: chats", size=26, fam=SANS, col=DARK, bg=GOLD, bold=True)
+            c.pill(PX, Y0 + 600, "sabse pehle: chats", size=26, fam=SANS, col=DARK, bg=GOLD, bold=True)
         if t > 2.2:
             by = Y0 + PH - 110
             for i in range(1, 4): ring(c, X0 + 60 + i * 120, by, t, 2.2 + i * 0.2, col=DIM)
-            c.pill(PX + 60, by - 90, "baaki sab: ek tap door", size=24, fam=MONO, col=DOT)
+            c.pill(PX + 60, by - 66, "baaki sab: ek tap door", size=24, fam=MONO, col=DOT)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.8, (PX, Y0 + 400), 1.12), (2.0, (PX, Y0 + 520), 1.12),
                                      (d - 0.4, (PX, Y0 + 560), 1.15)), seed=4)
     hud(cv)
@@ -156,8 +156,8 @@ def s6(cv, t, d, st):                                     # exercise: find your 
             top = ry < 2 and k >= 1
             c.fill_rrect(W / 2 - 360, y, 720, 64, 14, (0.30, 0.24, 0.06) if top else CARD)
             c.font(SANS, 26, True); c.text(W / 2 - 330, y + 42, lab, GOLD if top else DOT)
-            c.fill_rrect(W / 2 + 80, y + 22, 25 * use * min(1, t / 1.0), 20, 8, GOLD if top else GREY)
-            if top and t > 3.2: c.font(SANS, 22, True); c.text(W / 2 + 250, y + 42, "polish ✓", GREEN)
+            c.fill_rrect(W / 2 + 10, y + 22, 25 * use * min(1, t / 1.0), 20, 8, GOLD if top else GREY)
+            if top and t > 3.2: c.font(SANS, 22, True); c.text(W / 2 + 245, y + 42, "polish ✓", GREEN)
         if t > 3.0: c.pill(W / 2, 1460, "sabse aage + sabse zyaada polish", size=28, fam=MONO, col=DARK, bg=GOLD, bold=True)
     stage.compose(cv, t, d, world, K((0, (W / 2, 1000), 1.0), (d - 0.4, (W / 2, 1020), 1.0)), seed=8)
     hud(cv)
