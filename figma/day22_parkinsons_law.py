@@ -49,7 +49,7 @@ def s1(cv, t, d, st):                                     # habit: a week for th
                 c.font(SANS, 40, True); c.text(x - 14, y + 40, "✗", RED)
                 if i in (1, 4): c.pill(x, y + 120, "kal karenge", size=18, fam=MONO, col=DIM)
         if t > 3.4:
-            moon(c, W / 2 + 390, 700, 26)
+            moon(c, W / 2 + 390, 640, 26)
             for k in range(int(min(12, (t - 3.4) * 12))):
                 c.dbar(W / 2 - 300, 1000 + k * 26, 600 - (k * 37) % 180, rows=1, gap=4, col=DOT)
             c.pill(W / 2 + 390, 900, "aakhri raat!", size=26, fam=SANS, col=DARK, bg=AMY, bold=True)
@@ -93,8 +93,8 @@ def s3(cv, t, d, st):                                     # long checkout: 10 fi
         if t > 2.0:
             for j, (dx, dy) in enumerate([(-120, 350), (130, 420), (0, 300)]):
                 if t > 2.0 + j * 0.4: c.font(SANS, 56, True); c.text(PX + dx, Y0 + dy, "?", AMY)
-            c.pill(PX + 320, Y0 + 300, "rukta hai…", size=24, fam=MONO, col=DOT)
-        if t > 3.2: c.pill(PX + 320, Y0 + 380, "sochta hai…", size=24, fam=MONO, col=DOT)
+            c.pill(PX + 295, Y0 + 300, "rukta hai…", size=24, fam=MONO, col=DOT)
+        if t > 3.2: c.pill(PX + 295, Y0 + 380, "sochta hai…", size=24, fam=MONO, col=DOT)
         if t > QUIT:
             k = ease(min(1, (t - QUIT) / 0.6))
             c.c.new_path(); c.c.set_source_rgba(0, 0, 0, 0.65 * k); c.c.rectangle(X0, Y0, PW, PH); c.c.fill()
