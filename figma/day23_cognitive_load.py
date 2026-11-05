@@ -173,7 +173,7 @@ def s5(cv, t, d, st):                                     # contacts by face: no
     def world(c):
         tap_t[0], tap_t[1] = t, TAP
         gpay(c, people_k=ease(min(1, t / 1.2)), tap=0 if t > TAP else None)
-        if t > 1.4: c.pill(PX + 310, Y0 + 470, "roz waale log", size=24, fam=MONO, col=DOT)
+        if t > 1.4: c.pill(X0 + 210, Y0 + 413, "roz waale log", size=20, fam=MONO, col=DARK, bg=GB, bold=True)
         if TAP - 0.6 < t < TAP + 0.2:
             k = ease(min(1, (t - TAP + 0.6) / 0.6))
             c._dot(X0 + 64 + 200 * (1 - k), Y0 + 490 + 220 * (1 - k), 12, (1, 1, 1), 1)

@@ -480,5 +480,43 @@
       "day21:day21_pareto": 0.696
     },
     "module": "day22_parkinsons_law"
+  },
+  "day23": {
+    "day": "day23",
+    "topic": "Cognitive Load",
+    "file": "assets/voice/day23/full.mp3",
+    "sha256": "32d823a7f12266d08cb0fcba5f3b4181aef583966fa5e6aa778ce4ae1b0604c3",
+    "duration": 61.47,
+    "script_cost": 0.53,
+    "voice_similarity": 0.987,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.697,
+      "day02:day02_hicks_law": 0.67,
+      "day03:day03_fitts_law": 0.68,
+      "day03:day03_fitts_myntra": 0.68,
+      "day04:day04_jakobs_law": 0.675,
+      "day05:day05_millers_law": 0.675,
+      "day05:day05_millers_law_card": 0.681,
+      "day05:day05_millers_law_netflix": 0.685,
+      "day05:day05_millers_law_phonepe": 0.673,
+      "day06:day06_zeigarnik_effect": 0.679,
+      "day07:day07_goal_gradient": 0.67,
+      "day08:day08_peak_end": 0.682,
+      "day09:day09_von_restorff": 0.685,
+      "day10:day10_serial_position": 0.681,
+      "day11:day11_aesthetic_usability": 0.699,
+      "day12:day12_doherty_threshold": 0.687,
+      "day13:day13_teslers_law": 0.682,
+      "day14:day14_postels_law": 0.672,
+      "day15:day15_law_of_proximity": 0.688,
+      "day16:day16_common_region": 0.694,
+      "day17:day17_law_of_similarity": 0.68,
+      "day18:day18_uniform_connectedness": 0.695,
+      "day19:day19_pragnanz": 0.688,
+      "day20:day20_occams_razor": 0.679,
+      "day21:day21_pareto": 0.687,
+      "day22:day22_parkinsons_law": 0.672
+    },
+    "module": "day23_cognitive_load"
   }
 }
