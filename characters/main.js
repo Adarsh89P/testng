@@ -1,0 +1,31 @@
+import { Impasto, Strokes } from './engine/impasto.js';
+import { Ref, paintRef } from './engine/plate.js';
+import { P, lin } from './common.js';
+import * as G from './gods.js';
+import * as S from './scenes.js';
+const q = new URLSearchParams(location.search), sheet = +(q.get('sheet') || 1), W = 1920, H = 1080;
+await document.fonts.load('700 40px "Noto Serif Devanagari"', 'शिव विष्णु ब्रह्मा');
+const E = new Impasto(document.getElementById('c'), { W, H, ss: 2 });
+const up = (b, w, h, ox, oy) => ({ b: E.batch(b.strokes.data()), tex: E.texture(b.ref.ctx.canvas), w, h, ox, oy });
+const mul = (A, B) => [A[0] * B[0] + A[2] * B[1], A[1] * B[0] + A[3] * B[1], A[0] * B[2] + A[2] * B[3], A[1] * B[2] + A[3] * B[3], A[0] * B[4] + A[2] * B[5] + A[4], A[1] * B[4] + A[3] * B[5] + A[5]];
+const TR = (x, y) => [1, 0, 0, 1, x, y], SC = s => [s, 0, 0, s, 0, 0];
+// background: warm parchment with soft mottled bands
+const bgR = new Ref(W, H, 1);
+bgR.fill(P([[0, 0], [W, 0], [W, H], [0, H]]), lin(0, 0, 0, H, [[0, '#efe0c0'], [1, '#d4b98e']]), { dir: -4, fallback: -4, group: 'bg', maxR: 12, jit: .02, detail: 3 });
+const cards = [];
+const names = { 1: [['शिव', 'shiva'], ['विष्णु', 'vishnu'], ['ब्रह्मा', 'brahma'], ['पार्वती', 'parvati'], ['गणेश', 'ganesha'], ['नंदी', 'nandi']], 2: [['नरसिंह', 'narasimha'], ['यम', 'yama'], ['मार्कंडेय', 'boy']] }[sheet];
+const BUILD = { shiva: () => [up(S.buildShiva(true), S.SHW, S.SHH, S.SHX, S.SHY), .56], vishnu: () => [up(G.vishnu(), G.GW, G.GH, G.GX, G.GY0), 1.02], brahma: () => [up(G.brahma(), G.GW, G.GH, G.GX, G.GY0), 1.02], parvati: () => [up(G.parvati(), G.GW, G.GH, G.GX, G.GY0), 1.02], ganesha: () => [up(G.ganesha(), G.GW, G.GH, G.GX, G.GY0), 1.02], nandi: () => [up(G.nandi(), G.GW, G.GH, G.GX, G.GY0), 1.02], narasimha: () => [up(G.narasimha(), G.GW, G.GH, G.GX, G.GY0), 1.7], yama: () => [up(S.buildYama(), S.YW, S.YH, S.YOX, S.YOY), 1.0], boy: () => [up(S.buildBoy(false), S.BW, S.BH, S.BX, S.BY), 2.3] };
+const labelR = new Ref(W, H, 1);
+const cols = sheet === 1 ? 3 : 3, rows = sheet === 1 ? 2 : 1, cw = W / cols, ch = H / rows;
+names.forEach(([n], i) => { const cx = (i % cols) * cw + cw / 2, cy = Math.floor(i / cols) * ch; labelR.text(n, cx, cy + ch - 34, '700 54px "Noto Serif Devanagari"', '#4a2a1a', { dir: 'edge', fallback: 10, maxR: 4, group: 'l' + i }); });
+const P0 = { bg: up({ strokes: paintRef(bgR, { R: [24, 12, 6], T: 14, seed: 3 }), ref: bgR }, W, H, 0, 0), lab: up({ strokes: paintRef(labelR, { R: [10, 5, 3], T: 10, seed: 4 }), ref: labelR }, W, H, 0, 0) };
+const items = names.map(([n, k]) => { const [pl, s] = BUILD[k](); return { pl, s, k }; });
+const plate = (pl, o) => { const M = o.M || [1, 0, 0, 1, 0, 0], Mu = mul(M, TR(-pl.ox, -pl.oy)); E.under(pl.tex, pl.w, pl.h, { ...o, M: Mu }); E.draw(pl.b, { ...o, M: Mu }); };
+window.DUR = 1;
+window.render = t => {
+  E.begin(); const o = { t, cam: { x: W / 2, y: H / 2, zoom: 1 }, grey: 0, reveal: -1e6 };
+  plate(P0.bg, o);
+  items.forEach(({ pl, s, k }, i) => { const cx = (i % cols) * cw + cw / 2, gy = Math.floor(i / cols) * ch + ch - 80; plate(pl, { ...o, M: mul(TR(cx, gy), SC(s)) }); });
+  plate(P0.lab, o); E.finish({ sat: .92, vig: .15 });
+};
+render(0); window.READY = true;
