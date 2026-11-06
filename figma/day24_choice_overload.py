@@ -53,12 +53,13 @@ def s1(cv, t, d, st):                                     # Friday night: 30 min
         for r in range(-1, 5):
             y = Y0 + 140 + r * 230 - off
             for j in range(4):
-                if Y0 + 120 < y + 200 and y < Y0 + PH - 20:
-                    poster(c, X0 + 18 + j * 114, max(Y0 + 120, y), 104, 180 - max(0, Y0 + 120 - y), r * 4 + j + int(t * 1.1))
+                top, bot = max(Y0 + 120, y), min(Y0 + PH - 30, y + 180)
+                if bot - top > 24:
+                    poster(c, X0 + 18 + j * 114, top, 104, bot - top, r * 4 + j + int(t * 1.1))
         mins = min(30, int(t / GIVE * 30))
-        c.pill(PX + 330, Y0 + 200, f"0:{mins:02d}", size=30, fam=SANS, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
-        c.pill(PX + 330, Y0 + 120, "Shukravaar raat", size=22, fam=MONO, col=DOT)
-        if t > 2.4: c.pill(PX + 330, Y0 + 290, "trailer… trailer…", size=22, fam=MONO, col=DOT)
+        c.pill(PX + 300, Y0 + 200, f"0:{mins:02d}", size=30, fam=SANS, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
+        c.pill(PX + 300, Y0 + 120, "Shukravaar raat", size=22, fam=MONO, col=DOT)
+        if t > 2.4: c.pill(PX + 300, Y0 + 290, "trailer… trailer…", size=22, fam=MONO, col=DOT)
         if t > GIVE:
             k = ease(min(1, (t - GIVE) / 0.5))
             c.c.new_path(); c.c.set_source_rgba(0, 0, 0, 0.7 * k); c.c.rectangle(X0, Y0, PW, PH); c.c.fill()
@@ -129,9 +130,9 @@ def s4(cv, t, d, st):                                     # Netflix: a small Top
                 poster(c, X0 + 18 + j * 114, Y0 + 420 + r * 150, 104, 130, r * 4 + j, 0.35)
         c.fill_rrect(X0 + 10, Y0 + 130, PW - 20, 250, 14, (0.08, 0.08, 0.09), k)
         top10_row(c, Y0 + 180, k)
-        if t > 1.6: c.pill(PX + 320, Y0 + 520, "hazaaron shows", size=24, fam=MONO, col=DIM)
+        if t > 1.6: c.pill(PX + 290, Y0 + 520, "hazaaron shows", size=24, fam=MONO, col=DIM)
         if t > 2.6: c.pill(PX + 320, Y0 + 200, "bas 10", size=30, fam=SANS, col=DARK, bg=NRED, bold=True)
-        if t > 3.6: c.pill(PX + 320, Y0 + 290, "bade number, saaf order", size=22, fam=MONO, col=DOT)
+        if t > 3.6: c.pill(PX + 290, Y0 + 290, "bade number, saaf order", size=22, fam=MONO, col=DOT)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.8, (PX + 110, Y0 + 320), 1.25), (d - 0.4, (PX + 110, Y0 + 330), 1.22)),
                   seed=5)
     hud(cv)
@@ -155,7 +156,7 @@ def s5(cv, t, d, st):                                     # one glance, one tap,
             c.fill_rrect(X0 + 30, Y0 + 500, PW - 60, 8, 4, (0.3, 0.3, 0.32), k)
             c.fill_rrect(X0 + 30, Y0 + 500, (PW - 60) * prog, 8, 4, NRED, k)
         for j, (lab, at) in enumerate([("ek nazar", 0.6), ("ek tap", TAP), ("show chaalu", TAP + 0.8)]):
-            if t > at: c.pill(PX + 320, Y0 + 220 + j * 80, lab + " ✓", size=24, fam=SANS, col=DARK, bg=GREEN, bold=True)
+            if t > at: c.pill(PX + 300, Y0 + 220 + j * 80, lab + " ✓", size=24, fam=SANS, col=DARK, bg=GREEN, bold=True)
     stage.compose(cv, t, d, world, K((0, (PX + 110, Y0 + 330), 1.22), (d - 0.4, (PX + 80, Y0 + 360), 1.15)),
                   punch=0.05 * max(0, 1 - abs(t - TAP) / 0.12), seed=6)
     hud(cv); flash(cv, t, TAP, 0.08)
