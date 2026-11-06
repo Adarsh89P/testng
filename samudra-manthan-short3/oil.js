@@ -61,7 +61,7 @@ function nightPlate() {
 export async function setup(q) {
   await document.fonts.load('700 90px "FreeSerif"', 'समुद्र मंथन के अनेक रूप रहस्य विष्णु पुराण');
   const cv = document.getElementById('gl'), ov = document.getElementById('ov'), og = ov.getContext('2d');
-  const E = new Impasto(cv, { W, H, ss: 1.5 });
+  const E = new Impasto(cv, { W, H, ss: +(q.get('ss') || 1.5) });
   const DV = CH.durvasa(), VD = CH.vidyadhari(), IN = CH.indra(), EL = CH.airavata();
   const parts = {
     'durvasa.body': DV.body, 'durvasa.arm': DV.arm, vidyadhari: VD.body, 'indra.body': IN.body, 'indra.arm': IN.arm, 'airavata.body': EL.body, 'airavata.trunk': EL.trunk,
@@ -105,7 +105,10 @@ export async function setup(q) {
     const F = frame(t), [cx, cy, z] = F.cam, m = F.mood, cam = { x: cx, y: cy, zoom: z };
     E.begin();
     drawPlate(NIGHT, cam, t, -10);                                 // the night sky over the Ocean of Milk
-    for (const it of F.items) { if (it.id === 'ground') continue; drawPart(it.id, it.M, { cam, t, alpha: it.a, t0: it.t0 }); }
+    // oil paint is opaque: the Kurma is painted in front of the front wave so it stays visible
+    const items = F.items.filter(i => i.id !== 'ground'), k = items.filter(i => i.id === 'kurma'), rest = items.filter(i => i.id !== 'kurma');
+    const at = rest.findIndex(i => i.id === 'sea1'); if (at >= 0) rest.splice(at + 1, 0, ...k); else rest.push(...k);
+    for (const it of rest) drawPart(it.id, it.M, { cam, t, alpha: it.a, t0: it.t0 });
     const post = { expo: 1.03, sat: 1.08, contrast: 1.05, vig: .3, spec: .26, shin: 26 };
     if (m.anger > 0) { post.lightCol = [1, lerp(.95, .62, m.anger), lerp(.9, .46, m.anger)]; post.expo += .06 * m.anger; post.vig += .15 * m.anger; }
     if (m.drain > 0) { post.sat = lerp(1.08, .28, m.drain); post.expo = lerp(1.03, .86, m.drain); post.vig += .2 * m.drain; }
