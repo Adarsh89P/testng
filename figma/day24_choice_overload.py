@@ -204,7 +204,9 @@ SCENES = [
           whoosh=True, clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
-VO_CUTS = "auto"
+# The Day 24 file (model v4) has no pauses (break tags ignored): line cuts found by aligning it to a TTS reading of the
+# script, each snapped to the quietest point within 0.8 s (all in the silence between sentences); line check 8/8.
+VO_CUTS = [4.96, 15.44, 26.06, 35.04, 44.5, 50.76, 58.7]
 
 if __name__ == "__main__":
     import daily
