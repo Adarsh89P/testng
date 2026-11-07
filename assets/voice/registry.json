@@ -557,5 +557,45 @@
       "day23:day23_cognitive_load": 0.676
     },
     "module": "day24_choice_overload"
+  },
+  "day25": {
+    "day": "day25",
+    "topic": "Mental Models",
+    "file": "assets/voice/day25/full.mp3",
+    "sha256": "885e8d3933255b82dc511010965314936eebb0b3f96cccf6f5363e65b7869709",
+    "duration": 63.87,
+    "script_cost": 0.538,
+    "voice_similarity": 0.986,
+    "other_days": {
+      "day01:day01_labor_illusion": 0.702,
+      "day02:day02_hicks_law": 0.681,
+      "day03:day03_fitts_law": 0.692,
+      "day03:day03_fitts_myntra": 0.684,
+      "day04:day04_jakobs_law": 0.685,
+      "day05:day05_millers_law": 0.67,
+      "day05:day05_millers_law_card": 0.692,
+      "day05:day05_millers_law_netflix": 0.677,
+      "day05:day05_millers_law_phonepe": 0.68,
+      "day06:day06_zeigarnik_effect": 0.659,
+      "day07:day07_goal_gradient": 0.679,
+      "day08:day08_peak_end": 0.677,
+      "day09:day09_von_restorff": 0.683,
+      "day10:day10_serial_position": 0.684,
+      "day11:day11_aesthetic_usability": 0.685,
+      "day12:day12_doherty_threshold": 0.687,
+      "day13:day13_teslers_law": 0.69,
+      "day14:day14_postels_law": 0.694,
+      "day15:day15_law_of_proximity": 0.686,
+      "day16:day16_common_region": 0.693,
+      "day17:day17_law_of_similarity": 0.688,
+      "day18:day18_uniform_connectedness": 0.695,
+      "day19:day19_pragnanz": 0.694,
+      "day20:day20_occams_razor": 0.671,
+      "day21:day21_pareto": 0.684,
+      "day22:day22_parkinsons_law": 0.679,
+      "day23:day23_cognitive_load": 0.664,
+      "day24:day24_choice_overload": 0.673
+    },
+    "module": "day25_mental_models"
   }
 }
