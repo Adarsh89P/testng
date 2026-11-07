@@ -13,7 +13,7 @@ and names its source.
 | | |
 |---|---|
 | Channel name | **ग्रंथ रहस्य \| Granth Rahasya** |
-| Handle | **@GranthRahasya** (fallbacks: @GranthRahasyaHindi, @Granth.Rahasya) |
+| Handle | **@GranthRahasyaHindi** (@GranthRahasya is taken; fallbacks: @Granth.Rahasya, @GranthRahasyaKatha, @TheGranthRahasya) |
 | Tagline | **शास्त्रों की अनसुनी कथाएँ — रंगों में** |
 
 Why: "ग्रंथ" covers every scripture (not just one Purana), "रहस्य" matches the "क्या आपको पता है" hook, and it
@@ -42,7 +42,7 @@ reads the same in Hindi and English search.
 6. *Settings → Channel → Advanced*: Audience **"No, set this channel as not made for kids"**
    (mythology for a general audience; "made for kids" switches off comments and notifications).
 7. *Settings → Upload defaults* (saves typing every upload):
-   - Title: `| ग्रंथ रहस्य #shorts`
+   - Title: `| ग्रंथ रहस्य #shorts`  (write the hook in front of it)
    - Description: the template in §5
    - Category: **Education**
    - Video language: **Hindi**; caption certification: none
@@ -77,6 +77,8 @@ sourced and told in Hindi.
 ```
 Links (Customization → Basic info → Links): Instagram, a WhatsApp channel, and later a Telegram channel.
 
+**Contact email** (Customization → Basic info → Contact info): use a separate address for business enquiries, not your personal one.
+
 ---
 
 ## 4. Branding
@@ -89,7 +91,15 @@ Links (Customization → Basic info → Links): Instagram, a WhatsApp channel, a
 | Colours | indigo `#1c2458`, saffron `#ee7a1e`, gold `#f2b830`, cream `#fbefd6` | same as the videos |
 | Font for text | FreeSerif Bold (the subtitle font) | consistent with the videos |
 
-I can render the profile picture, banner and watermark in the same oil-painting engine once you pick the name.
+**Done — ready to upload** (in `channel-art/`):
+
+| Upload this | Where |
+|---|---|
+| `granth-rahasya-profile-800x800.jpg` | Customization → Branding → Picture |
+| `granth-rahasya-banner-2560x1440.jpg` | Customization → Branding → Banner image |
+| `granth-rahasya-watermark-150.png` | Customization → Branding → Video watermark (display: entire video) |
+
+`preview-banner-mobile-safe-area.jpg` shows the part of the banner phones display; `preview-profile-circle.jpg` shows the profile picture as YouTube crops it.
 
 ---
 
