@@ -65,7 +65,7 @@ def shop(c, t, a=1.0, banner_fn=None):
 def heat(c, x, y, r, k, a=1.0):
     for j, col in enumerate(HEAT):
         rr = r * (1 - j * 0.22) * k
-        c.c.new_path(); c.c.set_source_rgba(*col, 0.28 * a); c.c.arc(x, y, max(1, rr), 0, 6.2832); c.c.fill()
+        c.c.new_path(); c.c.set_source_rgba(*col, 0.15 * a); c.c.arc(x, y, max(1, rr), 0, 6.2832); c.c.fill()
 
 
 # ------------------------------------------------------------------ scenes
@@ -80,7 +80,7 @@ def s1(cv, t, d, st):                                     # memory test: what di
             c.font(SANS, 100, True); c.text(PX - 26, y + 140, "?", YELLOW, k)
             c.pill(PX, Y0 + PH + 70, "us par kya likha tha?", size=32, fam=SANS, col=DARK, bg=YELLOW, bold=True)
         if t > HIDE + 1.4: white_pill(c, W / 2, Y0 + PH + 150, "yaad nahi na?", 38)
-        if t < HIDE: c.pill(PX + 310, Y0 + 300, "bada, rangeen", size=24, fam=MONO, col=DOT)
+        if t < HIDE: c.pill(PX + 285, Y0 + 300, "bada, rangeen", size=24, fam=MONO, col=DOT)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.8, (PX + 60, Y0 + 330), 1.25), (HIDE, (PX + 60, Y0 + 330), 1.25),
                                      (d - 0.4, (PX, PY + 60), 0.95)), punch=0.05 * max(0, 1 - abs(t - HIDE) / 0.12), seed=2)
     hud(cv); flash(cv, t, HIDE, 0.08)
@@ -96,11 +96,11 @@ def s2(cv, t, d, st):                                     # eye-tracking: gaze t
             if t > at: heat(c, x, y, r, ease(min(1, (t - at) / 0.5)))
         n = sum(1 for i in range(len(SPOTS)) if t > 0.8 + i * 0.45)
         if n > 1: c.dots_path([(x, y) for x, y, _ in SPOTS[:n]], spacing=12, r=3, col=(1, 1, 1), a=0.9)
-        c.pill(PX + 300, Y0 + 120, "eye-tracking", size=24, fam=MONO, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
+        c.pill(PX + 275, Y0 + 120, "eye-tracking", size=24, fam=MONO, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
         if t > 3.2:
             x, y, w, h = BANNER
             c.rrect_path(x - 6, y - 6, w + 12, h + 12, 22); c.c.set_source_rgba(*RED, 1); c.c.set_line_width(3); c.c.stroke()
-            c.pill(PX + 300, y + 100, "banner: 0 nazar", size=24, fam=SANS, col=DARK, bg=RED, bold=True)
+            c.pill(PX + 275, y + 100, "banner: 0 nazar", size=24, fam=SANS, col=DARK, bg=RED, bold=True)
     stage.compose(cv, t, d, world, K((0, (PX, PY), 0.95), (0.8, (PX + 60, Y0 + 420), 1.15), (d - 0.4, (PX + 60, Y0 + 430), 1.12)),
                   seed=3)
     hud(cv)
@@ -132,7 +132,7 @@ SKIP = 2.4
 def s4(cv, t, d, st):                                     # trap: important message styled like a banner → skipped too
     def world(c):
         shop(c, t, banner_fn=lambda: banner(c, t, text=("PAYMENT FAILED!", "Order hold par hai · retry karo"), col=(0.95, 0.30, 0.30)))
-        if t > 1.2: c.pill(PX + 300, Y0 + 300, "zaroori message!", size=24, fam=SANS, col=DARK, bg=YELLOW, bold=True)
+        if t > 1.2: c.pill(PX + 280, Y0 + 300, "zaroori message!", size=24, fam=SANS, col=DARK, bg=YELLOW, bold=True)
         if t > SKIP:
             k = ease(min(1, (t - SKIP) / 1.0))
             pts = [(X0 + 200, Y0 + 150), (X0 + 120 + 80 * k, Y0 + 150 + 350 * k)]
@@ -169,7 +169,7 @@ def s5(cv, t, d, st):                                     # good apps: important
         if t > 1.2: heat(c, X0 + 200, Y0 + 190, 110, ease(min(1, (t - 1.2) / 0.6)))
         labels = [("saada", 2.0), ("saaf", 2.6), ("sahi jagah", 3.2)]
         for j, (lab, at) in enumerate(labels):
-            if t > at: c.pill(PX + 300, Y0 + 150 + j * 70, lab + " ✓", size=24, fam=SANS, col=DARK, bg=GREEN, bold=True)
+            if t > at: c.pill(PX + 285, Y0 + 150 + j * 70, lab + " ✓", size=24, fam=SANS, col=DARK, bg=GREEN, bold=True)
         if t > 4.0: white_pill(c, W / 2, 1660, "ad jaisa nahi, content jaisa", 36)
     stage.compose(cv, t, d, world, K((0, ANCHOR, 1.0), (0.6, (PX + 60, Y0 + 280), 1.25), (d - 0.4, (PX + 60, Y0 + 300), 1.2)),
                   seed=6)
