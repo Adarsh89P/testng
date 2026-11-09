@@ -13,7 +13,7 @@ Settings as the Day 04 master: Eleven Multilingual v2 · speed 1.05 · stability
 ```
 डे ट्वेंटी सेवन। और आज, एक प्लेट समोसे से शुरू करते हैं। <break time="1.5s" />
 प्लेट में दस समोसे हों, तो कोई जल्दी नहीं करता। पर जैसे ही आख़िरी एक बचता है, अचानक सबको वही चाहिए। <break time="1.5s" />
-ऐमज़ॉन पे भी यही होता है। प्रोडक्ट के नीचे, छोटा सा लाल लाइन। ओनली टू लेफ़्ट इन स्टॉक। और आपका हाथ, सीधा बाय नाउ पर। <break time="1.5s" />
+ऐमज़ॉन पे भी यही होता है। प्रोडक्ट के नीचे, छोटी सी लाल लाइन। ओनली टू लेफ़्ट इन स्टॉक। और आपका हाथ, सीधा बाय नाउ पर। <break time="1.5s" />
 इसे कहते हैं, स्कार्सिटी। जो चीज़ कम है, या जल्दी ख़त्म होने वाली है, वो हमें ज़्यादा क़ीमती लगती है। <break time="1.5s" />
 वजह सीधी है। हमें खोने का डर, पाने की ख़ुशी से ज़्यादा लगता है। कहीं छूट न जाए, बस यही सोच। <break time="1.5s" />
 पर ध्यान रहे। अगर हर प्रोडक्ट पर हमेशा, सिर्फ़ दो बचे हैं लिखा हो, तो यूज़र समझ जाता है, और भरोसा टूट जाता है। <break time="1.5s" />
@@ -25,7 +25,7 @@ Settings as the Day 04 master: Eleven Multilingual v2 · speed 1.05 · stability
 ```
 Day twenty-seven. Aur aaj, ek plate samose se shuru karte hain.
 Plate mein das samose hon, toh koi jaldi nahi karta. Par jaise hi aakhri ek bachta hai, achaanak sabko wahi chahiye.
-Amazon pe bhi yahi hota hai. Product ke neeche, chhota sa laal line. Only two left in stock. Aur aapka haath, seedha Buy Now par.
+Amazon pe bhi yahi hota hai. Product ke neeche, chhoti si laal line. Only two left in stock. Aur aapka haath, seedha Buy Now par.
 Ise kehte hain, Scarcity. Jo cheez kam hai, ya jaldi khatam hone waali hai, woh hamein zyaada qeemti lagti hai.
 Wajah seedhi hai. Hamein khone ka darr, paane ki khushi se zyaada lagta hai. Kahin chhoot na jaaye, bas yahi soch.
 Par dhyaan rahe. Agar har product par hamesha, sirf do bache hain likha ho, toh user samajh jaata hai, aur bharosa toot jaata hai.
