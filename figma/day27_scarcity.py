@@ -62,7 +62,7 @@ def s1(cv, t, d, st):                                     # samosa plate: ten â†
         n = 10 if t < 1.2 else max(1, 10 - int((t - 1.2) * 6))
         pos = [(cx - 200 + (i % 5) * 100, cy - 40 + (i // 5) * 90) for i in range(10)]
         for i in range(n): samosa(c, *pos[i] if n > 1 else (cx, cy), 1.1)
-        c.pill(W / 2, 640, f"{n} samose", size=34, fam=SANS, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
+        c.pill(W / 2, 640, f"{n} samose" if n > 1 else "1 samosa", size=34, fam=SANS, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
         if t < 1.6: c.pill(W / 2, 1240, "koi jaldi nahiâ€¦", size=28, fam=MONO, col=DOT)
         if t > LAST:
             k = ease(min(1, (t - LAST) / 0.8))
@@ -85,7 +85,7 @@ def s2(cv, t, d, st):                                     # Amazon: small red li
         product_page(c, stock_k=(t - 1.0) if t > 1.0 else 0, press=TAP < t < TAP + 0.25)
         if t > 1.2:
             ring(c, X0 + 150, Y0 + 547, t, 1.2, col=STOCK)
-            c.pill(PX + 300, Y0 + 545, "chhoti si laal line", size=22, fam=MONO, col=DARK, bg=STOCK, bold=True)
+            c.pill(PX + 275, Y0 + 595, "chhoti si laal line", size=22, fam=MONO, col=DARK, bg=STOCK, bold=True)
         if TAP - 1.0 < t < TAP + 0.3:
             k = ease(min(1, (t - TAP + 1.0) / 1.0))
             c._dot(PX + 200 - 200 * k, Y0 + 900 - 175 * k, 13, (1, 1, 1), 1)
