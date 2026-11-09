@@ -85,7 +85,7 @@ def s2(cv, t, d, st):                                     # Amazon: small red li
         product_page(c, stock_k=(t - 1.0) if t > 1.0 else 0, press=TAP < t < TAP + 0.25)
         if t > 1.2:
             ring(c, X0 + 150, Y0 + 547, t, 1.2, col=STOCK)
-            c.pill(PX + 120, Y0 + 445, "chhoti si laal line ↓", size=22, fam=MONO, col=DARK, bg=STOCK, bold=True)
+            c.pill(PX + 160, Y0 + 445, "chhoti si laal line ↓", size=22, fam=MONO, col=DARK, bg=STOCK, bold=True)
         if TAP - 1.0 < t < TAP + 0.3:
             k = ease(min(1, (t - TAP + 1.0) / 1.0))
             c._dot(PX + 200 - 200 * k, Y0 + 900 - 175 * k, 13, (1, 1, 1), 1)
