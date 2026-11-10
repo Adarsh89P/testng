@@ -114,6 +114,15 @@ export async function setup(q) {
     if (m.drain > 0) { post.sat = lerp(1.08, .28, m.drain); post.expo = lerp(1.03, .86, m.drain); post.vig += .2 * m.drain; }
     post.expo = (post.expo + m.flash * .8) * (1 - m.fade);
     E.finish(post);
-    og.clearRect(0, 0, W, H); oilSub(og, t);
+    og.clearRect(0, 0, W, H);
+    if (q.get('thumb')) {   // cover image: big title instead of the subtitle
+      og.save(); og.textAlign = 'center'; og.textBaseline = 'middle'; og.lineJoin = 'round';
+      const gv = og.createLinearGradient(0, 120, 0, 760); gv.addColorStop(0, 'rgba(18,10,30,.72)'); gv.addColorStop(1, 'rgba(18,10,30,0)'); og.fillStyle = gv; og.fillRect(0, 0, W, 800);
+      const line = (txt, y, size, col, w) => { og.font = `700 ${size}px "FreeSerif"`; og.strokeStyle = '#1e0c06'; og.lineWidth = w; og.shadowColor = 'rgba(0,0,0,.8)'; og.shadowBlur = 20; og.strokeText(txt, W / 2, y); og.shadowBlur = 0; og.fillStyle = col; og.fillText(txt, W / 2, y); };
+      line('वासुकि का मुख', 290, 118, '#fff4dc', 14);
+      line('दैत्यों को क्यों?', 440, 130, '#ffcf4a', 16);
+      line('एक ओर अग्नि · दूसरी ओर वर्षा', 1650, 70, '#fff4dc', 11);
+      og.restore();
+    } else oilSub(og, t);
   };
 }
