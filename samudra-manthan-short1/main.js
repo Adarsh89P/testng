@@ -459,7 +459,14 @@ function render(t) {
   tr.fillStyle = '#fff'; tr.fillRect(0, 0, W, H);
   sea(t); scene(t);
   fr.setTransform(1, 0, 0, 1, 0, 0); fr.clearRect(0, 0, W, H); fr.drawImage(stc, 0, 0);
-  subtitle(t);
+  if (new URLSearchParams(location.search).get('thumb')) {
+    const g = fr; g.save(); g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
+    const line = (txt, y, size, col, w) => { g.font = `700 ${size}px "FreeSerif"`; g.strokeStyle = '#2a0d08'; g.lineWidth = w; g.shadowColor = 'rgba(0,0,0,.6)'; g.shadowBlur = 16; g.strokeText(txt, W / 2, y); g.shadowBlur = 0; g.fillStyle = col; g.fillText(txt, W / 2, y); };
+    line('समुद्र मंथन का विष', 270, 106, '#fff4dc', 14);
+    line('शिव ने नहीं पिया?', 420, 126, '#ffcf4a', 16);
+    line('विष्णु पुराण का रहस्य', 1600, 76, '#fff4dc', 12);
+    g.restore();
+  } else subtitle(t);
   const L = lamps(t), n = Math.max(.35, L.reduce((a, l) => a + l[2], 0));
   const poison = ss(seg(t, 29.8, 31)) * (1 - ss(seg(t, 34.3, 35.2)));
   const fade = ss(seg(t, 56.2, 57.0)) + (1 - ss(seg(t, 0, .25)));
