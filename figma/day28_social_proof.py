@@ -71,9 +71,9 @@ def s1(cv, t, d, st):                                     # two golgappa stalls 
         if t > 1.8: c.pill(W / 2, 600, "aap kiske paas jaaoge?", size=34, fam=SANS, col=DARK, bg=(0.95, 0.95, 0.96), bold=True)
         if t > GO:
             k = ease(min(1, (t - GO) / 0.9))
-            x = W / 2 + (lx + 60 - W / 2) * k; y = 1500 - (1500 - 1320) * k
+            x = W / 2 + (lx + 130 - W / 2) * k; y = 1500 - (1500 - 1250) * k
             person(c, x, y, (1, 1, 1), 1, 1.2)
-            c.pill(x, y + 70, "aap", size=22, fam=MONO, col=DARK, bg=(1, 1, 1), bold=True)
+            c.pill(x + 60, y - 30, "aap", size=22, fam=MONO, col=DARK, bg=(1, 1, 1), bold=True)
         if t > GO + 1.1: white_pill(c, W / 2, 1520, "line waale ke paas na?", 38)
     stage.compose(cv, t, d, world, K((0, (W / 2, 950), 0.95), (d - 0.4, (W / 2, 1040), 0.95)), seed=2)
     hud(cv)
@@ -110,9 +110,9 @@ def s3(cv, t, d, st):                                     # law named: unsure â†
         for i in range(24):
             ox = W / 2 - 380 + (i % 8) * 108; oy = 980 + (i // 8) * 110
             lead = i < 6
-            tx = W / 2 + 330; ty = 1090
+            tx = W / 2 + 120 + (i % 6) * 55; ty = 1000 + (i // 6) * 75
             p = min(1, max(0, k * 1.6 - (0 if lead else 0.3 + (i % 8) * 0.05)))
-            x = ox + (tx - ox) * p * 0.85; y = oy + (ty - oy) * p * 0.85
+            x = ox + (tx - ox) * p; y = oy + (ty - oy) * p
             person(c, x, y, ZOM if lead else COLS[i % 6], 1, 0.8)
         if t > 2.0: c.dots_path([(W / 2 - 420, 1350), (W / 2 + 420, 1350)], spacing=9, r=3, col=AMY, reveal=min(1, (t - 2.0) / 0.8))
         if t > 3.6: c.pill(W / 2, 1450, "jo baaki log kar rahe hain", size=30, fam=MONO, col=DARK, bg=AMY, bold=True)
