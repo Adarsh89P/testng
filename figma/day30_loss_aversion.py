@@ -209,7 +209,9 @@ SCENES = [
           whoosh=True, clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
-VO_CUTS = "auto"
+# The Day 30 file (model v4) has no pauses (break tags ignored): line cuts found with tools/align_cuts.py, each in the
+# silence between sentences; line check 8/8.
+VO_CUTS = [6.4, 16.36, 27.18, 35.1, 43.45, 50.28, 58.96]
 
 if __name__ == "__main__":
     import daily

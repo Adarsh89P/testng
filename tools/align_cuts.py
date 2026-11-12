@@ -21,7 +21,8 @@ def main(mod_name, key, upload=None):
     sr = engine.SR
     y = V._load(path, sr)
     if upload: print("name ok:", V.check_upload_name(upload))
-    print("similarity", round(V.voice_similarity(y, sr), 3))
+    try: print("similarity", round(V.voice_similarity(y, sr), 3))
+    except Exception as e: print("similarity: n/a (master missing:", type(e).__name__ + ")")
     engine.NATURAL = False
     segs = [engine.tts(s.spoken, voice="hf_beta", speed=1.05, lang="hi") for s in M.SCENES]
     bounds = np.cumsum([len(s) for s in segs])[:-1] / sr
