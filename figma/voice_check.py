@@ -100,10 +100,17 @@ def voice_profile(y, sr):
     return np.concatenate([m.mean(1), m.std(1)])
 
 
+# Series reference chosen by Rakhi when the Day 04 file was lost in a container reset: her Day 30 Tisha K - Expressive
+# upload (sha256 09f5d804…), kept in git. Used only when the Day 04 master is not on disk.
+SERIES_REF = os.path.join(ROOT, "assets", "voice", "master", "full.mp3")
+
+
 def master_voice():
-    """Voice the series must sound like: the configured clone reference if any, else the Day 04 master."""
+    """Voice the series must sound like: the configured clone reference if any, else the Day 04 master, else the
+    series reference Rakhi designated (Day 30 Tisha K take)."""
     cfg = os.path.join(ROOT, "assets", "voice", "reference.json")
-    return os.path.join(ROOT, json.load(open(cfg))["file"]) if os.path.exists(cfg) else MASTER
+    if os.path.exists(cfg): return os.path.join(ROOT, json.load(open(cfg))["file"])
+    return MASTER if os.path.exists(MASTER) else SERIES_REF
 
 
 def voice_similarity(y, sr, master=None):
