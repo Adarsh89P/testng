@@ -12,3 +12,4 @@ onnxruntime
 fonttools
 pycairo
 requests
+librosa

@@ -6,3 +6,5 @@ output/
 *.mp3
 __pycache__/
 !assets/audio/*.mp3
+# keep every day's verified voice-over (and the Day 04 master) in git so a fresh container still has them
+!assets/voice/*/full.mp3
