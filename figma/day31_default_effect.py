@@ -93,8 +93,8 @@ def s3(cv, t, d, st):                                     # law named: people ke
             c.font(SANS, 30, True); c.text(W / 2 - 210, y + 56, lab + ("  (pehle se)" if i == 0 else ""), DOT if i == 0 else DIM)
         if t > 2.2:
             n = int(min(12, (t - 2.2) * 8))
-            for j in range(n): c._dot(W / 2 + 330 + (j % 3) * 30, 990 + (j // 3) * 22, 9, VIO, 1)
-            c.pill(W / 2 + 360, 1310, "zyaadatar: wahi rakh lete", size=22, fam=MONO, col=DOT)
+            for j in range(n): c._dot(W / 2 + 330 + (j % 3) * 26, 980 + (j // 3) * 24, 9, VIO, 1)
+            c.pill(W / 2 + 120, 1325, "zyaadatar: wahi rakh lete", size=22, fam=MONO, col=DOT)
         if t > 3.6: c.pill(W / 2, 1420, "badalne mein mehnat lagti hai", size=30, fam=MONO, col=DARK, bg=VIO, bold=True)
     stage.compose(cv, t, d, world, K((0, (W / 2, 680), 1.2), (1.4, (W / 2, 1080), 1.0), (d - 0.4, (W / 2, 1110), 1.02)), seed=4)
     hud(cv); flash(cv, t, 0.2)
