@@ -42,8 +42,8 @@ export function frame(t) {
   for (let i = 0; i < 18; i++) { const st = 35.9 + (i * .17) % 1.6; if (t < st || t > st + 1.6) continue; const u = (t - st) / 1.6; add('spark', place(LK[0] - 60 + (i * 37) % 160, LK[1] - 380 + u * 420, 1.1, 1, t * 3 + i), st, st + 1.4, { a: Math.sin(u * Math.PI), din: .1 }); }
   // the garland: once insulted, now restored
   const rest = ss(seg(t, 41.29, 43.0));
-  add('garlandL', place(540, GY + 240 - rest * 120, 1.5), 38.18, END, { din: .6 });
-  sparkRing(add, t, 43.0, END, 540, GY + 150, 160, 10);
+  add('garlandL', place(560, GY + 110 - rest * 120, 1.5), 38.18, END, { din: .6 });
+  sparkRing(add, t, 43.0, END, 560, GY + 10, 160, 10);
   // the secret: Vishnu and Lakshmi together
   endCard(add, t, 45.60, 45.9, true);
   const cam = key(t, [[0, [540, 960, 1.04]], [6.8, [540, 960, 1.04]], [7.5, [540, 960, 1.0]], [14.6, [540, 960, 1.0]], [15.6, [600, 1000, 1.08]], [24.6, [600, 1000, 1.08]], [25.4, [540, 960, 1.0]], [45.4, [540, 960, 1.0]], [45.9, [540, 960, 1.05]]]);

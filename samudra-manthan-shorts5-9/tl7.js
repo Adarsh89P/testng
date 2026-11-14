@@ -49,8 +49,8 @@ export function frame(t) {
   sparkRing(add, t, 48.6, 50.4, 720, GY - 300, 240, 14);
   // the garland's insult… and Shri returns
   const back = ss(seg(t, 53.63, 54.2));
-  add('garlandL', place(540, GY + 220 - back * 60, 1.4), 50.41, END, { din: .6 });
-  sparkRing(add, t, 53.63, END, 540, GY + 170, 150, 10);
+  add('garlandL', place(360, GY + 40 - back * 60, 1.3), 50.41, END, { din: .6 });
+  sparkRing(add, t, 53.63, END, 360, GY - 10, 150, 10);
   seaFront(add, t, .1, END);
   endCard(add, t, 55.16, 56.56, true);
   const cam = key(t, [[0, [540, 960, 1.04]], [6.8, [540, 960, 1.04]], [7.6, [540, 1000, 1.0]], [17.5, [540, 980, 1.06]], [19.2, [540, 900, 1.15]], [20.8, [540, 940, 1.0]], [42.7, [540, 940, 1.0]], [45.0, [640, 960, 1.05]], [50.2, [700, 940, 1.1]], [50.6, [540, 1000, 1.0]], [54.9, [540, 1000, 1.0]], [55.4, [540, 960, 1.05]]]);
