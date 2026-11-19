@@ -63,7 +63,7 @@ def s1(cv, t, d, st):                                     # pull feed down → s
         drop = 0
         if cur:
             lt = t - cur[0]
-            drop = 120 * (math.sin(min(1, lt / 0.5) * math.pi / 2) if lt < 0.5 else max(0, 1 - (lt - 0.9) / 0.3) if lt > 0.9 else 1)
+            drop = 120 * math.sin(min(1, lt / 0.5) * math.pi / 2)    # feed stays pulled down until the next pull
             if 0.4 < lt < 1.2: spinner(c, PX, Y0 + 150, t)
             if lt > 1.2:
                 if cur[1]: c.pill(PX, Y0 + 150, "nayi post!", size=24, fam=SANS, col=DARK, bg=IGO, bold=True)
@@ -144,8 +144,8 @@ def s5(cv, t, d, st):                                     # Instagram's own stop
     def world(c):
         phone(c, PX, PY, PW, PH)
         c.font(SANS, 30, True); c.text(X0 + 24, Y0 + 94, "Instagram", DOT)
-        sc = min(1, t / 1.4) * 220
-        post(c, Y0 + 130 - sc, 2)
+        sc = min(1, t / 1.4)
+        post(c, Y0 + 130 - 60 * sc, 2, a=1 - 0.85 * sc)
         k = ease(min(1, max(0, (t - 1.0) / 0.6)))
         cy = Y0 + 560 - 60 * k
         c.c.new_path(); c.c.set_source_rgba(*IGP, k); c.c.arc(PX, cy, 54, 0, 6.2832); c.c.set_line_width(5); c.c.stroke()
