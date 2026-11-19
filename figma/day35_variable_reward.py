@@ -68,9 +68,11 @@ def s1(cv, t, d, st):                                     # pull feed down → s
             if lt > 1.2:
                 if cur[1]: c.pill(PX, Y0 + 150, "nayi post!", size=24, fam=SANS, col=DARK, bg=IGO, bold=True)
                 else: c.pill(PX, Y0 + 150, "kuch nahi…", size=24, fam=SANS, col=DOT)
+        c.c.save(); c.c.rectangle(X0 + 8, Y0 + 120, PW - 16, PH - 150); c.c.clip()   # keep the feed inside the screen
         for j in range(2):
             post(c, Y0 + 130 + drop + j * 330, j + (1 if (cur and cur[1] and t - cur[0] > 1.2) else 0),
                  new=(j == 0 and cur is not None and cur[1] and t - cur[0] > 1.2))
+        c.c.restore()
         if cur and t - cur[0] < 0.6:
             k = (t - cur[0]) / 0.6
             c._dot(PX + 60, Y0 + 260 + 140 * k, 14, (1, 1, 1), 1)
