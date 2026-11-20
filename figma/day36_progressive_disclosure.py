@@ -143,7 +143,7 @@ def s5(cv, t, d, st):                                     # same law: Settings "
         for i, r in enumerate(["Wi-Fi", "Display", "Sound"]):
             c.font(SANS, 24, True); c.text(lx - 170, 790 + i * 60, r, DOT)
         op = ease(min(1, max(0, (t - 1.0) / 0.6)))
-        c.font(SANS, 24, True); c.text(lx - 170, 990, "Advanced  " + ("▾" if op > 0.5 else "›"), GM)
+        c.font(SANS, 24, True); c.text(lx - 170, 990, "Advanced  " + ("–" if op > 0.5 else "+"), GM)
         for i, r in enumerate(["Developer", "Reset", "Backup"]):
             c.font(SANS, 20, True); c.text(lx - 150, 1050 + i * 50, r, DIM, op)
         c.fill_rrect(rx - 200, 660, 400, 600, 24, CARD)
@@ -152,7 +152,7 @@ def s5(cv, t, d, st):                                     # same law: Settings "
             c.rrect_path(rx - 170, 760 + i * 80, 340, 56, 10); c.c.set_source_rgba(*GREY, 1); c.c.set_line_width(1.5); c.c.stroke()
             c.font(SANS, 20, True); c.text(rx - 150, 796 + i * 80, r, DIM)
         op2 = ease(min(1, max(0, (t - 2.2) / 0.6)))
-        c.font(SANS, 24, True); c.text(rx - 170, 960, "More options " + ("▴" if op2 > 0.5 else "▾"), GM)
+        c.font(SANS, 24, True); c.text(rx - 170, 960, "More options " + ("–" if op2 > 0.5 else "+"), GM)
         for i, r in enumerate(["GST number", "Landmark"]):
             c.rrect_path(rx - 170, 990 + i * 80, 340, 56, 10); c.c.set_source_rgba(*GREY, op2); c.c.set_line_width(1.5); c.c.stroke()
             c.font(SANS, 20, True); c.text(rx - 150, 1026 + i * 80, r, DIM, op2)
@@ -168,7 +168,7 @@ def s6(cv, t, d, st):                                     # balance: don't over-
         lx, rx = W * 0.27, W * 0.73
         c.fill_rrect(lx - 200, 660, 400, 500, 24, CARD)
         c.font(SANS, 26, True); c.text(lx - 170, 720, "Home", DOT)
-        c.font(SANS, 34, True); c.text(lx - 10, 860, "⋯", DIM)
+        c.font(SANS, 34, True); c.text(lx - 20, 860, "...", DIM)
         for j, (dx, dy) in enumerate([(-120, 980), (60, 1050)]):
             c.font(SANS, 60, True); c.text(lx + dx, dy, "?", YELLOW)
         c.pill(lx, 1220, "sab chhupa diya ✗", size=24, fam=SANS, col=RED)
