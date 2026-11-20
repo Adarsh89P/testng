@@ -1,0 +1,3 @@
+/* FreeSerif (GNU FreeFont, GPL with font exception): Devanagari + Latin */
+@font-face{font-family:'FreeSerif';font-weight:400;font-display:block;src:url(FreeSerif.ttf) format('truetype')}
+@font-face{font-family:'FreeSerif';font-weight:700;font-display:block;src:url(FreeSerifBold.ttf) format('truetype')}
