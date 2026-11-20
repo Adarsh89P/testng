@@ -16,9 +16,9 @@ export function frame(t) {
   sparkRing(add, t, 5.6, 8.5, 780, GY - 220, 150, 10);
   palace(add, t, 8.6, END);
   // the conqueror, then the throne of Indra
+  add('throne', place(540, GY + 60, .95), 15.13, 21.9);
   hiranya(add, t, 540, GY + 60, 1.1, 1, lerp(-.2, -2.5, ss(seg(t, 10.5, 11.5))), 8.91, 21.9);
   add('daitya0', place(250, GY + 60, .7, 1), 9.6, 14.9); add('daitya1', place(830, GY + 60, .7, -1), 9.8, 14.9);
-  add('throne', place(540, GY + 60, .95), 15.13, 21.9);
   const walk = ss(seg(t, 17.5, 20.8));
   add('deva0', place(lerp(860, 1250, walk), GY + 60, .62, 1, .18), 15.6, 20.8); add('deva1', place(lerp(960, 1350, walk), GY + 60, .58, 1, .2), 15.8, 20.8);
   // Prahlad
