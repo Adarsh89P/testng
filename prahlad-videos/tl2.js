@@ -17,7 +17,7 @@ export function frame(t) {
   // the guru's ashram
   add('ground', place(0, GY), 7.5, 20.5);
   add('tree0', place(150, GY + 40, .9), 7.64, 20.5); add('tree1', place(960, GY + 40, .9, -1), 7.64, 20.5);
-  add('durvasa.body', place(330, GY + 80, .9), 7.9, 12.4); add('durvasa.arm', mul(mul(place(330, GY + 80, .9), T(14, -388)), R(-1.0)), 7.9, 12.4);
+  add('purohit', place(330, GY + 80, .9), 7.9, 12.4);
   add('prahlad', place(720, GY + 80, 1.05, -1), 7.9, 12.4);
   add('pothi', place(540, GY + 40, .55), 8.6, 12.4);
   // on his father's lap
@@ -32,7 +32,7 @@ export function frame(t) {
   // the king's rage, the guru trembling, the heart that teaches
   const sh = shake(t, 32.3, 1.8, .06) + shake(t, 47.84, 1.6, .07);
   hiranya(add, t, 230, GY + 60, .95, 1, lerp(.1, -1.6, ss(seg(t, 34.8, 35.4))), 32.27, END, { r: sh });
-  add('durvasa.body', place(900, GY + 80, .8, -1, .05 * Math.sin(t * 20) * (t < 38.3 ? 1 : 0)), 34.79, 38.9);
+  add('purohit', place(900, GY + 80, .8, -1, .05 * Math.sin(t * 20) * (t < 38.3 ? 1 : 0)), 34.79, 38.9);
   sparkRing(add, t, 42.93, 45.6, 560, GY - 250, 90, 10);
   sparkRise(add, t, 46.2, 50.0, 420, 700, GY - 200, 300, 12, 3);
   endCard(add, t, 50.4, 50.6);
