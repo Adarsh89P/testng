@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path.cwd() / 'core' / 'audio'))
 import sfx
 from sfx import SR, t_, noise, bp, lp, hp, norm, add
 
-P = Path(sys.argv[1]); EP = sys.argv[2]; DUR = {'1': 48.6, '2': 52.3, '3': 48.1, '4': 47.9, '5': 49.5}[EP]
+P = Path(sys.argv[1]); EP = sys.argv[2]; DUR = {'1': 48.6, '2': 52.3, '3': 48.1, '4': 47.9, '5': 49.5, '6': 51.5, '7': 47.7, '8': 45.8, '9': 51.3, '10': 54.2}[EP]
 rng = np.random.default_rng(11)
 
 # —— voice ——
@@ -139,6 +139,61 @@ if EP == '5':
     for k in range(3): add(fx, bell(SA * (2, 3, 4)[k], 1, 3), 43.92 + k * .4, .14)
     endcard(47.5, 47.7, 48.6, .8)
 
+if EP == '6':
+    add(fx, sfx.whoosh(.35), 1.34, .1); add(mus, crackle(3.0, .6), 3.0, .2); chimes(5.9, 7.7, 10)
+    add(fx, bell(SA * 1.5, 1, 4), 8.58, .16)
+    for k in range(8): add(fx, ge(1, 66) if k % 2 == 0 else na(1, 480), 14.2 + k * .5, .14)
+    add(mus, crackle(5.0, 1.0), 15.0, .4); anger(18.6); add(mus, sfx.rumble(2.0), 18.6, .3)
+    add(fx, sfx.whoosh(.5), 20.4, .14); crack(23.7, .35); crack(24.3, .25); chimes(24.3, 27.0, 10)
+    add(mus, crackle(13.0, 1.0), 28.5, .4); add(fx, sfx.whoosh(.4), 27.9, .12)
+    add(fx, bell(SA * 2, 1, 4.5), 35.6, .2); arp(36.0, .4, .1, 6); chimes(40.9, 43.5, 16); add(fx, shankh(233, 1.0), 42.9, .24)
+    chimes(45.7, 49.2, 12)
+    endcard(49.6, 49.8, 50.6, .8)
+if EP == '7':
+    add(fx, sfx.whoosh(.6), 2.0, .12); chimes(4.4, 5.5, 8)
+    add(fx, bell(SA * 1.5, 1, 4), 6.24, .16); anger(10.81); add(fx, na(1, 400), 12.5, .14)
+    chimes(13.6, 18.6, 12); add(fx, bell(SA * 4, 1, 3.5), 16.33, .16)
+    add(fx, sfx.whoosh(1.4), 21.0, .18); add(mus, lp(noise(3.0), 1100) * np.sin(np.pi * t_(3.0) / 3.0) * .7, 20.6, .25)
+    add(fx, ge(1, 52), 23.99, .35); add(fx, bell(SA * 2, 1, 5), 24.0, .22); chimes(24.2, 27.8, 14)
+    anger(28.67); add(mus, lp(sfx.brown(4.0), 260) * np.sin(np.pi * t_(4.0) / 4.0), 29.0, .45)
+    add(fx, shankh(233, .9), 32.6, .24); add(fx, sfx.whoosh(.6), 32.7, .14)
+    for k in range(6): add(fx, hp(noise(.2), 2500) * np.exp(-t_(.2) / .05), 33.6 + k * .7, .14); add(fx, bell(SA * 4 * BHUPALI[k % 6], 1, 1.4), 33.62 + k * .7, .08)
+    add(mus, lp(noise(4.0), 1400) * np.sin(np.pi * t_(4.0) / 4.0) * .8, 38.5, .35)
+    add(fx, bell(SA * 2, 1, 4.5), 41.4, .2); chimes(42.0, 45.3, 12)
+    endcard(45.9, 46.1, 46.85, .8)
+if EP == '8':
+    add(fx, sfx.whoosh(.35), 1.35, .1); chimes(1.6, 5.8, 10)
+    for k in range(6): add(fx, tanpura_pluck(SA * 4 * BHUPALI[k % 6], 1.4), 8.3 + k * .5, .05, pan=-.5 + k * .2)
+    for k, tt in enumerate([17.44, 18.4, 19.2]): add(fx, bell(SA * (2, 1.5, 1)[k], 1, 3), tt, .14)
+    add(mus, lp(sfx.brown(2.0), 300) * np.sin(np.pi * t_(2.0) / 2.0), 22.4, .3)
+    add(fx, bell(SA * 2, 1, 4.5), 24.94, .2); chimes(25.0, 28.9, 14); arp(26.0, .4, .1, 4)
+    add(fx, ge(1, 60), 29.61, .3); add(fx, na(1, 520), 32.19, .16)
+    chimes(34.1, 38.5, 14); groove(39.2, 43.5, .7)
+    endcard(44.0, 44.2, 45.0, .7)
+if EP == '9':
+    add(fx, sfx.whoosh(.35), 1.36, .1); add(mus, lp(noise(5.0), 600) * np.sin(np.pi * t_(5.0) / 5.0) * .7, 1.5, .3)
+    add(fx, bell(SA * 1.5, 1, 4), 7.59, .16); anger(11.12)
+    for k in range(3): add(fx, hp(noise(.5), 3500) * np.exp(-t_(.5) / .15), 14.0 + k * .5, .1)
+    add(fx, lp(noise(1.2), 900) * np.exp(-t_(1.2) / .4), 18.7, .35); add(fx, ge(1, 46), 18.7, .4)
+    for k in range(3): add(mus, sfx.rumble(1.4), 19.6 + k * .5, .3)
+    add(mus, lp(noise(11.0), 400) * np.sin(np.pi * t_(11.0) / 11.0) * .8, 22.6, .35)
+    for k in range(5): add(fx, bell(SA * 4 * BHUPALI[(k * 2) % 6], 1, 3), 25.9 + k * 1.4, .08)
+    crack(34.69, .35); add(fx, shankh(233, .8), 35.0, .2)
+    add(mus, sfx.rumble(3.0), 36.3, .4); add(mus, lp(noise(3.0), 1200) * np.sin(np.pi * t_(3.0) / 3.0), 36.3, .3)
+    add(fx, sfx.whoosh(.8), 39.45, .14); add(fx, ge(1, 56), 41.57, .4); add(fx, bell(SA * 2, 1, 5), 41.6, .26); chimes(41.7, 45.5, 16)
+    add(fx, na(1, 460), 46.14, .16)
+    endcard(49.4, 49.6, 50.3, .8)
+if EP == '10':
+    add(fx, sfx.whoosh(.35), 1.40, .1); chimes(1.6, 5.7, 10)
+    add(fx, bell(SA * 2, 1, 4.5), 6.63, .2); add(fx, shankh(233, 1.0), 10.96, .2); chimes(11.0, 12.6, 10)
+    add(fx, na(1, 520), 13.53, .14); arp(16.1, .4, .1, 8); chimes(19.0, 22.2, 14)
+    add(fx, na(1, 460), 23.04, .14); add(mus, lp(sfx.brown(4.0), 300) * np.sin(np.pi * t_(4.0) / 4.0), 24.4, .3)
+    add(fx, bell(SA * 4, 1, 4), 26.83, .18); chimes(29.5, 34.9, 14)
+    add(fx, bell(SA * 2, 1, 5), 35.67, .22); arp(36.0, .35, .1, 8)
+    add(mus, sfx.rumble(2.0), 40.5, .3); crack(41.6, .4); add(fx, ge(1, 40), 41.6, .5); add(mus, lp(sfx.brown(2.0), 200), 41.6, .45)
+    add(fx, shankh(233, 1.2), 44.6, .26); groove(44.8, 46.7, .9)
+    add(fx, bell(SA * 4, 1, 4), 47.37, .18); chimes(49.5, 52.0, 12)
+    endcard(52.4, 52.6, 53.4, .8)
 # hard silence 20.71–21.88: bed to digital zero (fx keeps its single tap)
 pass
 # duck the bed under the voice (~9 dB)

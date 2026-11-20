@@ -1,5 +1,7 @@
 // Prahlad series characters (same shape language as chars.js).
 import { S, P, L, E, C, B, X, curve, face, hairBack, crownTall, earring, neck, PI } from './chars.js';
+import * as CH from './chars.js';
+import * as C2 from './chars2.js';
 
 // —— Hiranyakashipu: the daitya king. Dark skin, fierce solid face, spiked gold crown, crimson and gold. Origin at the feet ——
 export function hiranyakashipu() {
@@ -56,3 +58,40 @@ export function woodpile() {
   return { box: [-200, -200, 200, 20], shapes: sh };
 }
 export function tusk() { return { box: [-60, -20, 60, 20], shapes: [{ p: B([[-50, 6], [0, -6], [50, 2]], 18, 4), c: 'ivory' }] }; }
+
+// —— Parts 6–10 ——
+const recolor = (part, map) => ({ ...part, shapes: part.shapes.map(s => ({ ...s, c: map[s.c] || s.c })) });
+// the royal priests (Shanda and Amarka): white-robed, grey-bearded — distinct from Durvasa's saffron
+export function purohit() { return recolor(CH.durvasa().body, { saffron: 'white', saffron2: 'milk2', hairBrown: 'beard', skinAsh: 'skin', rudraksha: 'gold' }); }
+// the Kritya: a fire-born demoness — red skin, crimson and flame
+export function kritya() { return C2.goddess({ skin: 'red2', sari: 'crim', border: 'flame', blouse: 'ink', crown: 'tiara', pose: 'dance' }).body; }
+// Bhudevi, Mother Earth: green sari, gold
+export function bhudevi() { return C2.goddess({ sari: 'green', border: 'gold', blouse: 'gold', crown: 'tall' }).body; }
+// Shambarasura the illusionist: smoke-violet daitya
+export function shambara() { return recolor(CH.daitya(1).body, { skinD: 'smoke', teal: 'crim', jade: 'ink', red: 'gold' }); }
+// the daitya boys of the gurukul
+export function daityaBoy(v = 0) { return recolor(prahlad().body, v ? { skin: 'skinD', saffron: 'red', gold: 'jade' } : { skin: 'skinD', saffron: 'teal', gold: 'red' }); }
+export function chakra() { return { box: [-70, -70, 70, 70], shapes: CH.chakraShapes(0, 0, 60) }; }
+export function trishul() {
+  return { box: [-60, -330, 60, 20], shapes: [{ p: CH.B([[0, 10], [0, -250]], 9, 9), c: 'iron' },
+    { p: CH.P([[-50, -300], [-46, -250], [-14, -236], [-10, -290], [0, -330], [10, -290], [14, -236], [46, -250], [50, -300], [30, -256], [6, -250], [-6, -250], [-30, -256]]), c: 'iron', pat: { t: 'lattice', s: 7 } }] };
+}
+export function shard() { return { box: [-30, -30, 30, 30], shapes: [{ p: CH.P([[-24, -10], [20, -22], [26, 8], [-6, 24]]), c: 'iron' }] }; }
+export function bowl() { return { box: [-70, -60, 70, 20], shapes: [{ p: CH.P([[-64, -30], [64, -30], [44, 10], [-44, 10]]), c: 'brass', pat: { t: 'coin' } }, { p: CH.E(0, -32, 60, 12), c: 'serpent' }] }; }
+export function mountain() { return { box: [-260, -340, 260, 10], shapes: [{ p: CH.P([[-250, 0], [-120, -250], [-60, -200], [10, -330], [120, -180], [170, -220], [250, 0]]), c: 'rock', pat: { t: 'bark' } }] }; }
+// Narasimha: Vishnu's four-armed body with a lion's head and mane
+export function narasimha() {
+  const V = CH.vishnu().body, N = [8, -410], k = 1.5, nHead = CH.face(N, k, { skinLine: 'skinV', skin: 'skinV' }).length + 5;
+  const sh = V.shapes.slice(0, V.shapes.length - nHead).map(s => ({ ...s, c: s.c === 'skinV' ? 'gold2' : s.c }));
+  const cx = 18, cy = -470, mane = [];
+  for (let i = 0; i < 22; i++) { const a = i / 22 * 2 * Math.PI, r = i % 2 ? 78 : 112; mane.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r * 1.05]); }
+  sh.push({ p: CH.P(mane), c: 'saffron2', pat: { t: 'folds' } });
+  sh.push({ p: CH.E(cx + 6, cy, 56, 64), c: 'gold' });
+  sh.push({ p: CH.E(cx + 34, cy + 34, 36, 26), c: 'ivory' });
+  sh.push({ p: CH.E(cx + 36, cy + 52, 22, 12), c: 'red2' });
+  for (const x of [-2, 34]) { sh.push({ p: CH.E(cx + x, cy - 16, 11, 8), c: 'white' }); sh.push({ p: CH.C(cx + x + 2, cy - 16, 5), c: 'ink' }); }
+  sh.push({ p: CH.E(cx + 34, cy + 16, 10, 7), c: 'ink' });
+  sh.push({ p: CH.P([[cx - 34, cy - 58], [cx + 46, cy - 58], [cx + 40, cy - 92], [cx + 20, cy - 80], [cx + 6, cy - 118], [cx - 8, cy - 80], [cx - 28, cy - 92]]), c: 'gold', pat: { t: 'lattice', s: 7 } });
+  return { box: [-140, -680, 150, 20], shapes: sh };
+}
+export function ocean(v = 0) { const s = CH.sea(v); return { ...s, shapes: s.shapes.map(x => ({ ...x, c: v ? 'ganga' : 'teal' })) }; }

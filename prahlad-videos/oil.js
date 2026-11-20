@@ -72,7 +72,7 @@ export async function setup(q) {
     sea0: CH.sea(0), sea1: CH.sea(1), mandara: CH.mandara(),
     kurma: CH.kurma(), mandaraB: CH.mandaraBare(), wrap: CH.wrap(), vasuki: CH.vasuki(), spark: CH.spark(), cloud: CH.cloudProp(), rain0: CH.rain(0), rain1: CH.rain(1),
     hook: CH.plaque(HOOK, 760, 300),
-    hiranya: C3.hiranyakashipu().body, 'hiranya.arm': C3.hiranyakashipu().arm, prahlad: C3.prahlad().body, pillar: C3.pillar(), woodpile: C3.woodpile(), tusk: C3.tusk(), ground: CH.ground(),
+    hiranya: C3.hiranyakashipu().body, purohit: C3.purohit(), kritya: C3.kritya(), bhudevi: C3.bhudevi(), shambara: C3.shambara(), boy0: C3.daityaBoy(0), boy1: C3.daityaBoy(1), chakra: C3.chakra(), trishul: C3.trishul(), shard: C3.shard(), bowl: C3.bowl(), mountain: C3.mountain(), narasimha: C3.narasimha(), ocean0: C3.ocean(0), ocean1: C3.ocean(1), 'hiranya.arm': C3.hiranyakashipu().arm, prahlad: C3.prahlad().body, pillar: C3.pillar(), woodpile: C3.woodpile(), tusk: C3.tusk(), ground: CH.ground(),
     kamadhenu: C2.kamadhenu().body, moon: C2.moon(), shiva: CH.shiva().body, dhanvantari: C2.dhanvantari().body, dhanvantariE: C2.dhanvantari(false).body,
     kalash: C2.kalash(), lotusThrone: C2.lotusThrone(), river: C2.river(), stream: C2.stream(), throne: C2.throne(), pothi: C2.pothi(), pothiV: C2.pothi('विष्णु पुराण'), pothiL: C2.pothi('लोक-परंपरा'),
     naga0: C2.naga(0), naga1: C2.naga(1), naga2: C2.naga(2),
