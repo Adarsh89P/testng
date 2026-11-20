@@ -11,10 +11,10 @@ export const CUES = splitCues([
   [38.54, 41.03, 'और जब वायु को उसे सुखा देने भेजा गया...'], [41.40, 45.40, 'तो उसके हृदय में बसे भगवान ने उस वायु को भी शांत कर दिया।'], [46.01, 46.82, 'जय श्री हरि।']]);
 export function frame(t) {
   const items = [], add = adder(items, t), END = 45.9, PX = 540;
-  add('hook', place(540, 400), 1.40, 6.0);
   add('pillar', place(540, GY + 30, 1.0), .2, 6.0);
   add('prahlad', place(560, GY - 1000 + 900 * ss(seg(t, 2.0, 4.0)), .8, 1, -.6 * (1 - ss(seg(t, 2, 4)))), 1.4, 6.0);
   add('bhudevi', place(560, GY + 90, .9), 4.4, 6.0, { a: .8 });
+  add('hook', place(540, 400), 1.40, 6.0);
   palace(add, t, 6.0, 28.4);
   hiranya(add, t, 220, GY + 60, .9, 1, lerp(.1, -1.6, ss(seg(t, 10.8, 11.3))), 6.24, 13.0);
   add('daitya0', place(820, GY + 70, .7, -1), 7.5, 13.0);
@@ -28,7 +28,7 @@ export function frame(t) {
   add('pillar', place(540, GY + 30, 1.25), 19.84, 28.4);
   add('prahlad', place(560, lerp(GY - 1150, GY - 80, fall), .85, 1, lerp(0, 1.6, fall)), 19.84, 24.6);
   add('bhudevi', place(540, GY + 90 + rise(t, 23.4, 1.0, 400), 1.05), 23.4, 28.4, { din: .9 });
-  add('prahlad', place(600, GY - 210, .7, 1, -1.4), 24.4, 28.4);
+  add('prahlad', place(680, GY - 330, .62, 1, -1.45), 24.4, 28.4);
   sparkRing(add, t, 24.0, 27.6, 560, GY - 260, 190, 14);
   // Shambara's illusions; the Sudarshan chakra cuts them down
   add('ground', place(0, GY), 28.4, END);
