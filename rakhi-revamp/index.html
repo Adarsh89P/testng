@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rakhi Das · UI/UX Designer</title>
+<meta name="description" content="Portfolio of Rakhi Das, a UI/UX Designer in Kolkata designing healthcare, wellness, mobility and fintech products.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310141B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='40' fill='%23fff' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+:root{
+  --ink:#10141B; --body:#202836; --muted:#5B6474; --faint:#6C655C; --link:#2A2622;
+  --bg:#FFFFFF; --surface:#F2F4F7; --warm:#F4F1EA; --cream:#F1E6D2; --gold:#E6CF93;
+  --line:#DFE2E7; --grid1:rgba(16,20,27,.075); --grid2:rgba(16,20,27,.043);
+  --card-bg:radial-gradient(120% 90% at 0% 0%, #F7F7F8, #EEEEF0);
+  --card-ring:rgba(16,20,27,.07) 0 0 0 1px inset, rgba(255,255,255,.9) 0 1px 0 0 inset;
+  --raised:rgba(20,40,80,.12) 0 8px 28px 0, rgba(10,20,40,.22) 0 10px 30px -8px, rgba(255,255,255,.25) 0 1px 0 0 inset;
+  --glass:rgba(255,255,255,.72); --glass-line:rgba(255,255,255,.75);
+  --pill-bg:rgba(16,20,27,.08); --pill-line:rgba(16,20,27,.14);
+  --focus:#1F6FD1;
+  --serif:"Instrument Serif",Georgia,serif; --sans:Geist,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; --mono:"Geist Mono","Courier New",monospace;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --ink:#F5F6F6; --body:#D6D8DB; --muted:#9D9E9F; --faint:#8A8F98; --link:#E9E4DA;
+  --bg:#0E0F11; --surface:#1C1D1F; --warm:#1C1D1F; --line:#353537;
+  --grid1:rgba(255,255,255,.05); --grid2:rgba(255,255,255,.028);
+  --card-bg:radial-gradient(120% 90% at 0% 0%, #1F2023, #17181A);
+  --card-ring:rgba(255,255,255,.07) 0 0 0 1px inset, rgba(255,255,255,.05) 0 1px 0 0 inset;
+  --raised:rgba(0,0,0,.45) 0 8px 28px 0, rgba(0,0,0,.5) 0 10px 30px -8px, rgba(255,255,255,.06) 0 1px 0 0 inset;
+  --glass:rgba(28,29,31,.72); --glass-line:rgba(255,255,255,.08);
+  --pill-bg:rgba(255,255,255,.06); --pill-line:rgba(255,255,255,.14);
+  --focus:#7C93BF;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .6s ease,color .6s ease}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:12px;z-index:100}
+.skip:focus{left:16px}
+.wrap{width:min(1072px,100% - 32px);margin-inline:auto}
+@media (min-width:1440px){.wrap{width:min(1120px,100% - 32px)}}
+
+/* ---------- page grid backdrop ---------- */
+.paper{position:relative;background-image:
+  linear-gradient(var(--grid1) 1px,transparent 1px),linear-gradient(90deg,var(--grid1) 1px,transparent 1px),
+  linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:center top}
+
+/* ---------- hero scene ---------- */
+.scene{position:relative;height:clamp(340px,52vh,560px);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.scene canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene .fade{position:absolute;inset:auto 0 0 0;height:46%;pointer-events:none;
+  background:linear-gradient(rgba(255,255,255,0) 0%,rgba(255,255,255,.09) 20%,rgba(255,255,255,.3) 40%,rgba(255,255,255,.61) 60%,rgba(255,255,255,.88) 80%,#fff 100%);transition:opacity .6s}
+:root[data-theme="dark"] .scene .fade{background:linear-gradient(rgba(14,15,17,0) 0%,rgba(14,15,17,.09) 20%,rgba(14,15,17,.3) 40%,rgba(14,15,17,.61) 60%,rgba(14,15,17,.88) 80%,#0E0F11 100%)}
+.hint{position:absolute;left:50%;top:18px;transform:translateX(-50%);font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#fff;
+  background:rgba(16,20,27,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 12px;border-radius:999px;pointer-events:none;transition:opacity .5s}
+.hint.gone{opacity:0}
+
+.intro{position:relative;z-index:2;text-align:center;margin-top:clamp(-150px,-14vh,-90px);padding-bottom:8px}
+.intro h1{font:400 clamp(51px,7.4vw,81px)/.95 var(--serif);letter-spacing:-.02em;display:inline-flex;align-items:center;gap:.22em;flex-wrap:wrap;justify-content:center}
+.avatar{width:.92em;height:.92em;border-radius:24%;overflow:hidden;flex:none;background:linear-gradient(160deg,#F1E6D2,#E6CF93);
+  box-shadow:rgba(16,20,27,.09) 0 0 0 1px,rgba(50,35,15,.18) 0 4px 9px,rgba(50,35,15,.22) 0 22px 50px -8px;transform:rotate(4deg);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.avatar:hover{transform:rotate(-3deg) translateY(-6px)}
+.avatar img{width:100%;height:118%;object-fit:cover;object-position:50% 8%}
+.intro p{max-width:760px;margin:22px auto 0;font:300 clamp(16px,1.6vw,19px)/1.65 var(--sans);color:var(--muted)}
+.intro p b{font-weight:500;color:var(--body)}
+.status{display:inline-flex;align-items:center;gap:8px;margin-top:22px;font:400 12px/1 var(--mono);letter-spacing:.05em;color:var(--muted)}
+.status i{width:7px;height:7px;border-radius:50%;background:#2fa36b;box-shadow:0 0 0 4px rgba(47,163,107,.16)}
+
+/* ---------- section label ---------- */
+.label{display:flex;align-items:center;gap:16px;margin:96px 0 32px}
+.label::before,.label::after{content:"";flex:1;height:1px;background:var(--line)}
+.label span{font:500 13px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg)}
+
+/* ---------- work cards ---------- */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.card{position:relative;border-radius:30px;background:var(--card-bg);box-shadow:var(--card-ring);overflow:hidden;display:flex;flex-direction:column;transition:transform .25s ease}
+.card:hover{transform:translateY(-4px)}
+.card .txt{padding:36px 36px 0}
+.eyebrow{font:400 12px/1.55 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.card h3{font:400 clamp(30px,3.2vw,40px)/1.06 var(--serif);letter-spacing:-.01em;margin:10px 0 14px;text-wrap:balance}
+.card p{color:var(--muted);font-size:16px;max-width:46ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;padding:0}
+.tags li{list-style:none;font:400 12px/1 var(--mono);color:var(--body);padding:6px 9px;border-radius:999px;background:var(--pill-bg)}
+.btn{display:inline-flex;align-items:center;gap:10px;margin-top:24px;height:44px;padding:0 18px;border-radius:999px;font:400 14px/1 var(--sans);color:var(--ink);
+  background:var(--pill-bg);border:1px solid var(--pill-line);transition:transform .2s ease,background .2s}
+.btn:hover{transform:scale(1.04)}
+.btn:active{transform:scale(.96)}
+.btn svg{width:15px;height:15px;transition:transform .2s}
+.btn:hover svg{transform:translateX(3px)}
+.shot{margin-top:auto;padding:32px 36px 0;display:flex;justify-content:center;align-items:flex-end}
+.shot img{height:auto;border-radius:18px 18px 0 0;box-shadow:rgba(16,20,27,.08) 0 0 0 1px,rgba(20,40,80,.14) 0 20px 40px -12px}
+.card.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);min-height:440px}
+.card.wide .txt{padding:40px 0 40px 40px;display:flex;flex-direction:column}
+.card.wide .txt .btn{margin-top:auto;align-self:flex-start}
+.card.wide .shot{padding:40px 0 0 32px;justify-content:flex-end}
+.card.wide .shot img{height:auto;border-radius:14px 0 0 0}
+.browser{width:100%;border-radius:14px 0 0 0;overflow:hidden;background:#fff;box-shadow:rgba(16,20,27,.08) 0 0 0 1px,rgba(20,40,80,.16) 0 24px 48px -14px}
+.browser .bar{display:flex;align-items:center;gap:6px;height:30px;padding:0 12px;background:#F2F4F7;border-bottom:1px solid #E4E6EA}
+.browser .bar i{width:9px;height:9px;border-radius:50%;background:#E0E2E6}
+.browser .bar i:nth-child(1){background:#FF5F57}.browser .bar i:nth-child(2){background:#FEBC2E}.browser .bar i:nth-child(3){background:#28C840}
+.browser .bar span{margin-left:10px;flex:1;max-width:260px;height:18px;border-radius:6px;background:#fff;font:400 10px/18px var(--mono);color:#8A8F98;padding-left:8px}
+.photo{margin-top:auto;padding:28px 36px 36px}
+.photo img{border-radius:18px;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;box-shadow:rgba(16,20,27,.08) 0 0 0 1px}
+.ext{font:400 12px/1 var(--mono);color:var(--muted);margin-left:4px}
+
+.more{display:flex;justify-content:center;margin-top:28px}
+
+/* ---------- experience ---------- */
+.xp{border-radius:30px;background:var(--card-bg);box-shadow:var(--card-ring);padding:12px 36px}
+.row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:20px;align-items:center;padding:24px 0;border-top:1px solid var(--line);transition:transform .25s}
+.row:first-child{border-top:0}
+.row:hover{transform:translateX(4px)}
+.logo{width:48px;height:48px;border-radius:24%;background:#fff;display:grid;place-items:center;box-shadow:rgba(16,20,27,.09) 0 0 0 1px,rgba(50,35,15,.12) 0 4px 9px;overflow:hidden;font:400 24px/1 var(--serif);color:#10141B}
+.logo img{width:70%;height:70%;object-fit:contain}
+.row h4{font:400 26px/1.1 var(--serif);letter-spacing:-.005em}
+.row .co{font:500 14px/1.4 var(--sans);color:var(--body);margin-top:4px}
+.row p{font:300 15px/1.6 var(--sans);color:var(--muted);margin-top:6px;max-width:62ch}
+.row time{font:400 12px/1.4 var(--mono);letter-spacing:.04em;color:var(--muted);white-space:nowrap;align-self:start;padding-top:6px}
+.now{display:inline-block;margin-left:8px;font:400 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#C2412D;border:1px solid #C2412D;border-radius:3px;padding:3px 5px;vertical-align:3px}
+
+/* ---------- gallery ---------- */
+.gal-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.gal-head h2{font:400 clamp(40px,5vw,56px)/1 var(--serif);letter-spacing:-.015em}
+.gal-head h2 em{font-style:italic;color:var(--muted)}
+.gal-head p{max-width:360px;color:var(--muted);font:300 15px/1.65 var(--sans)}
+.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.track{display:flex;gap:16px;width:max-content;animation:slide 60s linear infinite;padding:12px 0 24px}
+.marquee:hover .track{animation-play-state:paused}
+.track figure{height:260px;flex:none;border-radius:20px;overflow:hidden;box-shadow:var(--card-ring);background:var(--surface)}
+.track figure:nth-child(odd){transform:rotate(-1.2deg)}
+.track figure:nth-child(even){transform:rotate(1.2deg) translateY(10px)}
+.track img{height:100%;width:auto}
+@keyframes slide{to{transform:translateX(calc(-50% - 8px))}}
+
+/* ---------- contact ---------- */
+.talk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center;padding-bottom:40px}
+.desk{position:relative;height:440px}
+.desk>*{position:absolute;transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.desk>*:hover{transform:rotate(0) translateY(-6px)!important;z-index:5}
+.polaroid{left:0;top:2%;width:230px;padding:12px 12px 44px;background:#fff;transform:rotate(-6deg);
+  box-shadow:rgba(16,20,27,.09) 0 0 0 1px,rgba(50,35,15,.18) 0 4px 9px,rgba(50,35,15,.22) 0 25px 58px -10px}
+.polaroid img{width:100%;aspect-ratio:1;object-fit:cover}
+.polaroid figcaption{position:absolute;left:0;right:0;bottom:12px;text-align:center;font:italic 400 20px/1 var(--serif);color:#10141B}
+.tape{position:absolute;width:90px;height:26px;background:rgba(230,207,147,.6);top:-12px;left:50%;transform:translateX(-50%) rotate(-4deg)}
+.envelope{left:38%;top:50%;width:300px;height:190px;border-radius:6px;background:#F4F1EA;transform:rotate(4deg);
+  box-shadow:rgba(16,20,27,.09) 0 0 0 1px,rgba(50,35,15,.16) 0 4px 9px,rgba(50,35,15,.2) 0 25px 58px -10px;overflow:hidden;display:flex;align-items:flex-end;padding:20px;color:#2A2622}
+.envelope::before{content:"";position:absolute;inset:0 0 auto 0;height:110px;background:linear-gradient(to bottom right,transparent 49.5%,rgba(42,38,34,.08) 50%) left/50% 100% no-repeat,linear-gradient(to bottom left,transparent 49.5%,rgba(42,38,34,.08) 50%) right/50% 100% no-repeat}
+.seal{position:absolute;left:50%;top:84px;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d6573f,#a1301f);color:#F4F1EA;display:grid;place-items:center;font:italic 400 22px/1 var(--serif);box-shadow:0 3px 8px rgba(42,24,16,.35)}
+.envelope span{position:relative;font:italic 400 19px/1.2 var(--serif)}
+.stamp{left:6%;bottom:0;width:140px;padding:7px;background:#fff;transform:rotate(-8deg);outline:2px dashed #fff;outline-offset:-1px;
+  box-shadow:rgba(16,20,27,.09) 0 0 0 1px,rgba(10,20,40,.22) 0 12px 26px -6px}
+.stamp>div{background:#0A66C2;color:#fff;padding:14px 12px 12px}
+.stamp b{display:block;font:700 40px/1 var(--sans);letter-spacing:-.04em}
+.stamp small{display:block;font:400 9px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-top:8px}
+.badge{right:2%;top:4%;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F6DD8B,#E2B93B);color:#3B2A06;display:grid;place-items:center;text-align:center;transform:rotate(10deg);
+  box-shadow:inset 0 0 0 6px rgba(59,42,6,.12),0 12px 28px rgba(50,35,15,.25)}
+.badge span{font:italic 400 26px/.9 var(--serif)}
+.badge small{display:block;font:500 9px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.talk h2{font:400 clamp(56px,7vw,80px)/.95 var(--serif);letter-spacing:-.02em}
+.talk h2 em{font-style:italic}
+.talk p{color:var(--muted);margin:18px 0 26px;max-width:42ch;font:300 17px/1.6 var(--sans)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.primary{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:12px;background:var(--ink);color:var(--bg);font:500 15px/1 var(--sans);transition:transform .2s}
+.primary:hover{transform:scale(1.04)}
+.primary svg{width:15px;height:15px}
+.links{display:flex;gap:18px;margin-top:22px;font:400 13px/1 var(--mono);color:var(--muted)}
+.links a{border-bottom:1px solid var(--line);padding-bottom:3px}
+.links a:hover{color:var(--ink);border-color:var(--ink)}
+footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:24px 0 140px;font:400 12px/1.4 var(--mono);color:var(--muted);border-top:1px solid var(--line)}
+
+/* ---------- floating dock ---------- */
+.dock{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:29;display:flex;gap:8px;align-items:center}
+.glass{background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);box-shadow:var(--raised);border-radius:999px}
+.nav{display:flex;padding:5px;gap:2px}
+.nav a{padding:9px 14px;border-radius:999px;font:500 14px/1 var(--sans);color:var(--muted);transition:background .2s,color .2s;white-space:nowrap}
+.nav a:hover{background:rgba(127,127,127,.16);color:var(--ink)}
+.nav a.on{background:var(--ink);color:var(--bg)}
+.ctrl{display:flex;align-items:center;gap:10px;padding:5px 12px 5px 6px}
+.dn{position:relative;width:56px;height:32px;border-radius:999px;border:0;cursor:pointer;background:linear-gradient(#5fb2ee,#a8d8f6);box-shadow:inset 0 1px 3px rgba(0,0,0,.25);transition:background .5s;overflow:hidden}
+.dn .knob{position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#FFF6C8,#FFD34E 60%,#F7B52C);box-shadow:0 0 12px rgba(255,211,78,.8);transition:left .45s cubic-bezier(.4,1.4,.5,1),background .45s,box-shadow .45s}
+.dn .stars{position:absolute;inset:0;opacity:0;transition:opacity .4s;background:radial-gradient(1px 1px at 12px 9px,#fff,transparent),radial-gradient(1px 1px at 20px 21px,#fff,transparent),radial-gradient(1.4px 1.4px at 9px 19px,#fff,transparent)}
+.dn[aria-checked="false"]{background:linear-gradient(#0c1530,#25365e)}
+.dn[aria-checked="false"] .knob{left:28px;background:radial-gradient(circle at 38% 35%,#fff,#e9edf5 55%,#c7cfdc);box-shadow:0 0 10px rgba(220,230,255,.55),inset -5px -2px 0 rgba(160,170,190,.35)}
+.dn[aria-checked="false"] .stars{opacity:1}
+.when{display:flex;align-items:center;gap:7px;font:400 12px/1 var(--mono);color:var(--muted);white-space:nowrap}
+.when i{width:6px;height:6px;border-radius:50%;background:#2fa36b}
+.when.manual i{background:#E2B93B}
+.when button{border:0;background:none;color:inherit;cursor:pointer;padding:4px;border-radius:6px;display:none}
+.when.manual button{display:inline-grid}
+.when button svg{width:13px;height:13px}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .card.wide{grid-template-columns:1fr}
+  .card.wide .txt{padding:36px 36px 0}
+  .card.wide .txt .btn{margin-top:24px}
+  .card.wide .shot{padding:32px 0 0 36px}
+  .talk{grid-template-columns:1fr}
+  .desk{order:2;height:400px}
+}
+@media (max-width:720px){
+  .grid{grid-template-columns:1fr}
+  .card .txt{padding:28px 24px 0}
+  .card.wide .txt{padding:28px 24px 0}
+  .shot{padding:24px 24px 0}
+  .card.wide .shot{padding:24px 0 0 24px}
+  .photo{padding:24px}
+  .xp{padding:4px 20px}
+  .row{grid-template-columns:40px minmax(0,1fr);gap:14px}
+  .logo{width:40px;height:40px}
+  .row time{grid-column:2;grid-row:1;padding:0 0 4px}
+  .row>div{grid-column:2}
+  .row h4{font-size:23px}
+  .label{margin:72px 0 24px}
+  .track figure{height:200px}
+  .nav a.opt,.when{display:none}
+  .ctrl{padding:5px}
+  .nav a{padding:9px 11px}
+  .desk{height:360px;transform:scale(.86);transform-origin:top left;width:116%}
+  .polaroid{width:190px}
+  .envelope{width:250px;height:160px;right:14%}
+  .seal{top:70px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  .marquee{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="scene" id="scene" aria-label="Interactive sky. Drag the sun or moon to change the time of day.">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="fade"></div>
+  <div class="hint" id="hint">☀︎ Drag the sun</div>
+</header>
+
+<main class="paper">
+  <section class="intro wrap" id="top">
+    <h1>Hi, I’m Rakhi. <span class="avatar"><img src="assets/portrait.webp" alt="Portrait of Rakhi Das" width="533" height="740"></span></h1>
+    <p>I design products that feel simple, even when they are not — bringing together <b>user research</b>, <b>interaction design</b>, <b>design systems</b> and <b>usability testing</b> across healthcare, wellness, mobility and fintech.</p>
+    <div class="status"><i></i>Open to full-time roles · Kolkata, India</div>
+  </section>
+
+  <div class="wrap">
+    <div class="label" id="work"><span>Case study</span></div>
+
+    <div class="grid">
+      <article class="card wide">
+        <div class="txt">
+          <div class="eyebrow">Healthcare · Case study</div>
+          <h3>Five products, one diagnostic system.</h3>
+          <p>Patient app, doctor tools, website and admin dashboard for a diagnostics chain — four user types, one connected booking-to-report flow.</p>
+          <ul class="tags"><li>Web app</li><li>Mobile</li><li>Dashboard</li><li>Mar–Jul 2025</li></ul>
+          <a class="btn" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/healthcare_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+        <div class="shot">
+          <div class="browser"><div class="bar"><i></i><i></i><i></i><span>clinic.dashboard / bookings</span></div>
+            <img src="assets/hc-dash.webp" alt="Healthcare admin dashboard showing a bookings table with payment statuses" width="1400" height="672" loading="lazy"></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="txt">
+          <div class="eyebrow">Wellness · Case study</div>
+          <h3>Five wellness apps, folded into one.</h3>
+          <p>Timetable, video library, meditation, recipes and shop in a single yoga app — with a four-screen onboarding into guided sessions and progress tracking.</p>
+          <ul class="tags"><li>iOS · Android</li><li>Jan–Nov 2024</li></ul>
+          <a class="btn" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/yoga_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+        <div class="photo"><img src="assets/yoga.webp" alt="Yoga app screens on two phones beside a woman meditating" width="1600" height="706" loading="lazy"></div>
+      </article>
+
+      <article class="card">
+        <div class="txt">
+          <div class="eyebrow">Mobility · Case study</div>
+          <h3>A taxi app you can finish at the kerb.</h3>
+          <p>Booking for Malta, where most riders are tourists: the fare up front, a live map of nearby taxis, and a flow short enough to complete on the street.</p>
+          <ul class="tags"><li>Mobile</li><li>Jan–Jul 2024</li></ul>
+          <a class="btn" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/malta_taxi_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+        <div class="photo"><img src="assets/malta.webp" alt="Malta Taxi app splash and map screens on two phones" width="629" height="580" loading="lazy" style="aspect-ratio:629/500;object-position:50% 30%"></div>
+      </article>
+
+      <article class="card">
+        <div class="txt">
+          <div class="eyebrow">Fintech · Case study</div>
+          <h3>Onboarding into a bank in three screens.</h3>
+          <p>QIIB’s mobile banking welcome, opening onto accounts, partner services, an ATM locator and a live currency converter.</p>
+          <ul class="tags"><li>Mobile</li><li>Nov 2025</li></ul>
+          <a class="btn" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/banking_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+        <div class="photo"><img src="assets/banking.webp" alt="QIIB banking app home screen held in a hand" width="629" height="580" loading="lazy" style="aspect-ratio:629/500;object-position:50% 30%"></div>
+      </article>
+
+      <article class="card">
+        <div class="txt">
+          <div class="eyebrow">Marketplace · Presentation deck</div>
+          <h3>Where brands and creators actually close the deal.</h3>
+          <p>Discovery, messaging, payments and campaign tracking for influencer–brand collaborations, in one platform.</p>
+          <ul class="tags"><li>Web app</li><li>Jan–Sep 2023</li></ul>
+          <a class="btn" href="https://www.figma.com/deck/7Z5C9KMnP7e2YqW3y3xLEM/Cheeky?node-id=2-1411&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1" target="_blank" rel="noopener">View deck <span class="ext">↗</span></a>
+        </div>
+        <div class="photo"><img src="assets/influencer.webp" alt="Cheeky influencer platform dashboard, listings and chat screens" width="1032" height="580" loading="lazy" style="aspect-ratio:1032/600"></div>
+      </article>
+    </div>
+
+    <div class="more"><a class="btn" href="https://www.behance.net/rakhidas1" target="_blank" rel="noopener">More work on Behance <span class="ext">↗</span></a></div>
+
+    <div class="label" id="experience"><span>Experience</span></div>
+    <div class="xp">
+      <div class="row"><span class="logo"><img src="assets/logo-sundew.webp" alt=""></span><div><h4>Associate UI/UX Designer <span class="now">Now</span></h4><div class="co">Sundew Solutions</div><p>Research-led product experiences for a fast-moving startup, from first interview to shipped interface.</p></div><time>Dec 2024 – Present</time></div>
+      <div class="row"><span class="logo"><img src="assets/logo-fortmindz.webp" alt=""></span><div><h4>Associate UI/UX Designer</h4><div class="co">Fortmindz Pvt. Ltd.</div><p>Owned interface design for web and mobile products, backed by a reusable component library.</p></div><time>Jun 2023 – Dec 2024</time></div>
+      <div class="row"><span class="logo" aria-hidden="true">P</span><div><h4>Junior UI/UX Designer</h4><div class="co">Pixel Consultancy</div><p>Turned client briefs into interactive prototypes that made design decisions easy to review.</p></div><time>Nov 2022 – Jun 2023</time></div>
+      <div class="row"><span class="logo"><img src="assets/logo-granicus.webp" alt=""></span><div><h4>Jr. Implementation Associate</h4><div class="co">Logic ’n’ Color (Granicus)</div><p>Client-facing implementation work that became the foundation for a move into UX design.</p></div><time>Oct 2020 – Jul 2022</time></div>
+    </div>
+
+    <div class="label" id="gallery"><span>Off the canvas</span></div>
+    <div class="gal-head">
+      <h2>Frames from <em>the road.</em></h2>
+      <p>A few photographs from outside the design tools — mountains, early light and moments worth keeping.</p>
+    </div>
+  </div>
+  <div class="marquee" aria-label="Travel photographs">
+    <div class="track" id="track">
+      <figure><img src="assets/g1.webp" alt="Sunset over a sea of cloud, seen past an aeroplane wing" loading="lazy"></figure>
+      <figure><img src="assets/g2.webp" alt="A timber house by a mountain road, snowy peaks behind" loading="lazy"></figure>
+      <figure><img src="assets/g4.webp" alt="Rakhi in a denim jacket in a wide green valley" loading="lazy"></figure>
+      <figure><img src="assets/g3.webp" alt="A woman carrying a small child in a shawl outside a green wooden house" loading="lazy"></figure>
+      <figure><img src="assets/g5.webp" alt="Mountain peaks rising above low cloud at dusk" loading="lazy"></figure>
+      <figure><img src="assets/g7.webp" alt="Rakhi with arms outstretched above terraced fields" loading="lazy"></figure>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="label" id="contact"><span>About &amp; contact</span></div>
+    <section class="talk">
+      <div class="desk">
+        <figure class="polaroid"><span class="tape"></span><img src="assets/g4.webp" alt="Rakhi in a green mountain valley"><figcaption>in the hills</figcaption></figure>
+        <a class="envelope" href="mailto:dasrakhi303@gmail.com"><span class="seal">R</span><span>dasrakhi303@gmail.com</span></a>
+        <a class="stamp" href="https://www.linkedin.com/in/rakhi-das-183381158/" target="_blank" rel="noopener"><div><b>in</b><small>LinkedIn · Rakhi Das</small></div></a>
+        <a class="badge" href="https://www.behance.net/rakhidas1" target="_blank" rel="noopener"><div><span>more</span><small>on Behance</small></div></a>
+      </div>
+      <div>
+        <h2>let’s <em>talk</em></h2>
+        <p>Four years designing products end to end, after two in client-facing implementation. I’m looking for a full-time team that cares about research as much as pixels. Pick a card on the desk, or start here.</p>
+        <div class="actions">
+          <a class="primary" href="mailto:dasrakhi303@gmail.com">Say नमस्ते 👋</a>
+          <a class="btn" style="margin-top:0" href="assets/Rakhi_Das_UIUX_Designer_Resume.pdf" download>Download résumé <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v9M4 8l4 4 4-4"/></svg></a>
+        </div>
+        <div class="links"><a href="https://www.linkedin.com/in/rakhi-das-183381158/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://www.behance.net/rakhidas1" target="_blank" rel="noopener">Behance ↗</a></div>
+      </div>
+    </section>
+    <footer><span>© 2026 Rakhi Das</span><span>Made with ♥ in Kolkata</span></footer>
+  </div>
+</main>
+
+<div class="dock">
+  <nav class="nav glass" aria-label="Primary">
+    <a href="#work" class="on">Work</a><a href="#experience" class="opt">Experience</a><a href="#contact">Contact</a><a href="assets/Rakhi_Das_UIUX_Designer_Resume.pdf" target="_blank">Résumé ↗</a>
+  </nav>
+  <div class="ctrl glass">
+    <button class="dn" id="dn" role="switch" aria-checked="true" aria-label="Day. Switch to night"><span class="stars"></span><span class="knob"></span></button>
+    <div class="when" id="when"><i></i><span id="clock">--:--</span><span class="txt" id="whenTxt">· your local sky</span><button id="reset" aria-label="Back to live time"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2.5v3h-3"/></svg></button></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const cv = document.getElementById('sky'), ctx = cv.getContext('2d');
+  const scene = document.getElementById('scene');
+  const dn = document.getElementById('dn'), clock = document.getElementById('clock'), when = document.getElementById('when'), hint = document.getElementById('hint');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // hour: 0..24. Day arc 6→18 for the sun, night arc 18→6 for the moon.
+  let hour, live = true, dragging = false, W = 0, H = 0, dpr = 1, t0 = performance.now();
+  const nowHour = () => { const d = new Date(); return d.getHours() + d.getMinutes() / 60; };
+  hour = nowHour();
+
+  // deterministic pseudo-random
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const stars = Array.from({length: 140}, () => ({x: rnd(), y: rnd() * .62, r: rnd() * 1.3 + .3, p: rnd() * 6.28}));
+  const clouds = Array.from({length: 7}, (_, i) => ({x: i / 7 * 1.3 + rnd() * .08, y: .08 + rnd() * .3, s: .6 + rnd() * .8, v: .004 + rnd() * .006, n: 4 + (i % 3)}));
+  const birds = Array.from({length: 5}, () => ({x: .55 + rnd() * .2, y: .14 + rnd() * .1, s: 4 + rnd() * 4, p: rnd() * 6}));
+  const boats = [{x: .63, s: 1}, {x: .71, s: .7}];
+
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const mix = (c1, c2, k) => c1.map((v, i) => Math.round(lerp(v, c2[i], k)));
+  const rgb = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = k => k * k * (3 - 2 * k);
+
+  const isDay = h => h >= 6 && h < 18;
+  // position along arc: 0 at rising edge, 1 at setting edge
+  const arcT = h => isDay(h) ? (h - 6) / 12 : ((h - 18 + 24) % 24) / 12;
+  const horizon = () => H * .64;
+  function bodyPos(h) {
+    const t = arcT(h), cx = W * (.08 + .84 * t), top = Math.max(46, H * .12), base = horizon() + 10;
+    return {x: cx, y: base - Math.sin(Math.PI * t) * (base - top), t};
+  }
+
+  // palettes
+  const P = {
+    noonTop: [42,131,214], noonBot: [197,230,247],
+    goldTop: [92,120,190], goldBot: [252,196,140],
+    nightTop: [6,9,22], nightBot: [30,44,82],
+    seaNoon: [43,134,192], seaNoon2: [127,207,214], seaGold: [70,92,140], seaGold2: [236,170,130], seaNight: [8,16,36], seaNight2: [24,38,70],
+  };
+  function palette(h) {
+    if (isDay(h)) {
+      const e = Math.sin(Math.PI * arcT(h));           // elevation 0..1
+      const k = smooth(clamp(e / .45, 0, 1));          // 0 = golden hour, 1 = high sun
+      return {top: mix(P.goldTop, P.noonTop, k), bot: mix(P.goldBot, P.noonBot, k), sea: mix(P.seaGold, P.seaNoon, k), sea2: mix(P.seaGold2, P.seaNoon2, k), night: 0, e, k};
+    }
+    const e = Math.sin(Math.PI * arcT(h));
+    const k = smooth(clamp(e / .3, 0, 1));             // dusk → deep night
+    return {top: mix([40,50,100], P.nightTop, k), bot: mix([120,90,120], P.nightBot, k), sea: mix([30,36,70], P.seaNight, k), sea2: mix([70,60,90], P.seaNight2, k), night: 1, e, k};
+  }
+
+  function hill(x0, x1, peak, col, side) {
+    const hz = horizon();
+    ctx.beginPath(); ctx.moveTo(x0, hz + 2);
+    ctx.bezierCurveTo(lerp(x0, x1, .25), hz - peak * 1.1, lerp(x0, x1, .55), hz - peak, x1, hz + 2);
+    ctx.closePath(); ctx.fillStyle = col; ctx.fill();
+  }
+
+  function cloud(cx, cy, s, n, col) {
+    ctx.fillStyle = col; ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const ox = (i - (n - 1) / 2) * 26 * s, oy = -Math.sin((i / (n - 1)) * Math.PI) * 14 * s;
+      ctx.moveTo(cx + ox + 30 * s, cy + oy); ctx.ellipse(cx + ox, cy + oy, 30 * s, 18 * s, 0, 0, Math.PI * 2);
+    }
+    ctx.moveTo(cx + n * 15 * s, cy + 6 * s); ctx.ellipse(cx, cy + 6 * s, n * 15 * s, 9 * s, 0, 0, Math.PI * 2);
+    ctx.fill('nonzero');
+  }
+
+  function draw(now) {
+    const time = (now - t0) / 1000;
+    const pal = palette(hour), hz = horizon(), b = bodyPos(hour);
+
+    // sky
+    let g = ctx.createLinearGradient(0, 0, 0, hz);
+    g.addColorStop(0, rgb(pal.top)); g.addColorStop(1, rgb(pal.bot));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, hz + 1);
+
+    // stars
+    if (pal.night) {
+      for (const s of stars) {
+        const a = pal.k * (.55 + .45 * Math.sin(time * 1.6 + s.p));
+        ctx.fillStyle = `rgba(255,255,255,${a})`;
+        ctx.beginPath(); ctx.arc(s.x * W, s.y * hz, s.r, 0, 7); ctx.fill();
+      }
+    }
+
+    // glow around body
+    const glowR = pal.night ? 150 : 260 + (1 - pal.k) * 180;
+    g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, glowR);
+    if (pal.night) { g.addColorStop(0, 'rgba(220,230,255,.35)'); g.addColorStop(1, 'rgba(220,230,255,0)'); }
+    else { g.addColorStop(0, `rgba(255,250,220,${.9})`); g.addColorStop(.25, `rgba(255,${Math.round(lerp(170,235,pal.k))},${Math.round(lerp(110,190,pal.k))},.45)`); g.addColorStop(1, 'rgba(255,220,180,0)'); }
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, hz);
+
+    // clouds
+    const cloudCol = pal.night ? `rgba(150,165,205,${.12 + .2 * (1 - pal.k)})` : rgb(mix([255,214,190], [255,255,255], pal.k), .92);
+    for (const c of clouds) {
+      const x = ((c.x + (reduce ? 0 : time * c.v * .1)) % 1.3) - .15;
+      cloud(x * W, c.y * hz, c.s * Math.min(1, W / 1100), c.n, cloudCol);
+    }
+
+    // body
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, hz); ctx.clip();
+    if (pal.night) {
+      ctx.fillStyle = '#F2F4FA'; ctx.shadowColor = 'rgba(220,230,255,.9)'; ctx.shadowBlur = 24;
+      ctx.beginPath(); ctx.arc(b.x, b.y, 22, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+      ctx.fillStyle = 'rgba(170,180,200,.35)';
+      [[-7,-5,5],[6,4,4],[-2,9,3],[8,-8,2.5]].forEach(([dx,dy,r]) => { ctx.beginPath(); ctx.arc(b.x+dx, b.y+dy, r, 0, 7); ctx.fill(); });
+    } else {
+      const sc = mix([255,170,90], [255,251,232], pal.k);
+      ctx.fillStyle = rgb(sc); ctx.shadowColor = rgb(sc); ctx.shadowBlur = 40;
+      ctx.beginPath(); ctx.arc(b.x, b.y, 26, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+      // rays
+      ctx.strokeStyle = `rgba(255,255,240,${.25 * pal.k})`; ctx.lineWidth = 2;
+      for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283 + time * .08; ctx.beginPath(); ctx.moveTo(b.x + Math.cos(a) * 38, b.y + Math.sin(a) * 38); ctx.lineTo(b.x + Math.cos(a) * 64, b.y + Math.sin(a) * 64); ctx.stroke(); }
+    }
+    ctx.restore();
+
+    // birds (day)
+    if (!pal.night) {
+      ctx.strokeStyle = `rgba(30,40,60,${.55 * pal.k + .2})`; ctx.lineWidth = 1.4;
+      for (const bd of birds) {
+        const x = bd.x * W + (reduce ? 0 : Math.sin(time * .2 + bd.p) * 20), y = bd.y * hz + Math.sin(time * .5 + bd.p) * 4, f = Math.sin(time * 6 + bd.p) * 2;
+        ctx.beginPath(); ctx.moveTo(x - bd.s, y - f); ctx.quadraticCurveTo(x - bd.s / 2, y - bd.s / 2, x, y); ctx.quadraticCurveTo(x + bd.s / 2, y - bd.s / 2, x + bd.s, y - f); ctx.stroke();
+      }
+    }
+
+    // hills
+    const hillFar = pal.night ? rgb(mix([40,52,80],[16,24,44],pal.k)) : rgb(mix([150,120,110],[118,170,140],pal.k));
+    const hillNear = pal.night ? rgb(mix([30,40,62],[10,16,30],pal.k)) : rgb(mix([110,100,80],[86,150,92],pal.k));
+    hill(W * .62, W * 1.05, H * .13, hillFar);
+    hill(W * .78, W * 1.12, H * .09, hillNear);
+    hill(-W * .08, W * .3, H * .17, hillFar);
+    hill(-W * .1, W * .2, H * .11, hillNear);
+    // lighthouse on left headland
+    const lx = W * .12, ly = horizon() - H * .135;
+    ctx.fillStyle = pal.night ? '#c9cfdb' : '#F4F1EA'; ctx.beginPath(); ctx.moveTo(lx - 7, ly + 2); ctx.lineTo(lx - 4.5, ly - 34); ctx.lineTo(lx + 4.5, ly - 34); ctx.lineTo(lx + 7, ly + 2); ctx.fill();
+    ctx.fillStyle = '#C2412D'; ctx.fillRect(lx - 6, ly - 18, 12, 6); ctx.fillRect(lx - 5.5, ly - 40, 11, 6);
+    if (pal.night || pal.k < .35) {
+      const beam = Math.sin(time * .9);
+      ctx.fillStyle = 'rgba(255,240,180,.95)'; ctx.beginPath(); ctx.arc(lx, ly - 37, 3, 0, 7); ctx.fill();
+      const bx = lx + beam * W * .35, bg = ctx.createLinearGradient(lx, 0, bx, 0);
+      bg.addColorStop(0, 'rgba(255,240,180,.35)'); bg.addColorStop(1, 'rgba(255,240,180,0)');
+      ctx.fillStyle = bg; ctx.beginPath(); ctx.moveTo(lx, ly - 37); ctx.lineTo(bx, ly - 37 - 18); ctx.lineTo(bx, ly - 37 + 18); ctx.fill();
+    }
+
+    // sea
+    g = ctx.createLinearGradient(0, hz, 0, H);
+    g.addColorStop(0, rgb(pal.sea)); g.addColorStop(.55, rgb(pal.sea2)); g.addColorStop(1, rgb(pal.sea2));
+    ctx.fillStyle = g; ctx.fillRect(0, hz, W, H - hz);
+    ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(0, hz, W, 1);
+
+    // reflection column
+    const refl = pal.night ? 'rgba(230,236,255,' : `rgba(255,${Math.round(lerp(200,250,pal.k))},${Math.round(lerp(150,220,pal.k))},`;
+    const vis = b.y < hz + 6 ? 1 : 0;
+    for (let i = 0; i < 26 && vis; i++) {
+      const yy = hz + 4 + i * i * .55, w = (12 + i * 3.2) * (1 + .35 * Math.sin(time * 2 + i));
+      if (yy > H) break;
+      ctx.fillStyle = refl + (.55 - i * .018) + ')';
+      ctx.fillRect(b.x - w / 2 + Math.sin(time * 1.3 + i * 1.7) * 6, yy, w, 1.6 + i * .05);
+    }
+    // ripples
+    ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 1;
+    for (let i = 0; i < 18; i++) {
+      const yy = hz + 10 + (i * 37 % (H - hz)), xx = ((i * 191 + time * 8) % (W + 80)) - 40;
+      ctx.beginPath(); ctx.moveTo(xx, yy); ctx.lineTo(xx + 24 + (i % 4) * 8, yy); ctx.stroke();
+    }
+    // boats
+    for (const bt of boats) {
+      const x = bt.x * W + (reduce ? 0 : Math.sin(time * .15 + bt.x * 9) * 14), y = hz + 8 * bt.s + Math.sin(time * 1.2 + bt.x * 5) * .8, s = bt.s * 10;
+      ctx.fillStyle = pal.night ? 'rgba(200,210,230,.6)' : 'rgba(255,255,255,.95)';
+      ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x, y - 1); ctx.lineTo(x + s * 1.2, y - 1); ctx.fill();
+      ctx.fillStyle = pal.night ? 'rgba(20,28,50,.9)' : 'rgba(40,50,70,.85)';
+      ctx.beginPath(); ctx.moveTo(x - s * .9, y); ctx.lineTo(x + s * 1.5, y); ctx.lineTo(x + s * 1.1, y + s * .45); ctx.lineTo(x - s * .6, y + s * .45); ctx.fill();
+    }
+
+    if (!reduce || dragging) raf = requestAnimationFrame(draw);
+  }
+
+  let raf = 0, visible = true;
+  function start() { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }
+  function resize() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = scene.clientWidth; H = scene.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    start();
+  }
+
+  // ---------- UI sync ----------
+  function fmt(h) {
+    const hh = Math.floor(h) % 24, mm = Math.floor((h % 1) * 60), ap = hh < 12 ? 'am' : 'pm';
+    return `${(hh % 12) || 12}:${String(mm).padStart(2, '0')} ${ap}`;
+  }
+  function sync() {
+    const day = isDay(hour);
+    dn.setAttribute('aria-checked', day);
+    dn.setAttribute('aria-label', day ? 'Day. Switch to night' : 'Night. Switch to day');
+    root.dataset.theme = day ? 'light' : 'dark';
+    clock.textContent = fmt(hour);
+    when.classList.toggle('manual', !live);
+    document.getElementById('whenTxt').textContent = live ? '· your local sky' : '· drag to change';
+    hint.textContent = day ? '☀︎ Drag the sun' : '☾ Drag the moon';
+    document.querySelector('meta[name=theme-color]')?.setAttribute('content', day ? '#ffffff' : '#0E0F11');
+    if (reduce) start();
+  }
+
+  // ---------- drag ----------
+  function hourFromX(x) {
+    const t = clamp((x / W - .08) / .84, 0, 1);
+    return isDay(hour) ? 6 + t * 12 : (18 + t * 12) % 24;
+  }
+  scene.addEventListener('pointerdown', e => {
+    const r = scene.getBoundingClientRect(), b = bodyPos(hour);
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    if (Math.hypot(x - b.x, y - b.y) > 70) return;
+    dragging = true; live = false; scene.setPointerCapture(e.pointerId); scene.style.cursor = 'grabbing';
+    hint.classList.add('gone'); e.preventDefault(); start();
+  });
+  scene.addEventListener('pointermove', e => {
+    const r = scene.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!dragging) { const b = bodyPos(hour); scene.style.cursor = Math.hypot(x - b.x, y - b.y) < 70 ? 'grab' : ''; return; }
+    hour = hourFromX(x); sync();
+  });
+  const end = () => { dragging = false; scene.style.cursor = ''; };
+  scene.addEventListener('pointerup', end); scene.addEventListener('pointercancel', end);
+
+  // keyboard: arrows move the sun when the scene is focused
+  scene.tabIndex = 0;
+  scene.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault(); live = false;
+    const t = clamp(arcT(hour) + (e.key === 'ArrowRight' ? 1 : -1) / 48, 0, .999);
+    hour = isDay(hour) ? 6 + t * 12 : (18 + t * 12) % 24; sync();
+  });
+
+  dn.addEventListener('click', () => {
+    live = false;
+    hour = isDay(hour) ? 21 : 10.5;   // jump to a nice night / morning
+    sync();
+  });
+  document.getElementById('reset').addEventListener('click', () => { live = true; hour = nowHour(); sync(); });
+  setInterval(() => { if (live) { hour = nowHour(); sync(); } }, 30000);
+
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) start(); else cancelAnimationFrame(raf); }).observe(scene);
+  addEventListener('resize', resize);
+  setTimeout(() => hint.classList.add('gone'), 6000);
+
+  // duplicate gallery for seamless marquee
+  const tr = document.getElementById('track');
+  [...tr.children].forEach(n => { const c = n.cloneNode(true); c.setAttribute('aria-hidden', 'true'); tr.appendChild(c); });
+
+  // active nav
+  const links = [...document.querySelectorAll('.nav a[href^="#"]')];
+  const secs = links.map(a => document.querySelector(a.getAttribute('href')));
+  addEventListener('scroll', () => {
+    let i = 0; secs.forEach((s, k) => { if (s && s.getBoundingClientRect().top < innerHeight * .5) i = k; });
+    links.forEach((a, k) => a.classList.toggle('on', k === i));
+  }, {passive: true});
+
+  // honour ?t=21 for previews
+  const q = new URLSearchParams(location.search).get('t');
+  if (q !== null && !isNaN(+q)) { hour = +q % 24; live = false; }
+  resize(); sync();
+})();
+</script>
+<meta name="theme-color" content="#ffffff">
+</body>
+</html>
