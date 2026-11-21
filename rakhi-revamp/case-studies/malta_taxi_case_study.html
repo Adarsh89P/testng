@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Malta Taxi App | Rakhi Das</title>
+<meta name="description" content="UX case study: a taxi booking app for Malta, designed around clear pricing, real-time tracking and a guided booking flow.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310141B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='40' fill='%23fff' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="case.css">
+<script>try{var t=localStorage.getItem('rk-theme');var h=new Date().getHours();document.documentElement.dataset.theme=t||(h>=6&&h<18?'light':'dark')}catch(e){}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<span class="progress" aria-hidden="true"></span>
+
+<aside class="side" id="side" aria-label="Case study sections">
+  <a class="home" href="../index.html#work"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg> Home</a>
+  <p class="side-title">Malta Taxi App</p>
+  <p class="side-sub">Mobility · UX case study</p>
+  <nav class="toc">
+<a href="#overview"><i>01</i>Overview</a>
+<a href="#challenge"><i>02</i>The challenge</a>
+<a href="#research"><i>03</i>User needs</a>
+<a href="#solution"><i>04</i>The solution</a>
+<a href="#visual"><i>05</i>Visual language</a>
+<a href="#outcome"><i>06</i>Outcome</a>
+  </nav>
+  <div class="side-foot">
+    <a href="banking_case_study.html">Next case study →</a>
+    <a href="mailto:dasrakhi303@gmail.com">dasrakhi303@gmail.com</a>
+  </div>
+</aside>
+<div class="scrim" aria-hidden="true"></div>
+
+<div class="mnav glass"><a href="../index.html#work"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg> Home</a><button type="button" id="tocBtn" aria-expanded="false" aria-controls="side"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 4h10M3 8h10M3 12h6"/></svg> Sections</button></div>
+<div class="topbar"><div class="dn-wrap glass"><button class="dn" id="dn" role="switch" aria-checked="true" aria-label="Day. Switch to night"><span class="stars"></span><span class="knob"></span></button></div></div>
+
+<main id="main" class="cs-page">
+
+  
+  <header class="cs-shell cs-hero">
+    <div class="cs-grid">
+      <div class="sp-8">
+        <p class="cs-kicker cs-reveal">Mobility · UX case study</p>
+        <h1 class="cs-hero-title cs-reveal">Malta Taxi — booking a ride in a place you <span class="cs-em">don't know</span>.</h1>
+        <p class="cs-hero-sub cs-reveal">A taxi booking app for a country most of its riders are visiting for the first time — built around knowing the price before you commit, watching the car actually arrive, and a booking flow short enough to finish on a kerb.</p>
+      </div>
+    </div>
+
+    <dl class="cs-meta cs-reveal">
+      <div>
+        <dt>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Role
+        </dt>
+        <dd>UI/UX Designer</dd>
+      </div>
+      <div>
+        <dt>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Timeline
+        </dt>
+        <dd>Jan – Jul 2024</dd>
+      </div>
+      <div>
+        <dt>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5.5" y="2.5" width="13" height="19" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 18.6h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Platform
+        </dt>
+        <dd>iOS &amp; Android</dd>
+      </div>
+      <div>
+        <dt>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6-5.6-1.9 5.6-1.9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Deliverable
+        </dt>
+        <dd>Mobile app design</dd>
+      </div>
+    </dl>
+
+    <div class="cs-hero-actions cs-reveal">
+      <a class="btn btn-primary" href="#solution">
+        <span>See the final designs</span>
+        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn-outline" href="https://www.figma.com/slides/nhf3bX4IaSVZzYAABourZV/Malta-Taxi-App-%F0%9F%9A%96--Copy-?node-id=0-1" target="_blank" rel="noopener" aria-label="View the original deck on Figma (opens in a new tab)">
+        <span>View the deck</span>
+        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <figure class="cs-hero-figure cs-reveal">
+      <img src="../public/MaltaTaxi/malta-devices.png"
+           alt="Two iPhones showing the Malta Taxi app: the onboarding screen reading Start Your Journey Right with Malta Taxi, and the location permission screen."
+           width="1600" height="1200" fetchpriority="high" decoding="async">
+    </figure>
+  </header>
+
+
+  
+  <section class="cs-sec cs-shell" id="overview" aria-labelledby="overviewHead">
+    <div class="cs-grid">
+      <div class="sp-8">
+        <p class="cs-sec-label cs-reveal">01 — Project overview</p>
+        <h2 class="cs-h2 cs-reveal" id="overviewHead">An app that has to earn trust from someone with no local knowledge to check it against.</h2>
+        <p class="cs-lead cs-reveal">Malta's riders are disproportionately tourists: people who don't know the street names, don't know what a fair fare looks like, and have no way to tell a reliable driver from a chancer. Every one of the design decisions below comes back to that.</p>
+      </div>
+    </div>
+
+    <dl class="cs-cards">
+      <div class="cs-card cs-reveal">
+        <span class="cs-card-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4 2.8 20h18.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10.2v4M12 17.2v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <dt>The problem</dt>
+        <dd>Riders struggle to book reliable taxis quickly, with no clear pricing and no real-time tracking.</dd>
+      </div>
+      <div class="cs-card cs-reveal">
+        <span class="cs-card-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 19.5a6.5 6.5 0 0 1 13 0M16 5.4a3.2 3.2 0 0 1 0 5.2M17.5 14.2a6.5 6.5 0 0 1 4 5.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <dt>Users</dt>
+        <dd>Riders in Malta — most of them tourists on a first visit.</dd>
+      </div>
+      <div class="cs-card cs-reveal">
+        <span class="cs-card-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L20 8a2.83 2.83 0 0 0-4-4L4 16z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+        <dt>My role</dt>
+        <dd>UI/UX designer — mobile app design for iOS and Android.</dd>
+      </div>
+      <div class="cs-card cs-reveal">
+        <span class="cs-card-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 12.3l2.4 2.4 4.8-5.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <dt>Outcome</dt>
+        <dd>A complete booking app, from onboarding to tour exploration.</dd>
+      </div>
+    </dl>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="challenge" aria-labelledby="challengeHead">
+    <div class="cs-grid">
+      <div class="sp-7">
+        <p class="cs-sec-label cs-reveal">02 — The challenge</p>
+        <h2 class="cs-h2 cs-reveal" id="challengeHead">Three gaps, one broken first ride.</h2>
+        <div class="cs-lead cs-reveal">
+          <p class="cs-p">Users in Malta, especially tourists, <strong>face difficulty booking reliable taxis quickly</strong>. The lack of <strong>clear pricing</strong>, <strong>real-time tracking</strong>, and a simple booking flow creates confusion and reduces trust.</p>
+          <p class="cs-p">They are not three separate complaints — so the fix could not be three features bolted on separately. It had to be one sequence in which each answer arrives before the doubt it settles.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-pain">
+      <div class="cs-reveal">
+        <p class="cs-pain-num">01</p>
+        <h3>No clear pricing</h3>
+        <p>Not knowing the price is what makes the wait feel risky.</p>
+      </div>
+      <div class="cs-reveal">
+        <p class="cs-pain-num">02</p>
+        <h3>No real-time tracking</h3>
+        <p>Not being able to see the car is what makes the price feel like a gamble.</p>
+      </div>
+      <div class="cs-reveal">
+        <p class="cs-pain-num">03</p>
+        <h3>A slow booking flow</h3>
+        <p>A flow that takes too long gives both doubts the time they need to turn into a cancelled ride.</p>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="research" aria-labelledby="researchHead">
+    <div class="cs-grid">
+      <div class="sp-7">
+        <p class="cs-sec-label cs-reveal">03 — User needs</p>
+        <h2 class="cs-h2 cs-reveal" id="researchHead">What riders actually asked for.</h2>
+        <p class="cs-lead cs-reveal">The five needs the design was held against, in the deck's own words, with the design consequence underneath each.</p>
+      </div>
+    </div>
+
+    <div class="cs-pain is-auto">
+      <div class="cs-reveal">
+        <p class="cs-pain-num">01</p>
+        <h3>Quick and hassle-free taxi booking</h3>
+        <p>The booking flow is the product. Anything that isn't needed to get a car moving was pushed out of it.</p>
+      </div>
+      <div class="cs-reveal">
+        <p class="cs-pain-num">02</p>
+        <h3>Clear pricing before confirming rides</h3>
+        <p>The fare is shown while the ride is still cancellable, not after. Trust is decided in that gap.</p>
+      </div>
+      <div class="cs-reveal">
+        <p class="cs-pain-num">03</p>
+        <h3>Real-time tracking for safety and reliability</h3>
+        <p>A live map with the nearby taxis on it, so the wait is something you can watch rather than endure.</p>
+      </div>
+      <div class="cs-reveal">
+        <p class="cs-pain-num">04</p>
+        <h3>Easy navigation for unfamiliar locations</h3>
+        <p>Destination search that works for someone who can't spell the street they want — the tourist case, treated as the default.</p>
+      </div>
+      <div class="cs-reveal">
+        <p class="cs-pain-num">05</p>
+        <h3>Simple and guided user experience</h3>
+        <p>Onboarding sets location up front, so the first screen after it is already useful instead of asking for a permission mid-task.</p>
+      </div>
+    </div>
+
+    
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="solution" aria-labelledby="solutionHead">
+    <div class="cs-grid">
+      <div class="sp-8">
+        <p class="cs-sec-label cs-reveal">04 — The solution</p>
+        <h2 class="cs-h2 cs-reveal" id="solutionHead">Four moves, in the order you meet them.</h2>
+        <p class="cs-lead cs-reveal">A taxi booking app that takes the guesswork out of the ride — sequenced the way a rider actually hits each answer, rather than listed by feature.</p>
+      </div>
+    </div>
+
+    <div class="cs-steps is-4">
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">01</p>
+        <h3>Quick onboarding and location setup</h3>
+        <p>Location is asked for once, up front, with the reason attached — so no later screen has to stop and ask mid-task.</p>
+      </div>
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">02</p>
+        <h3>Real-time map with nearby taxis</h3>
+        <p>The wait becomes visible. Cars on a map answer "is one actually coming?" before the question is asked.</p>
+      </div>
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">03</p>
+        <h3>Easy destination search and booking</h3>
+        <p>Search built for someone who can't spell the street, and a confirmation step that shows the fare while cancelling is still free.</p>
+      </div>
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">04</p>
+        <h3>Tour exploration for travellers</h3>
+        <p>Treats a tourist as a tourist rather than a commuter who happens to be lost — places to go, not just a field to fill.</p>
+      </div>
+    </div>
+
+    <article class="cs-feature" style="margin-top:clamp(48px,5vw,72px)">
+      <div class="cs-feature-aside">
+        <p class="cs-feature-num">01</p>
+        <h3>Onboarding &amp; location setup</h3>
+        <p class="cs-feature-purpose">Two screens before anything is booked, both answering the fifth need: the app should be useful the moment onboarding ends.</p>
+        <dl class="cs-notes">
+          <div class="cs-note">
+            <dt>Onboarding</dt>
+            <dd>States the promise and offers one action.</dd>
+          </div>
+          <div class="cs-note is-decision">
+            <dt>Location setup</dt>
+            <dd>Asks for the permission with the reason attached — "set your location to start exploring" — rather than as a bare system prompt.</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <figure class="cs-figure cs-reveal">
+          <img src="../public/MaltaTaxi/malta-devices.png"
+               alt="Left: the location permission screen, headed We don't have your location yet, with an Enable device location button. Right: the onboarding screen, a car on a map above the line Start Your Journey Right with Malta Taxi and a Get Started button."
+               width="1600" height="1200" loading="lazy" decoding="async">
+        </figure>
+      </div>
+    </article>
+
+    
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="visual" aria-labelledby="visualHead">
+    <div class="cs-grid">
+      <div class="sp-7">
+        <p class="cs-sec-label cs-reveal">05 — Visual language</p>
+        <h2 class="cs-h2 cs-reveal" id="visualHead">The project palette.</h2>
+        <p class="cs-lead cs-reveal">Read off the screens rather than chosen next to them: the app render was decoded and its opaque pixels counted, so these five are the artwork's actual palette in order of area.</p>
+      </div>
+    </div>
+
+    <div class="cs-swatches">
+      <div class="cs-swatch cs-reveal">
+        <i style="background:#fa0501"></i>
+        <div><b>Malta red</b><code>#FA0501</code><p>The brand. Carries the onboarding screen, the primary action and the map pin.</p></div>
+      </div>
+      <div class="cs-swatch cs-reveal">
+        <i style="background:#ffffff"></i>
+        <div><b>Paper</b><code>#FFFFFF</code><p>The larger half of the app. Red is the accent; white is the room it works in.</p></div>
+      </div>
+      <div class="cs-swatch cs-reveal">
+        <i style="background:#ff5c51"></i>
+        <div><b>Red tint</b><code>#FF5C51</code><p>The soft halo behind the map card — the brand red at lower weight, for depth.</p></div>
+      </div>
+      <div class="cs-swatch cs-reveal">
+        <i style="background:#b9f4c8"></i>
+        <div><b>Map mint</b><code>#B9F4C8</code><p>The only cool colour, with one job: it is the map, so the map is never mistaken for a card.</p></div>
+      </div>
+      <div class="cs-swatch cs-reveal">
+        <i style="background:#000000"></i>
+        <div><b>Ink</b><code>#000000</code><p>Type and iconography. Pure black, because everything it sits on is white or mint.</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="outcome" aria-labelledby="outcomeHead">
+    <div class="cs-outcome cs-reveal">
+      <p class="cs-sec-label">06 — The outcome</p>
+      <h2 id="outcomeHead">A complete mobile app design for iOS and Android.</h2>
+
+      <ol class="cs-outcome-list">
+        <li>
+          <span>01</span>
+          <p>Onboarding and location setup that makes the first screen useful.</p>
+        </li>
+        <li>
+          <span>02</span>
+          <p>A live map of nearby taxis, so the wait can be watched.</p>
+        </li>
+        <li>
+          <span>03</span>
+          <p>Destination search and booking with the fare shown before confirming.</p>
+        </li>
+        <li>
+          <span>04</span>
+          <p>Tour exploration for travellers — with the Maltese cross and a single red carried through all of it.</p>
+        </li>
+      </ol>
+    </div>
+
+    
+  </section>
+
+
+  
+  <section class="cs-shell cs-end" id="connect" aria-labelledby="endHead">
+    <div>
+      <h2 id="endHead" class="cs-reveal">Thank you for reading.</h2>
+      <p class="cs-reveal">Interested in the thinking behind this project? I'd be glad to walk through it.</p>
+    </div>
+    <div class="cs-end-actions cs-reveal">
+      <a class="btn btn-primary" href="../index.html#work">
+        <span>Back to all work</span>
+        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn-outline" href="banking_case_study.html">
+        <span>Next: QIIB Mobile Banking</span>
+        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="cs-shell foot-in">
+    <div><h2>let’s <em>talk</em></h2><p>Open to full-time product design roles. Happy to walk through this project, or any of the others.</p></div>
+    <div class="acts">
+      <a class="btn btn-primary" href="mailto:dasrakhi303@gmail.com">dasrakhi303@gmail.com <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <a class="btn btn-outline" href="../assets/Rakhi_Das_UIUX_Designer_Resume.pdf" download>Download résumé</a>
+    </div>
+  </div>
+  <div class="cs-shell foot-line"><span>© 2026 Rakhi Das</span><span><a href="https://www.linkedin.com/in/rakhi-das-183381158/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://www.behance.net/rakhidas1" target="_blank" rel="noopener">Behance ↗</a></span></div>
+</footer>
+<script src="case.js"></script>
+</body>
+</html>

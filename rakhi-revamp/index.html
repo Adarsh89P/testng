@@ -260,7 +260,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
           <h3>Five products, one diagnostic system.</h3>
           <p>Patient app, doctor tools, website and admin dashboard for a diagnostics chain — four user types, one connected booking-to-report flow.</p>
           <ul class="tags"><li>Web app</li><li>Mobile</li><li>Dashboard</li><li>Mar–Jul 2025</li></ul>
-          <a class="btn" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/healthcare_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn" href="case-studies/healthcare_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         </div>
         <div class="shot">
           <div class="browser"><div class="bar"><i></i><i></i><i></i><span>clinic.dashboard / bookings</span></div>
@@ -274,7 +274,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
           <h3>Five wellness apps, folded into one.</h3>
           <p>Timetable, video library, meditation, recipes and shop in a single yoga app — with a four-screen onboarding into guided sessions and progress tracking.</p>
           <ul class="tags"><li>iOS · Android</li><li>Jan–Nov 2024</li></ul>
-          <a class="btn" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/yoga_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn" href="case-studies/yoga_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         </div>
         <div class="photo"><img src="assets/yoga.webp" alt="Yoga app screens on two phones beside a woman meditating" width="1600" height="706" loading="lazy"></div>
       </article>
@@ -285,7 +285,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
           <h3>A taxi app you can finish at the kerb.</h3>
           <p>Booking for Malta, where most riders are tourists: the fare up front, a live map of nearby taxis, and a flow short enough to complete on the street.</p>
           <ul class="tags"><li>Mobile</li><li>Jan–Jul 2024</li></ul>
-          <a class="btn" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/malta_taxi_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn" href="case-studies/malta_taxi_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         </div>
         <div class="photo"><img src="assets/malta.webp" alt="Malta Taxi app splash and map screens on two phones" width="629" height="580" loading="lazy" style="aspect-ratio:629/500;object-position:50% 30%"></div>
       </article>
@@ -296,7 +296,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
           <h3>Onboarding into a bank in three screens.</h3>
           <p>QIIB’s mobile banking welcome, opening onto accounts, partner services, an ATM locator and a live currency converter.</p>
           <ul class="tags"><li>Mobile</li><li>Nov 2025</li></ul>
-          <a class="btn" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/banking_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn" href="case-studies/banking_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         </div>
         <div class="photo"><img src="assets/banking.webp" alt="QIIB banking app home screen held in a hand" width="629" height="580" loading="lazy" style="aspect-ratio:629/500;object-position:50% 30%"></div>
       </article>
@@ -613,6 +613,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
     live = false;
     hour = isDay(hour) ? 21 : 10.5;   // jump to a nice night / morning
     sync();
+    try { localStorage.setItem('rk-theme', isDay(hour) ? 'light' : 'dark'); } catch (e) {}
   });
   document.getElementById('reset').addEventListener('click', () => { live = true; hour = nowHour(); sync(); });
   setInterval(() => { if (live) { hour = nowHour(); sync(); } }, 30000);

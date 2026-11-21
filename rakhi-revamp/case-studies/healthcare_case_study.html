@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Healthcare Diagnostic Platform — Redesigning Diagnostic Workflows | Rakhi Das</title>
+<meta name="description" content="UX/UI case study: redesigning a healthcare diagnostic ecosystem — patient app, front desk dashboard, admin dashboard, home collector app and website — into one connected system.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310141B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='40' fill='%23fff' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="case.css">
+<script>try{var t=localStorage.getItem('rk-theme');var h=new Date().getHours();document.documentElement.dataset.theme=t||(h>=6&&h<18?'light':'dark')}catch(e){}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<span class="progress" aria-hidden="true"></span>
+
+<aside class="side" id="side" aria-label="Case study sections">
+  <a class="home" href="../index.html#work"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg> Home</a>
+  <p class="side-title">Healthcare Diagnostic Platform</p>
+  <p class="side-sub">Healthcare · UX/UI case study</p>
+  <nav class="toc">
+<a href="#overview"><i>01</i>Overview</a>
+<a href="#challenge"><i>02</i>The challenge</a>
+<a href="#research"><i>03</i>Research & insights</a>
+<a href="#strategy"><i>04</i>UX strategy</a>
+<a href="#design"><i>05</i>Design evolution</a>
+<a href="#solution"><i>06</i>Final solution</a>
+<a href="#responsive"><i>07</i>Responsive experience</a>
+<a href="#outcome"><i>08</i>Outcome</a>
+  </nav>
+  <div class="side-foot">
+    <a href="yoga_case_study.html">Next case study →</a>
+    <a href="mailto:dasrakhi303@gmail.com">dasrakhi303@gmail.com</a>
+  </div>
+</aside>
+<div class="scrim" aria-hidden="true"></div>
+
+<div class="mnav glass"><a href="../index.html#work"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg> Home</a><button type="button" id="tocBtn" aria-expanded="false" aria-controls="side"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 4h10M3 8h10M3 12h6"/></svg> Sections</button></div>
+<div class="topbar"><div class="dn-wrap glass"><button class="dn" id="dn" role="switch" aria-checked="true" aria-label="Day. Switch to night"><span class="stars"></span><span class="knob"></span></button></div></div>
+
+<main id="main" class="cs-page">
+
+  
+  <header class="cs-shell cs-hero">
+    <div class="cs-grid">
+      <div class="sp-8">
+        <p class="cs-kicker cs-reveal">Healthcare · UX/UI case study</p>
+        <h1 class="cs-hero-title cs-reveal">Redesigning diagnostic workflows for <span class="cs-em">faster</span>, <span class="cs-em">simpler</span> healthcare access.</h1>
+        <p class="cs-hero-sub cs-reveal">A connected diagnostic platform that brings patients, front desk staff, administrators and home collection teams onto one system — with unified workflows and real-time visibility.</p>
+      </div>
+    </div>
+
+    <dl class="cs-meta cs-reveal">
+      <div>
+        <dt>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Role
+        </dt>
+        <dd>UI/UX Designer</dd>
+      </div>
+      <div>
+        <dt>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Timeline
+        </dt>
+        <dd>Mar – Jul 2025</dd>
+      </div>
+      <div>
+        <dt>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 21h7M12 17v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Platform
+        </dt>
+        <dd>Web + Mobile · 5 products</dd>
+      </div>
+      <div>
+        <dt>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6-5.6-1.9 5.6-1.9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          My contribution
+        </dt>
+        <dd>Research · UX · UI · Prototyping</dd>
+      </div>
+    </dl>
+
+    <div class="cs-hero-actions cs-reveal">
+      <a class="btn btn-primary" href="#solution">
+        <span>See the final designs</span>
+        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn-outline" href="#research">
+        <span>Read the thinking</span>
+        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    
+    <figure class="cs-hero-figure cs-reveal"><div class="stack" role="img" aria-label="The healthcare product suite: the bookings dashboard in a browser, with the patient app on a phone in front">
+  <div class="browser"><div class="bar"><i></i><i></i><i></i><span>clinic.dashboard / bookings</span></div>
+  <img src="../public/Healthcare/banner/dash.png" alt="" width="1700" height="816" fetchpriority="high" decoding="async"></div>
+  <picture><source srcset="../public/Healthcare/banner/phone-app.webp" type="image/webp"><img class="float" src="../public/Healthcare/banner/phone-app.png" alt="" width="319" height="658" decoding="async"></picture>
+</div></figure>
+  </header>
+
+
+  
+  <section class="cs-sec cs-shell" id="overview" aria-labelledby="overviewHead">
+    <div class="cs-grid">
+      <div class="sp-8">
+        <p class="cs-sec-label cs-reveal">01 — Project overview</p>
+        <h2 class="cs-h2 cs-reveal" id="overviewHead">Five products, five kinds of user, one diagnostic journey.</h2>
+      </div>
+    </div>
+
+    <dl class="cs-cards">
+      <div class="cs-card cs-reveal">
+        <span class="cs-card-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4 2.8 20h18.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10.2v4M12 17.2v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <dt>The problem</dt>
+        <dd>Diagnostic workflows were fragmented across disconnected touchpoints, for patients and staff alike.</dd>
+      </div>
+      <div class="cs-card cs-reveal">
+        <span class="cs-card-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 19.5a6.5 6.5 0 0 1 13 0M16 5.4a3.2 3.2 0 0 1 0 5.2M17.5 14.2a6.5 6.5 0 0 1 4 5.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <dt>Users</dt>
+        <dd>Patients · Front desk executives · Administrators · Phlebotomists · Home collectors</dd>
+      </div>
+      <div class="cs-card cs-reveal">
+        <span class="cs-card-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L20 8a2.83 2.83 0 0 0-4-4L4 16z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+        <dt>My role</dt>
+        <dd>Sole UI/UX designer — research, workflow mapping, UX strategy, UI and prototyping across all five products.</dd>
+      </div>
+      <div class="cs-card cs-reveal">
+        <span class="cs-card-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 12.3l2.4 2.4 4.8-5.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <dt>Outcome</dt>
+        <dd>A unified ecosystem that simplifies diagnostics and improves visibility for everyone involved.</dd>
+      </div>
+    </dl>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="challenge" aria-labelledby="challengeHead">
+    <div class="cs-grid">
+      <div class="sp-7">
+        <p class="cs-sec-label cs-reveal">02 — The challenge</p>
+        <h2 class="cs-h2 cs-reveal" id="challengeHead">Diagnostic care involves many people, several systems, and no shared view of any of it.</h2>
+        <div class="cs-lead cs-reveal">
+          <p class="cs-p">Diagnostic services are fragmented and time-consuming. Patients struggle with booking tests, tracking reports and navigating multiple touchpoints that don't talk to each other.</p>
+          <p class="cs-p">Internally, the same journey is stitched together by hand across <strong>front desk, admin and home collection</strong> — which is where the <strong>delays, errors and coordination gaps</strong> come from.</p>
+          <p class="cs-p">The absence of a unified system hurts both the patient experience and operational efficiency, which is what made this a redesign of the whole ecosystem rather than of any single screen.</p>
+        </div>
+      </div>
+
+      <aside class="sp-5 cs-reveal">
+        <div class="cs-tier" style="height:100%">
+          <div class="cs-tier-head">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 19.5a6.5 6.5 0 0 1 13 0M16 5.4a3.2 3.2 0 0 1 0 5.2M17.5 14.2a6.5 6.5 0 0 1 4 5.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <h3>Who the journey passes through</h3>
+          </div>
+          <dl>
+            <div>
+              <dt>Patient</dt>
+              <dd>Books a test, waits without status, chases a report.</dd>
+            </div>
+            <div>
+              <dt>Front desk executive</dt>
+              <dd>Registers patients and manages tests and appointments manually.</dd>
+            </div>
+            <div>
+              <dt>Administrator</dt>
+              <dd>Oversees staff, reports and operations with no single control surface.</dd>
+            </div>
+            <div>
+              <dt>Phlebotomist &amp; home collector</dt>
+              <dd>Runs sample collection with no task list, route or line back to the system.</dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+    </div>
+
+    <div class="cs-pain">
+      <div class="cs-reveal">
+        <p class="cs-pain-num">01</p>
+        <h3>Fragmented information</h3>
+        <p>Records were scattered across systems and states, so no one could see a full picture of a single test.</p>
+      </div>
+      <div class="cs-reveal">
+        <p class="cs-pain-num">02</p>
+        <h3>Multiple manual handoffs</h3>
+        <p>Simple tasks took several steps and re-entry by hand between roles, which is where the errors and the delays entered.</p>
+      </div>
+      <div class="cs-reveal">
+        <p class="cs-pain-num">03</p>
+        <h3>Low visibility</h3>
+        <p>Patients couldn't track a test and staff couldn't see what was assigned, in progress, or waiting on them.</p>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="research" aria-labelledby="researchHead">
+    <div class="cs-grid">
+      <div class="sp-7">
+        <p class="cs-sec-label cs-reveal">03 — Research &amp; insights</p>
+        <h2 class="cs-h2 cs-reveal" id="researchHead">I started by following the work, not the screens.</h2>
+        <p class="cs-lead cs-reveal">Contextual inquiry with the teams running the service, UX research across the five roles, and a full mapping of the existing workflow. Three findings shaped every decision that followed.</p>
+      </div>
+    </div>
+
+    <div class="cs-insights">
+
+      <article class="cs-insight cs-reveal">
+        <div class="cs-insight-rail">
+          <p class="cs-insight-num">Insight 01</p>
+          <p class="cs-insight-method">Contextual inquiry</p>
+        </div>
+        <div>
+          <h3 class="cs-insight-claim">Patients weren't confused by the booking form — they were confused by the silence after it.</h3>
+          <p class="cs-insight-evidence">The booking flow itself was convoluted, but the sharper problem came after: no real-time updates between booking and result, and reports that were hard to reach once they existed. The journey had no visible state, so patients fell back on phoning the desk.</p>
+        </div>
+        <div class="cs-implication">
+          <p class="cs-implication-label">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Design implication
+          </p>
+          <p>Make status the spine of the patient app. Every test carries one visible state from booking through collection to report, and the report is reachable from that same place.</p>
+        </div>
+      </article>
+
+      <article class="cs-insight cs-reveal">
+        <div class="cs-insight-rail">
+          <p class="cs-insight-num">Insight 02</p>
+          <p class="cs-insight-method">Workflow mapping</p>
+        </div>
+        <div>
+          <h3 class="cs-insight-claim">The front desk was absorbing the system's complexity by hand.</h3>
+          <p class="cs-insight-evidence">Mapping the desk's day showed an outdated workflow where routine tasks took several steps and the same patient details were re-keyed more than once. The manual re-entry was not carelessness — it was the interface asking for it, and that is where errors and queue time came from.</p>
+        </div>
+        <div class="cs-implication">
+          <p class="cs-implication-label">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Design implication
+          </p>
+          <p>Collapse registration into one quick path, and put tests and appointments on a single screen so the desk stops navigating between systems to serve one patient.</p>
+        </div>
+      </article>
+
+      <article class="cs-insight cs-reveal">
+        <div class="cs-insight-rail">
+          <p class="cs-insight-num">Insight 03</p>
+          <p class="cs-insight-method">UX research across roles</p>
+        </div>
+        <div>
+          <h3 class="cs-insight-claim">Every role could see its own step, and no role could see the operation.</h3>
+          <p class="cs-insight-evidence">Administrators had no centralised control over staff, reports and operations. Home collectors worked without an assigned task list or a planned route, and had no channel back into the system. Each role was locally functional and globally blind, so coordination happened over phone calls.</p>
+        </div>
+        <div class="cs-implication">
+          <p class="cs-implication-label">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Design implication
+          </p>
+          <p>Design one connected system, not five apps. Admin gets a single control surface, collectors get assigned tasks with details and an optimised route, and all of them read and write the same records the desk touches.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="strategy" aria-labelledby="strategyHead">
+    <div class="cs-grid">
+      <div class="sp-7">
+        <p class="cs-sec-label cs-reveal">04 — UX strategy</p>
+        <h2 class="cs-h2 cs-reveal" id="strategyHead">An MVP route: test the core of the journey first, then widen it.</h2>
+        <p class="cs-lead cs-reveal">Five products at once is a way to get five products wrong. The strategy was to establish the journey end to end at low fidelity, validate it with the people who run the service, and only then design each role's interface against a shape everyone had already agreed on.</p>
+      </div>
+    </div>
+
+    <figure class="cs-figure cs-figure-diagram cs-reveal">
+      <div class="cs-pan">
+        <picture>
+          <source srcset="../public/Healthcare/image%20212.webp" type="image/webp">
+          <img src="../public/Healthcare/image%20212.png" alt="Approach flow: analysing the current situation by studying user journeys and identifying pain points feeds into identifying the key user journey, conducting a scheduled televisit appointment and post-consultation documentation; those feed three overlapping activities — brainstorming concepts, validating them with SMEs and validating them with stakeholders — which lead to wireframing and UI design and then to launch, marked in progress, with feedback looping back to the brainstorming stage." width="1006" height="572" loading="lazy" decoding="async">
+        </picture>
+      </div>
+      <figcaption class="cs-cap">The working route from the current-state study through to launch. The dashed return path is the point: validation feeds back into concepts rather than terminating at handoff.</figcaption>
+    </figure>
+
+    <div class="cs-steps">
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">01</p>
+        <h3>Analyse the current system</h3>
+        <p>Study existing workflows and identify where they break.</p>
+      </div>
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">02</p>
+        <h3>Define user journeys</h3>
+        <p>Patient · Admin · Front desk · Phlebotomist · Home collector.</p>
+      </div>
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">03</p>
+        <h3>Brainstorm solutions</h3>
+        <p>Explore directions for each of the key problems.</p>
+      </div>
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">04</p>
+        <h3>Validate concepts</h3>
+        <p>With stakeholders and subject-matter experts before committing.</p>
+      </div>
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">05</p>
+        <h3>Wireframe &amp; design UI</h3>
+        <p>Build the intuitive interfaces on the validated structure.</p>
+      </div>
+      <div class="cs-step cs-reveal">
+        <p class="cs-step-num">06</p>
+        <h3>Test &amp; iterate</h3>
+        <p>Improve on feedback rather than shipping the first version.</p>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="design" aria-labelledby="designHead">
+    <div class="cs-grid">
+      <div class="sp-7">
+        <p class="cs-sec-label cs-reveal">05 — Design evolution</p>
+        <h2 class="cs-h2 cs-reveal" id="designHead">Four phases, and a deliberate refusal to draw screens early.</h2>
+        <p class="cs-lead cs-reveal">The methodology below is the one the project actually ran on. The first half is entirely non-visual — inquiry, research, workflow mapping, documented findings — because the problem here was structural, and a high-fidelity screen drawn before the structure is settled is just an expensive guess.</p>
+      </div>
+    </div>
+
+    <figure class="cs-figure cs-figure-diagram cs-reveal">
+      <div class="cs-pan">
+        <picture>
+          <source srcset="../public/Healthcare/Frame%2029.webp" type="image/webp">
+          <img src="../public/Healthcare/Frame%2029.png" alt="Design methodology: four phases — Discover, Define, Ideation and Implementation — shown as triangles above a timeline of nine steps: contextual inquiry, UX research, mapping user workflow, documenting findings and recommendations, prioritising user journey, exploring through lo-fi designs, creating high-fidelity prototypes, testing and feasibility, and release and monitor impact." width="1402" height="593" loading="lazy" decoding="async">
+        </picture>
+      </div>
+    </figure>
+
+    <div class="cs-notelist">
+      <div class="cs-reveal">
+        <h3>Discover</h3>
+        <p>Contextual inquiry, UX research and mapping the existing user workflow — establishing what the service actually does before proposing what it should do.</p>
+      </div>
+      <div class="cs-reveal">
+        <h3>Define</h3>
+        <p>Documenting findings and recommendations, then prioritising the user journey so the MVP had a defensible scope rather than a wish list.</p>
+      </div>
+      <div class="cs-reveal">
+        <h3>Ideation</h3>
+        <p>Exploring directions through lo-fi designs first, and only then building high-fidelity prototypes — so the cheap explorations absorbed the wrong turns.</p>
+      </div>
+      <div class="cs-reveal">
+        <h3>Implementation</h3>
+        <p>Testing and feasibility with the teams who would run it, then release and monitoring impact. Feasibility sat before release deliberately: this system has to work on the floor.</p>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="solution" aria-labelledby="solutionHead">
+    <div class="cs-grid">
+      <div class="sp-8">
+        <p class="cs-sec-label cs-reveal">06 — Final solution</p>
+        <h2 class="cs-h2 cs-reveal" id="solutionHead">Five interfaces, designed as one system.</h2>
+        <p class="cs-lead cs-reveal">Each product below solves its role's specific problem, but they share one record, one status vocabulary and one component set — which is what turns five apps into an ecosystem.</p>
+      </div>
+    </div>
+
+    
+    <article class="cs-feature">
+      <div class="cs-feature-aside">
+        <p class="cs-feature-num">01</p>
+        <h3>Patient app</h3>
+        <p class="cs-feature-purpose">Booking a test and following it to the report, without phoning anyone.</p>
+        <dl class="cs-notes">
+          <div class="cs-note">
+            <dt>Problem</dt>
+            <dd>A confusing booking flow, no real-time updates, and reports that were hard to access.</dd>
+          </div>
+          <div class="cs-note is-decision">
+            <dt>Design decision</dt>
+            <dd>Reduce booking to a few clear steps, then keep the same test visible afterwards with a live status and its report attached to it.</dd>
+          </div>
+          <div class="cs-note">
+            <dt>Why it works</dt>
+            <dd>The thing the patient booked and the thing they are waiting on are the same object on screen, so there is nothing to go looking for and no reason to call the desk for a status.</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <figure class="cs-figure cs-figure-shot cs-figure-pair cs-reveal">
+          <picture>
+          <source srcset="../public/Healthcare/app1.webp" type="image/webp">
+          <img src="../public/Healthcare/app1.png" alt="Patient app home screen with test search, quick actions and upcoming appointments, beside the doctor listing screen showing availability and booking" width="493" height="650" loading="lazy" decoding="async">
+        </picture>
+          <picture>
+          <source srcset="../public/Healthcare/app2.webp" type="image/webp">
+          <img src="../public/Healthcare/app2.png" alt="Patient app date and time slot selection for a dermatologist appointment, shown on a phone held in one hand" width="477" height="618" loading="lazy" decoding="async">
+        </picture>
+        </figure>
+        <div class="cs-annos">
+          <p class="cs-anno"><b>1</b> Search and quick actions sit above the fold — the two things a returning patient came for.</p>
+          <p class="cs-anno"><b>2</b> Upcoming appointments are on the home screen, not behind a tab, so status needs no navigation.</p>
+          <p class="cs-anno"><b>3</b> Availability is shown at the point of choosing, so the flow has no dead ends.</p>
+          <p class="cs-anno"><b>4</b> Date and slot are one step, sized for one-handed use.</p>
+        </div>
+      </div>
+    </article>
+
+    
+    <article class="cs-feature">
+      <div class="cs-feature-aside">
+        <p class="cs-feature-num">02</p>
+        <h3>Front desk dashboard</h3>
+        <p class="cs-feature-purpose">Registering a patient and managing their tests from a single screen.</p>
+        <dl class="cs-notes">
+          <div class="cs-note">
+            <dt>Problem</dt>
+            <dd>A confusing, outdated workflow where simple tasks took multiple steps and patient handling was slow and error-prone.</dd>
+          </div>
+          <div class="cs-note is-decision">
+            <dt>Design decision</dt>
+            <dd>Make registration a quick single path, and bring test and appointment management onto the same surface as the patient record.</dd>
+          </div>
+          <div class="cs-note">
+            <dt>Why it works</dt>
+            <dd>The desk serves a queue, so its cost is measured in steps per patient. Removing the navigation between systems removes both the wait and the re-entry that caused the errors.</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <figure class="cs-figure cs-figure-shot cs-reveal">
+      <div class="cs-pan">
+        <picture>
+          <source srcset="../public/Healthcare/Frame%201000005296.webp" type="image/webp">
+          <img src="../public/Healthcare/Frame%201000005296.png" alt="The redesigned front desk executive portal, showing patient records alongside booking and test management" width="1016" height="539" loading="lazy" decoding="async">
+        </picture>
+      </div>
+        </figure>
+        <div class="cs-annos">
+          <p class="cs-anno"><b>1</b> Patient record and booking actions occupy one view — no context switch mid-task.</p>
+          <p class="cs-anno"><b>2</b> Test and appointment management sit where the record already is.</p>
+          <p class="cs-anno"><b>3</b> Dense table layout, because this is an operational tool used all day and scanning beats scrolling.</p>
+        </div>
+      </div>
+    </article>
+
+    
+    <article class="cs-feature">
+      <div class="cs-feature-aside">
+        <p class="cs-feature-num">03</p>
+        <h3>Admin dashboard</h3>
+        <p class="cs-feature-purpose">One place to run staff, reports, users and operations.</p>
+        <dl class="cs-notes">
+          <div class="cs-note">
+            <dt>Problem</dt>
+            <dd>No centralised control. Managing staff, reports and day-to-day operations meant working across disconnected places.</dd>
+          </div>
+          <div class="cs-note is-decision">
+            <dt>Design decision</dt>
+            <dd>Give the administrator complete system control in one surface — users, reports and analytics together rather than as separate destinations.</dd>
+          </div>
+          <div class="cs-note">
+            <dt>Why it works</dt>
+            <dd>An administrator's job is comparison: this team against that one, today against last week. Analytics next to the records they summarise is what makes a decision possible without exporting anything.</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <figure class="cs-figure cs-figure-shot cs-reveal">
+      <div class="cs-pan">
+        <picture>
+          <source srcset="../public/Healthcare/Frame%201000005302.webp" type="image/webp">
+          <img src="../public/Healthcare/Frame%201000005302.png" alt="The redesigned admin dashboard, with centralised control over users, reports and analytics" width="1016" height="539" loading="lazy" decoding="async">
+        </picture>
+      </div>
+        </figure>
+        <div class="cs-annos">
+          <p class="cs-anno"><b>1</b> Overview metrics lead, so the state of the operation is the first thing read.</p>
+          <p class="cs-anno"><b>2</b> User and staff management is a peer of reporting, not a settings page.</p>
+          <p class="cs-anno"><b>3</b> Charts sit beside the underlying records they summarise.</p>
+        </div>
+      </div>
+    </article>
+
+    
+    <article class="cs-feature">
+      <div class="cs-feature-aside">
+        <p class="cs-feature-num">04</p>
+        <h3>Home collector app</h3>
+        <p class="cs-feature-purpose">Knowing what to collect, where, in what order — on a phone, in the field.</p>
+        <dl class="cs-notes">
+          <div class="cs-note">
+            <dt>Problem</dt>
+            <dd>No proper task tracking, inefficient routing and scheduling, and communication gaps back to the rest of the team.</dd>
+          </div>
+          <div class="cs-note is-decision">
+            <dt>Design decision</dt>
+            <dd>Assign tasks explicitly, with the visit details attached, and give the day an optimised order rather than a list to interpret.</dd>
+          </div>
+          <div class="cs-note">
+            <dt>Why it works</dt>
+            <dd>This is the only role using the system while moving, one-handed, often outdoors. A task that already knows its own address, patient and sample removes every decision that would otherwise need a phone call.</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <figure class="cs-figure cs-figure-shot cs-reveal">
+      <div class="cs-pan">
+        <picture>
+          <source srcset="../public/Healthcare/Frame%201000005307.webp" type="image/webp">
+          <img src="../public/Healthcare/Frame%201000005307.png" alt="Home collector app screens showing assigned tasks with visit details and an optimised collection route" width="1016" height="650" loading="lazy" decoding="async">
+        </picture>
+      </div>
+        </figure>
+        <div class="cs-annos">
+          <p class="cs-anno"><b>1</b> Assigned tasks carry their own details — no cross-referencing another system.</p>
+          <p class="cs-anno"><b>2</b> The visit order is given, not derived by the collector.</p>
+          <p class="cs-anno"><b>3</b> Status updates flow back into the same records the desk and admin read.</p>
+        </div>
+      </div>
+    </article>
+
+    
+    <article class="cs-feature">
+      <div class="cs-feature-aside">
+        <p class="cs-feature-num">05</p>
+        <h3>Website</h3>
+        <p class="cs-feature-purpose">The public front door: finding a test and booking it, and trusting the place you're booking with.</p>
+        <dl class="cs-notes">
+          <div class="cs-note">
+            <dt>Problem</dt>
+            <dd>An outdated interface with poor navigation, which cost the service both engagement and credibility.</dd>
+          </div>
+          <div class="cs-note is-decision">
+            <dt>Design decision</dt>
+            <dd>Rebuild around test discovery and booking as the primary path, in a clean, current visual language shared with the rest of the system.</dd>
+          </div>
+          <div class="cs-note">
+            <dt>Why it works</dt>
+            <dd>In healthcare the interface is part of the credibility judgement. A site that looks maintained and gets a first-time visitor to the thing they came for is doing trust work and conversion work with the same move.</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <figure class="cs-figure cs-figure-shot cs-reveal">
+      <div class="cs-pan">
+        <picture>
+          <source srcset="../public/Healthcare/Frame%201000005311.webp" type="image/webp">
+          <img src="../public/Healthcare/Frame%201000005311.png" alt="The redesigned clinic website, with clearer navigation and a direct path to test discovery and booking" width="1016" height="650" loading="lazy" decoding="async">
+        </picture>
+      </div>
+        </figure>
+        <div class="cs-annos">
+          <p class="cs-anno"><b>1</b> Test discovery and booking is the primary path, not a secondary link.</p>
+          <p class="cs-anno"><b>2</b> Navigation is reduced to the destinations a first-time visitor actually needs.</p>
+          <p class="cs-anno"><b>3</b> The same components and colour system as the internal tools, so the brand holds across the whole journey.</p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="responsive" aria-labelledby="responsiveHead">
+    <div class="cs-grid">
+      <div class="sp-8">
+        <p class="cs-sec-label cs-reveal">07 — Responsive experience</p>
+        <h2 class="cs-h2 cs-reveal" id="responsiveHead">One system, three postures.</h2>
+        <p class="cs-lead cs-reveal">Screen size here is a proxy for the work being done. The desk and the administrator sit down with the whole operation in front of them; the collector is standing in a doorway with one hand free. The same records, the same status vocabulary — a different amount of it, chosen deliberately rather than by breakpoint.</p>
+      </div>
+    </div>
+
+    <div class="cs-tiers">
+      <div class="cs-tier cs-reveal">
+        <div class="cs-tier-head">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 21h7M12 17v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <h3>Desktop</h3>
+          <span>Front desk · Admin</span>
+        </div>
+        <dl>
+          <div>
+            <dt>What it carries</dt>
+            <dd>Information-dense operational workflow: records, tables, analytics and management side by side.</dd>
+          </div>
+          <div>
+            <dt>What stays</dt>
+            <dd>The full record and every status.</dd>
+          </div>
+          <div>
+            <dt>Why</dt>
+            <dd>These roles compare and cross-reference all day. Density is the feature — hiding data behind navigation would cost them steps per patient.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="cs-tier cs-reveal">
+        <div class="cs-tier-head">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5.5" y="2.5" width="13" height="19" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 18.6h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <h3>Tablet</h3>
+          <span>Shared floor use</span>
+        </div>
+        <dl>
+          <div>
+            <dt>What it carries</dt>
+            <dd>The same workflow with the supporting columns folded away — the primary task keeps the full width.</dd>
+          </div>
+          <div>
+            <dt>What changes</dt>
+            <dd>Side panels stack under the main view; touch targets grow to finger size.</dd>
+          </div>
+          <div>
+            <dt>Why</dt>
+            <dd>A tablet on the floor is used standing and at arm's length. Reach and target size become the constraint, not screen area.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="cs-tier cs-reveal">
+        <div class="cs-tier-head">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.8 18.6h2.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <h3>Mobile</h3>
+          <span>Patient · Home collector</span>
+        </div>
+        <dl>
+          <div>
+            <dt>What it carries</dt>
+            <dd>A focused, task-based experience: one test with its status, or one visit with its details.</dd>
+          </div>
+          <div>
+            <dt>What changes</dt>
+            <dd>Everything not needed for the current task is removed rather than collapsed.</dd>
+          </div>
+          <div>
+            <dt>Why</dt>
+            <dd>Both roles are mobile by nature — a patient checking in passing, a collector between visits. Neither is browsing, so a scaled-down dashboard would be the wrong answer even if it fitted.</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    
+    <div class="cs-grid" style="margin-top:clamp(56px,6vw,88px)">
+      <div class="sp-8">
+        <h3 class="cs-h3 cs-reveal">System &amp; accessibility decisions</h3>
+      </div>
+    </div>
+
+    <div class="cs-notelist">
+      <div class="cs-reveal">
+        <h3>A shared component set</h3>
+        <p>Tables, cards, form fields, navigation and status indicators are defined once and reused across all five products, so a pattern a front desk executive learns transfers to the admin dashboard unchanged.</p>
+      </div>
+      <div class="cs-reveal">
+        <h3>Status is never colour alone</h3>
+        <p>Every state carries a label as well as a colour. In a diagnostic workflow a misread status has clinical consequences, and roughly one in twelve men cannot separate the usual red/green pairing.</p>
+      </div>
+      <div class="cs-reveal">
+        <h3>Built to scale</h3>
+        <p>The system was designed to absorb new test types, roles and screens without re-authoring — which is what let five products ship against one visual language rather than five.</p>
+      </div>
+      <div class="cs-reveal">
+        <h3>Sized for real conditions</h3>
+        <p>Touch targets on the collector and patient apps are sized for one-handed outdoor use; the desk and admin tools favour scanning density for seated, all-day work. Typography and contrast follow the same split.</p>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="cs-sec cs-shell" id="outcome" aria-labelledby="outcomeHead">
+    <div class="cs-outcome cs-reveal">
+      <p class="cs-sec-label">08 — The outcome</p>
+      <h2 id="outcomeHead">Boosts patient satisfaction and cuts documentation workload.</h2>
+
+      <ol class="cs-outcome-list">
+        <li>
+          <span>01</span>
+          <p>A unified ecosystem serving all five kinds of user from one connected system.</p>
+        </li>
+        <li>
+          <span>02</span>
+          <p>Reduced manual work and the errors that came with re-entering the same data.</p>
+        </li>
+        <li>
+          <span>03</span>
+          <p>An improved patient experience, with a test that can be followed from booking to report.</p>
+        </li>
+        <li>
+          <span>04</span>
+          <p>A scalable design system that holds across web and mobile as the service grows.</p>
+        </li>
+      </ol>
+    </div>
+
+    <div class="cs-grid cs-learned">
+      <div class="sp-5">
+        <p class="cs-sec-label cs-reveal">What I learned</p>
+      </div>
+      <div class="sp-7">
+        <p class="cs-learned-quote cs-reveal">Designing for healthcare taught me that reducing complexity isn't about removing information — it's about delivering the right information, at the right time, to the right person.</p>
+        <p class="cs-p cs-reveal" style="margin-top:24px">The hardest part of this project was not any single interface. It was resisting the urge to design screens before the workflow underneath them was settled, when five different roles each had a confident opinion about what their screen should show.</p>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="cs-shell cs-end" id="connect" aria-labelledby="endHead">
+    <div>
+      <h2 id="endHead" class="cs-reveal">Thank you for reading.</h2>
+      <p class="cs-reveal">Interested in the thinking behind this project? I'd be glad to walk through it.</p>
+    </div>
+    <div class="cs-end-actions cs-reveal">
+      <a class="btn btn-primary" href="../index.html#work">
+        <span>Back to all work</span>
+        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn-outline" href="yoga_case_study.html">
+        <span>Next: YogaEase — Yoga All-in-One</span>
+        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="cs-shell foot-in">
+    <div><h2>let’s <em>talk</em></h2><p>Open to full-time product design roles. Happy to walk through this project, or any of the others.</p></div>
+    <div class="acts">
+      <a class="btn btn-primary" href="mailto:dasrakhi303@gmail.com">dasrakhi303@gmail.com <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <a class="btn btn-outline" href="../assets/Rakhi_Das_UIUX_Designer_Resume.pdf" download>Download résumé</a>
+    </div>
+  </div>
+  <div class="cs-shell foot-line"><span>© 2026 Rakhi Das</span><span><a href="https://www.linkedin.com/in/rakhi-das-183381158/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://www.behance.net/rakhidas1" target="_blank" rel="noopener">Behance ↗</a></span></div>
+</footer>
+<script src="case.js"></script>
+</body>
+</html>
