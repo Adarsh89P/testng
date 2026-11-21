@@ -21,6 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600&display=swap">
 <link rel="stylesheet" href="assets/home.css">
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <a class="skip" href="#work">Skip to work</a>
@@ -41,76 +42,147 @@
   </section>
 
   <div class="wrap">
-    <h2 class="label" id="work"><span>Case study</span></h2>
+    <h2 class="label" id="work"><span>Selected work</span></h2>
+    <div class="work-head reveal">
+      <p class="work-title">Five products, from <em>diagnostics</em> to <em>digital banking</em>.</p>
+      <div class="filters" role="group" aria-label="Filter projects by industry">
+        <button type="button" class="on" data-f="all" aria-pressed="true">All <i>5</i></button>
+        <button type="button" data-f="health" aria-pressed="false">Health &amp; wellness <i>2</i></button>
+        <button type="button" data-f="mobility" aria-pressed="false">Mobility <i>1</i></button>
+        <button type="button" data-f="fintech" aria-pressed="false">Fintech <i>1</i></button>
+        <button type="button" data-f="market" aria-pressed="false">Marketplace <i>1</i></button>
+      </div>
+    </div>
+    <p class="sr" id="filterStatus" role="status" aria-live="polite"></p>
 
-    <div class="grid">
-      <article class="card wide">
-        <div class="txt">
-          <div class="eyebrow">Healthcare · Case study</div>
+    <div class="projects">
+      <article class="proj reveal feature" data-cat="health">
+        <a class="proj-link" href="case-studies/healthcare_case_study.html" aria-label="Five products, one diagnostic system. — read the case study"></a>
+        <div class="proj-txt">
+          <div class="proj-meta"><span class="num">01</span><span class="chip">Healthcare</span><span class="read">10 min read</span></div>
           <h3>Five products, one diagnostic system.</h3>
-          <p>Patient app, doctor tools, website and admin dashboard for a diagnostics chain — four user types, one connected booking-to-report flow.</p>
-          <ul class="tags"><li>Web app</li><li>Mobile</li><li>Dashboard</li><li>Mar–Jul 2025</li></ul>
-          <a class="btn" href="case-studies/healthcare_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <p>Patient app, front-desk and admin dashboards, a home-collector app and the website for a diagnostics chain — four user types on one connected booking-to-report flow.</p>
+          <dl class="proj-facts"><div><dt>My role</dt><dd>Sole designer · Research, UX, UI, prototyping</dd></div><div><dt>When</dt><dd>Mar – Jul 2025</dd></div></dl>
+          <span class="proj-cta">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
         </div>
-        <div class="shot">
-          <div class="browser"><div class="bar"><i></i><i></i><i></i><span>clinic.dashboard / bookings</span></div>
-            <img src="assets/hc-dash.webp" alt="Healthcare admin dashboard showing a bookings table with payment statuses" width="1400" height="672" loading="lazy"></div>
-        </div>
+        <div class="proj-media" data-tilt><div class="stage">
+            <div class="browser layer" data-depth="0.4"><div class="bar"><i></i><i></i><i></i><span>clinic.dashboard / bookings</span></div><img src="assets/hc-dash.webp" alt="" width="1400" height="672" loading="lazy"></div>
+            <img class="layer l-card" data-depth="1" src="assets/hc-card.webp" alt="" width="700" height="750" loading="lazy">
+            <img class="layer l-phones" data-depth="1.6" src="assets/hc-phone.webp" alt="" width="600" height="467" loading="lazy">
+            <span class="sr">Healthcare bookings dashboard, a patient record card and the patient app on three phones</span>
+          </div></div>
       </article>
-
-      <article class="card">
-        <div class="txt">
-          <div class="eyebrow">Wellness · Case study</div>
+      <article class="proj reveal " data-cat="health">
+        <a class="proj-link" href="case-studies/yoga_case_study.html" aria-label="Five wellness apps, folded into one. — read the case study"></a>
+        <div class="proj-txt">
+          <div class="proj-meta"><span class="num">02</span><span class="chip">Wellness</span><span class="read">3 min read</span></div>
           <h3>Five wellness apps, folded into one.</h3>
-          <p>Timetable, video library, meditation, recipes and shop in a single yoga app — with a four-screen onboarding into guided sessions and progress tracking.</p>
-          <ul class="tags"><li>iOS · Android</li><li>Jan–Nov 2024</li></ul>
-          <a class="btn" href="case-studies/yoga_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <p>Timetable, video library, meditation, recipes and shop in a single yoga app, with a four-screen onboarding into guided sessions and progress tracking.</p>
+          <dl class="proj-facts"><div><dt>My role</dt><dd>Research, IA, UI, prototyping</dd></div><div><dt>When</dt><dd>Jan – Nov 2024</dd></div></dl>
+          <span class="proj-cta">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
         </div>
-        <div class="photo"><img src="assets/yoga.webp" alt="Yoga app screens on two phones beside a woman meditating" width="1600" height="706" loading="lazy"></div>
+        <div class="proj-media" data-tilt><img src="assets/yoga.webp" alt="Yoga app screens on two phones beside a woman meditating" width="1600" height="706" loading="lazy"></div>
       </article>
-
-      <article class="card">
-        <div class="txt">
-          <div class="eyebrow">Mobility · Case study</div>
+      <article class="proj reveal " data-cat="mobility">
+        <a class="proj-link" href="case-studies/malta_taxi_case_study.html" aria-label="A taxi app you can finish at the kerb. — read the case study"></a>
+        <div class="proj-txt">
+          <div class="proj-meta"><span class="num">03</span><span class="chip">Mobility</span><span class="read">4 min read</span></div>
           <h3>A taxi app you can finish at the kerb.</h3>
           <p>Booking for Malta, where most riders are tourists: the fare up front, a live map of nearby taxis, and a flow short enough to complete on the street.</p>
-          <ul class="tags"><li>Mobile</li><li>Jan–Jul 2024</li></ul>
-          <a class="btn" href="case-studies/malta_taxi_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <dl class="proj-facts"><div><dt>My role</dt><dd>UI/UX design for iOS &amp; Android</dd></div><div><dt>When</dt><dd>Jan – Jul 2024</dd></div></dl>
+          <span class="proj-cta">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
         </div>
-        <div class="photo"><img src="assets/malta.webp" alt="Malta Taxi app splash and map screens on two phones" width="629" height="580" loading="lazy" style="aspect-ratio:629/500;object-position:50% 30%"></div>
+        <div class="proj-media" data-tilt><img src="assets/malta.webp" alt="Malta Taxi app splash and map screens on two phones" width="629" height="580" loading="lazy"></div>
       </article>
-
-      <article class="card">
-        <div class="txt">
-          <div class="eyebrow">Fintech · Case study</div>
+      <article class="proj reveal " data-cat="fintech">
+        <a class="proj-link" href="case-studies/banking_case_study.html" aria-label="Onboarding into a bank in three screens. — read the case study"></a>
+        <div class="proj-txt">
+          <div class="proj-meta"><span class="num">04</span><span class="chip">Fintech</span><span class="read">3 min read</span></div>
           <h3>Onboarding into a bank in three screens.</h3>
           <p>QIIB’s mobile banking welcome, opening onto accounts, partner services, an ATM locator and a live currency converter.</p>
-          <ul class="tags"><li>Mobile</li><li>Nov 2025</li></ul>
-          <a class="btn" href="case-studies/banking_case_study.html">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <dl class="proj-facts"><div><dt>My role</dt><dd>Research, UX/UI, design system</dd></div><div><dt>When</dt><dd>Nov 2025</dd></div></dl>
+          <span class="proj-cta">Read case study <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
         </div>
-        <div class="photo"><img src="assets/banking.webp" alt="QIIB banking app home screen held in a hand" width="629" height="580" loading="lazy" style="aspect-ratio:629/500;object-position:50% 30%"></div>
+        <div class="proj-media" data-tilt><img src="assets/banking.webp" alt="QIIB banking app home screen held in a hand" width="629" height="580" loading="lazy"></div>
       </article>
-
-      <article class="card">
-        <div class="txt">
-          <div class="eyebrow">Marketplace · Presentation deck</div>
-          <h3>Where brands and creators actually close the deal.</h3>
-          <p>Discovery, messaging, payments and campaign tracking for influencer–brand collaborations, in one platform.</p>
-          <ul class="tags"><li>Web app</li><li>Jan–Sep 2023</li></ul>
-          <a class="btn" href="https://www.figma.com/deck/7Z5C9KMnP7e2YqW3y3xLEM/Cheeky?node-id=2-1411&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1" target="_blank" rel="noopener">View deck <span class="ext">↗</span></a>
+      <article class="proj reveal " data-cat="market">
+        <a class="proj-link" href="https://www.figma.com/deck/7Z5C9KMnP7e2YqW3y3xLEM/Cheeky?node-id=2-1411&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1" target="_blank" rel="noopener" aria-label="Where brands and creators close the deal. — view the deck"></a>
+        <div class="proj-txt">
+          <div class="proj-meta"><span class="num">05</span><span class="chip">Marketplace</span><span class="read">Figma deck</span></div>
+          <h3>Where brands and creators close the deal.</h3>
+          <p>Discovery, messaging, payments and campaign tracking for influencer–brand collaborations, in one web platform.</p>
+          <dl class="proj-facts"><div><dt>My role</dt><dd>Product design</dd></div><div><dt>When</dt><dd>Jan – Sep 2023</dd></div></dl>
+          <span class="proj-cta">View deck <span class="ext">↗</span></span>
         </div>
-        <div class="photo"><img src="assets/influencer.webp" alt="Cheeky influencer platform dashboard, listings and chat screens" width="1032" height="580" loading="lazy" style="aspect-ratio:1032/600"></div>
+        <div class="proj-media" data-tilt><img src="assets/influencer.webp" alt="Cheeky influencer platform dashboard, listings and chat screens" width="1032" height="580" loading="lazy"></div>
       </article>
     </div>
 
-    <div class="more"><a class="btn" href="https://www.behance.net/rakhidas1" target="_blank" rel="noopener">More work on Behance <span class="ext">↗</span></a></div>
+    <div class="more reveal"><a class="btn" href="https://www.behance.net/rakhidas1" target="_blank" rel="noopener">More work on Behance <span class="ext">↗</span></a></div>
 
     <h2 class="label" id="experience"><span>Experience</span></h2>
-    <div class="xp">
-      <div class="row"><span class="logo"><img src="assets/logo-sundew.webp" alt=""></span><div><h3>Associate UI/UX Designer <span class="now">Now</span></h3><div class="co">Sundew Solutions</div><p>Research-led product experiences for a fast-moving startup, from first interview to shipped interface.</p></div><time>Dec 2024 – Present</time></div>
-      <div class="row"><span class="logo"><img src="assets/logo-fortmindz.webp" alt=""></span><div><h3>Associate UI/UX Designer</h3><div class="co">Fortmindz Pvt. Ltd.</div><p>Owned interface design for web and mobile products, backed by a reusable component library.</p></div><time>Jun 2023 – Dec 2024</time></div>
-      <div class="row"><span class="logo" aria-hidden="true">P</span><div><h3>Junior UI/UX Designer</h3><div class="co">Pixel Consultancy</div><p>Turned client briefs into interactive prototypes that made design decisions easy to review.</p></div><time>Nov 2022 – Jun 2023</time></div>
-      <div class="row"><span class="logo"><img src="assets/logo-granicus.webp" alt=""></span><div><h3>Jr. Implementation Associate</h3><div class="co">Logic ’n’ Color (Granicus)</div><p>Client-facing implementation work that became the foundation for a move into UX design.</p></div><time>Oct 2020 – Jul 2022</time></div>
+    <div class="xp-head reveal">
+      <p class="xp-title">Six years in tech, <em>four in product design.</em></p>
+      <dl class="stats">
+        <div><dt>Years in tech</dt><dd><b data-count="6">6</b>+</dd></div>
+        <div><dt>Years designing</dt><dd><b data-count="4">4</b></dd></div>
+        <div><dt>Companies</dt><dd><b data-count="4">4</b></dd></div>
+        <div><dt>Projects here</dt><dd><b data-count="5">5</b></dd></div>
+      </dl>
+    </div>
+
+    <div class="career reveal">
+      <div class="axis" aria-hidden="true"><span style="--x:0">2020</span><span style="--x:1">2021</span><span style="--x:2">2022</span><span style="--x:3">2023</span><span style="--x:4">2024</span><span style="--x:5">2025</span><span style="--x:6">2026</span></div>
+      <div class="lanes" role="tablist" aria-label="Roles over time">
+        <button role="tab" id="t-sundew" aria-controls="p-sundew" aria-selected="true" class="bar lv4" data-from="2024.92" data-to="now"><span>Sundew</span></button>
+        <button role="tab" id="t-fortmindz" aria-controls="p-fortmindz" aria-selected="false" tabindex="-1" class="bar lv3" data-from="2023.42" data-to="2024.92"><span>Fortmindz</span></button>
+        <button role="tab" id="t-pixel" aria-controls="p-pixel" aria-selected="false" tabindex="-1" class="bar lv2" data-from="2022.83" data-to="2023.42"><span>Pixel</span></button>
+        <button role="tab" id="t-granicus" aria-controls="p-granicus" aria-selected="false" tabindex="-1" class="bar lv1" data-from="2020.75" data-to="2022.5"><span class="full">Logic ’n’ Color</span><span class="short" aria-hidden="true">LnC</span></button>
+      </div>
+      <section class="panel" role="tabpanel" id="p-sundew" aria-labelledby="t-sundew">
+        <div class="panel-main">
+          <span class="logo"><img src="assets/logo-sundew.webp" alt=""></span>
+          <div>
+            <h3>Associate UI/UX Designer <span class="now">Now</span></h3>
+            <p class="co">Sundew Solutions · <time>Dec 2024 – Present</time> · <span class="dur" data-from="2024-12" data-to="now"></span></p>
+            <p class="desc">Research-led product experiences for a fast-moving startup, from first interview to shipped interface.</p>
+          </div>
+        </div>
+        <div class="panel-work"><p class="pw-label">Work from this period</p><a href="case-studies/healthcare_case_study.html">Healthcare platform <span>Mar–Jul 2025</span></a><a href="case-studies/banking_case_study.html">QIIB banking onboarding <span>Nov 2025</span></a></div>
+      </section>
+      <section class="panel" role="tabpanel" id="p-fortmindz" aria-labelledby="t-fortmindz" hidden>
+        <div class="panel-main">
+          <span class="logo"><img src="assets/logo-fortmindz.webp" alt=""></span>
+          <div>
+            <h3>Associate UI/UX Designer</h3>
+            <p class="co">Fortmindz Pvt. Ltd. · <time>Jun 2023 – Dec 2024</time> · <span class="dur" data-from="2023-06" data-to="2024-12"></span></p>
+            <p class="desc">Owned interface design for web and mobile products, backed by a reusable component library.</p>
+          </div>
+        </div>
+        <div class="panel-work"><p class="pw-label">Work from this period</p><a href="case-studies/yoga_case_study.html">YogaEase wellness app <span>2024</span></a><a href="case-studies/malta_taxi_case_study.html">Malta Taxi <span>Jan–Jul 2024</span></a></div>
+      </section>
+      <section class="panel" role="tabpanel" id="p-pixel" aria-labelledby="t-pixel" hidden>
+        <div class="panel-main">
+          <span class="logo"><span aria-hidden="true">P</span></span>
+          <div>
+            <h3>Junior UI/UX Designer</h3>
+            <p class="co">Pixel Consultancy · <time>Nov 2022 – Jun 2023</time> · <span class="dur" data-from="2022-11" data-to="2023-06"></span></p>
+            <p class="desc">Turned client briefs into interactive prototypes that made design decisions easy to review.</p>
+          </div>
+        </div>
+        <div class="panel-work"><p class="pw-label">Work from this period</p><a href="https://www.figma.com/deck/7Z5C9KMnP7e2YqW3y3xLEM/Cheeky?node-id=2-1411&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1">Influencer marketing platform <span>Jan–Sep 2023</span></a></div>
+      </section>
+      <section class="panel" role="tabpanel" id="p-granicus" aria-labelledby="t-granicus" hidden>
+        <div class="panel-main">
+          <span class="logo"><img src="assets/logo-granicus.webp" alt=""></span>
+          <div>
+            <h3>Jr. Implementation Associate</h3>
+            <p class="co">Logic ’n’ Color (Granicus) · <time>Oct 2020 – Jul 2022</time> · <span class="dur" data-from="2020-10" data-to="2022-07"></span></p>
+            <p class="desc">Client-facing implementation work that became the foundation for a move into UX design.</p>
+          </div>
+        </div>
+        <div class="panel-work"><p class="pw-label">Work from this period</p><p class="none">The groundwork: client implementation before moving into UX design.</p></div>
+      </section>
     </div>
 
     <h2 class="label" id="gallery"><span>Off the canvas</span></h2>

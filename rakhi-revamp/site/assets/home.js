@@ -507,6 +507,92 @@
     links.forEach((a, k) => a.classList.toggle('on', k === i));
   }, {passive: true});
 
+  // ---------------------------------------------------------------- projects: filters
+  const projs = [...document.querySelectorAll('.proj')], status = document.getElementById('filterStatus');
+  document.querySelectorAll('.filters button').forEach(btn => btn.addEventListener('click', () => {
+    const f = btn.dataset.f;
+    document.querySelectorAll('.filters button').forEach(b => { const on = b === btn; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    let n = 0;
+    projs.forEach(pr => { const show = f === 'all' || pr.dataset.cat === f; pr.classList.toggle('hide', !show); if (show) { n++; pr.classList.remove('in'); requestAnimationFrame(() => pr.classList.add('in')); } });
+    if (status) status.textContent = `Showing ${n} project${n === 1 ? '' : 's'}`;
+  }));
+
+  // ---------------------------------------------------------------- projects: tilt, parallax, cursor bubble
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (fine && !reduce) {
+    const bubble = document.createElement('div'); bubble.className = 'cursor'; bubble.setAttribute('aria-hidden', 'true'); document.body.appendChild(bubble);
+    let bx = 0, by = 0, tx = 0, ty = 0, bubbleRaf = 0;
+    const follow = () => { bx += (tx - bx) * .22; by += (ty - by) * .22; bubble.style.left = bx + 'px'; bubble.style.top = by + 'px';
+      if (Math.abs(tx - bx) + Math.abs(ty - by) > .5) bubbleRaf = requestAnimationFrame(follow); else bubbleRaf = 0; };
+    projs.forEach(pr => {
+      const media = pr.querySelector('[data-tilt]'), img = media.querySelector('.stage') || media.querySelector('img');
+      const layers = [...media.querySelectorAll('.layer')];
+      layers.forEach(l => l.style.setProperty('--d', l.dataset.depth || 1));
+      pr.addEventListener('pointerenter', e => {
+        bubble.innerHTML = pr.querySelector('.proj-cta').innerHTML; bubble.classList.add('on');
+        bx = tx = e.clientX; by = ty = e.clientY; follow();
+      });
+      pr.addEventListener('pointermove', e => {
+        tx = e.clientX; ty = e.clientY; if (!bubbleRaf) bubbleRaf = requestAnimationFrame(follow);
+        const r = media.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width - .5, ny = (e.clientY - r.top) / r.height - .5;
+        img.style.setProperty('--ry', (nx * 7).toFixed(2) + 'deg'); img.style.setProperty('--rx', (-ny * 6).toFixed(2) + 'deg');
+        layers.forEach(l => { l.style.setProperty('--px', (nx * -14).toFixed(1)); l.style.setProperty('--py', (ny * -10).toFixed(1)); });
+      });
+      pr.addEventListener('pointerleave', () => {
+        bubble.classList.remove('on');
+        img.style.setProperty('--rx', '0deg'); img.style.setProperty('--ry', '0deg');
+        layers.forEach(l => { l.style.setProperty('--px', 0); l.style.setProperty('--py', 0); });
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------- experience: timeline bars, tabs, durations
+  const now = new Date(), nowY = now.getFullYear() + now.getMonth() / 12, Y0 = 2020, SPAN = 7;
+  document.querySelectorAll('.bar').forEach(bar => {
+    const from = +bar.dataset.from, to = bar.dataset.to === 'now' ? nowY : +bar.dataset.to;
+    bar.style.setProperty('--l', ((from - Y0) / SPAN * 100).toFixed(2) + '%');
+    bar.style.setProperty('--w', ((to - from) / SPAN * 100).toFixed(2) + '%');
+    if (bar.dataset.to === 'now') bar.classList.add('live');
+  });
+  const ym = v => { const [y, m] = v.split('-').map(Number); return y * 12 + (m - 1); };
+  document.querySelectorAll('.dur').forEach(d => {
+    const a = ym(d.dataset.from), b = d.dataset.to === 'now' ? now.getFullYear() * 12 + now.getMonth() : ym(d.dataset.to);
+    const m = Math.max(1, b - a), y = Math.floor(m / 12), r = m % 12;
+    d.textContent = [y ? `${y} yr${y > 1 ? 's' : ''}` : '', r ? `${r} mo${r > 1 ? 's' : ''}` : ''].filter(Boolean).join(' ');
+  });
+  const tabs = [...document.querySelectorAll('.lanes [role=tab]')];
+  const select = (t, focus) => {
+    tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden = !on; });
+    if (focus) t.focus();
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', e => {
+      const k = {ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1}[e.key];
+      if (k) { e.preventDefault(); select(tabs[(i + k + tabs.length) % tabs.length], true); }
+      if (e.key === 'Home') { e.preventDefault(); select(tabs[0], true); }
+      if (e.key === 'End') { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+    });
+  });
+
+  // ---------------------------------------------------------------- reveal on scroll + count-up stats
+  const countUp = el => {
+    const end = +el.dataset.count; if (reduce) { el.textContent = end; return; }
+    const t0 = performance.now(), step = t => { const k = Math.min(1, (t - t0) / 900); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+    el.textContent = 0; requestAnimationFrame(step);
+  };
+  const toReveal = [...document.querySelectorAll('.reveal')];
+  document.querySelectorAll('.projects .proj').forEach((el, i) => el.style.setProperty('--delay', (i % 2 ? .12 : 0) + 's'));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in'); io.unobserve(e.target);
+      e.target.querySelectorAll('[data-count]').forEach(countUp);
+    }), {rootMargin: '0px 0px -10% 0px'});
+    toReveal.forEach(el => io.observe(el));
+  } else toReveal.forEach(el => el.classList.add('in'));
+
   const q = new URLSearchParams(location.search).get('t');
   if (q !== null && !isNaN(+q)) { hour = +q % 24; live = false; }
   resize(); sync();
