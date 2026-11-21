@@ -41,14 +41,29 @@ a{color:inherit;text-decoration:none}
   background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:center top}
 
 /* ---------- hero scene ---------- */
-.scene{position:relative;height:clamp(340px,52vh,560px);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.scene{position:relative;height:clamp(380px,62vh,660px);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .scene canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .scene .fade{position:absolute;inset:auto 0 0 0;height:46%;pointer-events:none;
   background:linear-gradient(rgba(255,255,255,0) 0%,rgba(255,255,255,.09) 20%,rgba(255,255,255,.3) 40%,rgba(255,255,255,.61) 60%,rgba(255,255,255,.88) 80%,#fff 100%);transition:opacity .6s}
 :root[data-theme="dark"] .scene .fade{background:linear-gradient(rgba(14,15,17,0) 0%,rgba(14,15,17,.09) 20%,rgba(14,15,17,.3) 40%,rgba(14,15,17,.61) 60%,rgba(14,15,17,.88) 80%,#0E0F11 100%)}
-.hint{position:absolute;left:50%;top:18px;transform:translateX(-50%);font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#fff;
-  background:rgba(16,20,27,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 12px;border-radius:999px;pointer-events:none;transition:opacity .5s}
-.hint.gone{opacity:0}
+.note{position:absolute;left:0;top:0;z-index:3;display:flex;align-items:flex-start;gap:2px;font:600 22px/1 Caveat,"Segoe Print",cursive;color:#fff;
+  text-shadow:0 1px 8px rgba(0,0,0,.35);pointer-events:none;white-space:nowrap;transition:opacity .6s;will-change:transform}
+.note svg{width:30px;height:20px;margin-top:10px}
+:root:not([data-theme="dark"]) .note{color:#1b2a44;text-shadow:0 0 6px rgba(255,255,255,.95),0 0 14px rgba(255,255,255,.8)}
+.note.flip{flex-direction:row-reverse}
+.note.flip svg{transform:scaleX(-1)}
+#clickNote{opacity:0}
+#clickNote.show{opacity:1}
+.note.gone,#clickNote.gone{opacity:0}
+.pool{position:absolute;left:50%;top:-40px;width:min(900px,100%);height:340px;transform:translateX(-50%);pointer-events:none;z-index:-1;filter:blur(38px);opacity:.55}
+.pool i{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(var(--pool,255,220,180),.55),rgba(var(--pool,255,220,180),0) 70%);
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.4 -.6'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.4 -.6'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+.pool i:nth-child(1){width:46%;height:90%;left:6%;top:10%;animation:drift 14s ease-in-out infinite alternate}
+.pool i:nth-child(2){width:40%;height:80%;right:4%;top:0;animation:drift 18s ease-in-out infinite alternate-reverse}
+.pool i:nth-child(3){width:34%;height:70%;left:33%;top:30%;background:radial-gradient(circle,rgba(190,150,255,.35),rgba(190,150,255,0) 70%);animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(30px,-18px) scale(1.08)}}
+:root[data-theme="dark"] .pool{opacity:.7}
 
 .intro{position:relative;z-index:2;text-align:center;margin-top:clamp(-150px,-14vh,-90px);padding-bottom:8px}
 .intro h1{font:400 clamp(51px,7.4vw,81px)/.95 var(--serif);letter-spacing:-.02em;display:inline-flex;align-items:center;gap:.22em;flex-wrap:wrap;justify-content:center}
