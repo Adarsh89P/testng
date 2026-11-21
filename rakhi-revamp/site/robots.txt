@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rakhidas25.github.io/rakhi-das-portfolio/sitemap.xml
