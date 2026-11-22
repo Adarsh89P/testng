@@ -142,6 +142,25 @@ ul,ol{list-style:none}
 .pains li b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#F6E3DF;color:#A3321F;font:500 11px/1 var(--mono)}
 :root[data-theme="dark"] .pains li b{background:#3a2420;color:#f0a493}
 
+/* split hero */
+.cs-hero.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px 48px;align-items:center;padding-top:clamp(88px,10vw,120px)}
+.cs-hero.split .cs-hero-title{font-size:clamp(40px,4.8vw,64px)}
+.cs-hero.split .cs-meta{grid-column:1/-1;margin-top:12px}
+.hero-media{border-radius:28px;background:var(--card-bg);box-shadow:var(--card-ring);padding:clamp(14px,2vw,22px);overflow:hidden}
+.hero-media img{width:100%;height:auto;border-radius:16px}
+.hero-media .stack{padding-bottom:6%}
+.hero-media .stack .browser{border-radius:12px}
+.hero-tags{grid-column:1/-1;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px 28px;align-items:start}
+.hero-tags>div{display:contents}
+.hero-tags span{font:500 11px/32px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.flow li{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--ink);color:var(--bg);font:500 13px/1.2 var(--sans)}
+.flow li:not(:last-child)::after{content:"→";margin-left:6px;color:var(--muted);font-weight:400}
+.flow li{position:relative}
+.flow li:not(:last-child){margin-right:22px}
+.flow li:not(:last-child)::after{position:absolute;right:-18px;color:var(--muted)}
+.cs-outcome+.tradeoff{margin-top:14px}
+
 /* skills */
 .skills-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:20px}
 .skills-row>span{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}
@@ -322,6 +341,9 @@ ul,ol{list-style:none}
   .foot-in{grid-template-columns:1fr}
   .foot .acts{justify-content:flex-start}
   .step-tabs{grid-template-columns:1fr 1fr}
+  .cs-hero.split{grid-template-columns:1fr}
+  .hero-tags{grid-template-columns:1fr;gap:6px}
+  .hero-tags span{line-height:1.6}
   .pair{grid-template-columns:1fr;gap:6px}
   .pair .link{height:22px}
   .pair .link svg{transform:rotate(90deg);width:22px}

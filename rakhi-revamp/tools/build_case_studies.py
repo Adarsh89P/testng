@@ -1,6 +1,7 @@
 """Build the four case-study pages from one template.
 
-Edit the CONTENT below and run:  python3 rakhi-revamp/tools/build_case_studies.py
+Edit the CONTENT below (pages show: hero, facts, process titles, skills, problem/solution pairs,
+up to 4 screens with 2 callouts, outcomes and the hard part — aim for a two-minute read) and run:  python3 rakhi-revamp/tools/build_case_studies.py
 Pages are written to rakhi-revamp/site/case-studies/. Keep copy short: each page
 is meant to be read in about three minutes.
 """
@@ -174,7 +175,7 @@ X = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.
 L = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>'
 R = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>'
 FLIP = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 0 1 9.4-3.9M13.5 8a5.5 5.5 0 0 1-9.4 3.9M12 1.8v2.6H9.4M4 14.2v-2.6h2.6"/></svg>'
-SECTIONS = [('glance', 'At a glance'), ('problem', 'Problems → solutions'), ('process', 'Process'), ('insights', 'Insights → decisions'), ('solution', 'The solution'), ('outcome', 'Outcome')]
+SECTIONS = [('overview', 'Overview'), ('problem', 'Problem → solution'), ('screens', 'Key screens'), ('outcome', 'Outcome')]
 
 def img_size(rel):
     from PIL import Image
@@ -195,90 +196,60 @@ def label(i, name): return f'<p class="cs-sec-label">{i:02d} — {name}</p>'
 def render(key):
     c = CONTENT[key]; i = ORDER.index(key); nxt = ORDER[(i + 1) % len(ORDER)]; n = CONTENT[nxt]
     plain_title = re.sub('<[^>]+>', '', c['title'])
-    # hero
+    # hero visual
     if c['hero'] == 'stack':
-        hero = ('<figure class="cs-hero-figure cs-reveal"><div class="stack" role="img" aria-label="The healthcare product suite: the bookings dashboard in a browser, with the patient app on a phone in front">'
+        hero = ('<figure class="hero-media cs-reveal"><div class="stack" role="img" aria-label="The healthcare product suite: the bookings dashboard in a browser, with the patient app on a phone in front">'
                 '<div class="browser"><div class="bar"><i></i><i></i><i></i><span>clinic.dashboard / bookings</span></div>'
                 f'{picture("Healthcare/banner/dash.png", "", eager=True)}</div>'
                 f'{picture("Healthcare/banner/phone-app.png", "", cls="float")}</div></figure>')
     else:
-        hero = f'<figure class="cs-hero-figure cs-reveal">{picture(c["hero"][0], c["hero"][1], eager=True)}</figure>'
+        hero = f'<figure class="hero-media cs-reveal">{picture(c["hero"][0], c["hero"][1], eager=True)}</figure>'
     facts = ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in c['facts'])
-    glance = ''.join(f'<div><dt><i>{j+1}</i>{k}</dt><dd>{v}</dd></div>' for j, (k, v) in enumerate(c['glance']))
+    skills = '<ul class="skills" aria-label="Skills shown">' + ''.join(f'<li>{x}</li>' for x in c['skills'][:5]) + '</ul>'
+    process = '<ol class="flow" aria-label="Process">' + ''.join(f'<li>{t}</li>' for t, _ in c['process']) + '</ol>'
     pairs = '<ol class="pairs">' + ''.join(
         f'<li class="pair cs-reveal" style="--i:{j}"><div class="pr"><small>Problem {j+1:02d}</small><p>{a}</p></div>'
         f'<span class="link" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h36M31 2l6 6-6 6"/></svg></span>'
         f'<div class="sl"><small>Solution</small><p>{b}</p></div></li>' for j, (a, b) in enumerate(c['pairs'])) + '</ol>'
-    skills = '<ul class="skills" aria-label="Skills shown">' + ''.join(f'<li>{x}</li>' for x in c['skills']) + '</ul>'
-    tradeoff = f'<div class="tradeoff cs-reveal"><small>The hard part</small><p>{c["tradeoff"]}</p></div>'
-    steps = c['process']
-    step_tabs = ''.join(f'<button role="tab" id="st-{j}" aria-controls="sp-{j}" aria-selected="{"true" if j == 0 else "false"}"{"" if j == 0 else " tabindex=" + chr(34) + "-1" + chr(34)}><i>STEP {j+1:02d}</i><b>{t}</b></button>' for j, (t, _) in enumerate(steps))
-    step_panels = ''.join(f'<p class="step-panel" role="tabpanel" id="sp-{j}" aria-labelledby="st-{j}"{"" if j == 0 else " hidden"}>{d}</p>' for j, (_, d) in enumerate(steps))
-    flips = ''.join(f'''<div class="flip"><button class="flip-btn" type="button" aria-expanded="false">
-        <span class="face front"><small>Insight {j+1:02d}</small><p>{a}</p><em>What I designed {ARROW}</em></span>
-        <span class="face back"><small>Design decision</small><p>{b}</p><em>{FLIP} Back to the insight</em></span></button></div>''' for j, (a, b) in enumerate(c['insights']))
-    scr = c['screens']
-    g_tabs = ''.join(f'<button role="tab" id="gt-{j}" aria-controls="gp-{j}" aria-selected="{"true" if j == 0 else "false"}"{"" if j == 0 else " tabindex=" + chr(34) + "-1" + chr(34)}><i>{j+1:02d}</i>{t}</button>' for j, (t, *_ ) in enumerate(scr)) if len(scr) > 1 else ''
+    scr = c['screens'][:4]
+    many = len(scr) > 1
+    g_tabs = ''.join(f'<button role="tab" id="gt-{j}" aria-controls="gp-{j}" aria-selected="{"true" if j == 0 else "false"}"{"" if j == 0 else " tabindex=" + chr(34) + "-1" + chr(34)}><i>{j+1:02d}</i>{t}</button>' for j, (t, *_ ) in enumerate(scr)) if many else ''
     g_panels = ''
     for j, (t, sub, rel, alt, calls) in enumerate(scr):
-        role = f' role="tabpanel" id="gp-{j}" aria-labelledby="gt-{j}"' if len(scr) > 1 else ''
+        role = f' role="tabpanel" id="gp-{j}" aria-labelledby="gt-{j}"' if many else ''
         g_panels += (f'<div class="g-panel"{role}{"" if j == 0 else " hidden"}>'
                      f'<button class="zoom" type="button" data-full="../public/{quote(rel)}" aria-label="Enlarge: {html.escape(alt)}">{picture(rel, alt)}</button>'
-                     f'<div><h3>{t}</h3><p class="g-sub">{sub}</p><ol class="callouts">' + ''.join(f'<li>{x}</li>' for x in calls) + '</ol></div></div>')
-    gallery = (f'<div class="gallery"{" data-tabs" if len(scr) > 1 else ""}>' + (f'<div class="g-tabs" role="tablist" aria-label="Screens">{g_tabs}</div>' if g_tabs else '') + g_panels + '</div>')
-    ftitle = f'<h3 class="f-title">{c.get("features_title", "What the app does")}</h3>' if c['features'] else ''
-    feats = ftitle + (f'<ul class="features" style="--n:{len(c["features"])}">' + ''.join(f'<li><b>{a}</b><span>{b}</span></li>' for a, b in c['features']) + '</ul>') if c['features'] else ''
+                     f'<div><h3>{t}</h3><ol class="callouts">' + ''.join(f'<li>{x}</li>' for x in calls[:2]) + '</ol></div></div>')
+    gallery = (f'<div class="gallery"{" data-tabs" if many else ""}>' + (f'<div class="g-tabs" role="tablist" aria-label="Screens">{g_tabs}</div>' if g_tabs else '') + g_panels + '</div>')
     outs = ''.join(f'<li><span>{a}</span><p>{b}</p></li>' for a, b in c['outcomes'])
     note = f'<p class="cs-outcome-note">{c["outcome_note"]}</p>' if c['outcome_note'] else ''
-    learned = (f'<div class="learned cs-reveal"><p class="cs-sec-label">What I learned</p><div><blockquote>{c["learned"][0]}</blockquote>'
-               f'<p>{c["learned"][1]}</p></div></div>') if c['learned'] else ''
     main = f'''<main id="main" class="cs-page">
-  <header class="cs-shell cs-hero">
-    <p class="cs-kicker cs-reveal">{c["kicker"]}</p>
-    <h1 class="cs-hero-title cs-reveal">{c["title"].replace("<em>", '<span class="cs-em">').replace("</em>", "</span>")}</h1>
-    <p class="cs-hero-sub cs-reveal">{c["sub"]}</p>
-    <dl class="cs-meta cs-reveal">{facts}</dl>
-    <div class="cs-reveal skills-row"><span>Skills shown</span>{skills}</div>
-    <div class="cs-hero-actions cs-reveal"><a class="btn btn-primary" href="#solution">See the screens {ARROW}</a><span class="read">{{READ}} min read</span></div>
+  <header class="cs-shell cs-hero split" id="overview">
+    <div class="hero-text">
+      <p class="cs-kicker cs-reveal">{c["kicker"]}</p>
+      <h1 class="cs-hero-title cs-reveal">{c["title"].replace("<em>", '<span class="cs-em">').replace("</em>", "</span>")}</h1>
+      <p class="cs-hero-sub cs-reveal">{c["sub"]}</p>
+      <div class="cs-hero-actions cs-reveal"><a class="btn btn-primary" href="#screens">See the screens {ARROW}</a><span class="read">{{READ}} min read</span></div>
+    </div>
     {hero}
+    <dl class="cs-meta cs-reveal">{facts}</dl>
+    <div class="hero-tags cs-reveal"><div><span>Process</span>{process}</div><div><span>Skills</span>{skills}</div></div>
   </header>
 
-  <section class="cs-sec cs-shell" id="glance" aria-labelledby="h-glance">
-    <div class="cs-reveal">{label(1, "At a glance")}<h2 class="cs-h2" id="h-glance">The project in thirty seconds.</h2></div>
-    <dl class="glance cs-reveal">{glance}</dl>
-  </section>
-
   <section class="cs-sec cs-shell" id="problem" aria-labelledby="h-problem">
-    <div class="cs-reveal">{label(2, "Problems → solutions")}<h2 class="cs-h2" id="h-problem">Problems, and how each was solved.</h2><p class="intro-p">{c["problem"]}</p></div>
+    <div class="cs-reveal">{label(1, "Problem → solution")}<h2 class="cs-h2" id="h-problem">What was broken, and how I fixed it.</h2></div>
     {pairs}
   </section>
 
-  <section class="cs-sec cs-shell" id="process" aria-labelledby="h-process">
-    <div class="cs-reveal">{label(3, "Process")}<h2 class="cs-h2" id="h-process">How the work ran.</h2></div>
-    <div class="stepper cs-reveal" data-tabs style="--n:{len(steps)}">
-      <div class="step-tabs" role="tablist" aria-label="Process steps">{step_tabs}</div>
-      <div class="step-meter" aria-hidden="true"><span></span></div>
-      {step_panels}
-    </div>
-    {tradeoff}
-  </section>
-
-  <section class="cs-sec cs-shell" id="insights" aria-labelledby="h-insights">
-    <div class="cs-reveal">{label(4, "Insights → decisions")}<h2 class="cs-h2" id="h-insights">What I learned, and what it changed.</h2></div>
-    <div class="flips cs-reveal">{flips}</div>
-    <p class="flip-hint cs-reveal">Tap a card to see the design decision.</p>
-  </section>
-
-  <section class="cs-sec cs-shell" id="solution" aria-labelledby="h-solution">
-    <div class="cs-reveal">{label(5, "The solution")}<h2 class="cs-h2" id="h-solution">The key screens.</h2></div>
+  <section class="cs-sec cs-shell" id="screens" aria-labelledby="h-screens">
+    <div class="cs-reveal">{label(2, "Key screens")}<h2 class="cs-h2" id="h-screens">The design.</h2></div>
     <div class="cs-reveal">{gallery}</div>
-    <div class="cs-reveal">{feats}</div>
   </section>
 
   <section class="cs-sec cs-shell" id="outcome" aria-labelledby="h-outcome">
-    <div class="cs-outcome cs-reveal">{label(6, "Outcome")}<h2 id="h-outcome">{c["outcome_title"]}</h2>
+    <div class="cs-outcome cs-reveal">{label(3, "Outcome")}<h2 id="h-outcome">{c["outcome_title"]}</h2>
       <ol class="cs-outcome-list{" is-stats" if c["stats"] else ""}">{outs}</ol>{note}</div>
-    {learned}
+    <div class="tradeoff cs-reveal"><small>The hard part</small><p>{c["tradeoff"]}</p></div>
     <a class="next cs-reveal" href="{nxt}_case_study.html">
       <div><small>Next case study</small><b>{n["title"].replace("<em>", "").replace("</em>", "")}</b><span class="go">Read {n["short"]} {ARROW}</span></div>
       <img src="../assets/og-{nxt}.jpg" alt="" width="1200" height="630" loading="lazy">
@@ -286,7 +257,7 @@ def render(key):
   </section>
 </main>'''
     words = len(html.unescape(re.sub(r'<[^>]+>', ' ', main)).split())
-    main = main.replace('{READ}', str(max(1, round(words / 200))))
+    main = main.replace('{READ}', str(max(1, -(-words // 200))))
     toc = '\n'.join(f'<a href="#{sid}"><i>{j+1:02d}</i>{name}</a>' for j, (sid, name) in enumerate(SECTIONS))
     desc = re.sub('<[^>]+>', '', c['sub'])
     url = f'{BASE}case-studies/{key}_case_study.html'
