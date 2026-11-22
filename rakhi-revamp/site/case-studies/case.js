@@ -40,6 +40,54 @@
   };
   addEventListener('scroll', onScroll, {passive: true}); onScroll();
 
+  // ---- generic tab sets (process stepper + screen gallery)
+  document.querySelectorAll('[data-tabs]').forEach(set => {
+    const tabs = [...set.querySelectorAll('[role=tab]')], meter = set.querySelector('.step-meter span');
+    const pick = (t, focus) => {
+      tabs.forEach((x, i) => {
+        const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+        document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+        if (on && meter) meter.style.setProperty('--p', ((i + 1) / tabs.length * 100) + '%');
+      });
+      if (focus) t.focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => pick(t));
+      t.addEventListener('keydown', e => {
+        const k = {ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1}[e.key];
+        if (k) { e.preventDefault(); pick(tabs[(i + k + tabs.length) % tabs.length], true); }
+        if (e.key === 'Home') { e.preventDefault(); pick(tabs[0], true); }
+        if (e.key === 'End') { e.preventDefault(); pick(tabs[tabs.length - 1], true); }
+      });
+    });
+    if (tabs.length) pick(tabs.find(t => t.getAttribute('aria-selected') === 'true') || tabs[0]);
+  });
+
+  // ---- insight -> decision flip cards
+  document.querySelectorAll('.flip-btn').forEach(b => {
+    const front = b.querySelector('.front'), back = b.querySelector('.back');
+    const set = open => { b.setAttribute('aria-expanded', open); front.setAttribute('aria-hidden', open); back.setAttribute('aria-hidden', !open); };
+    set(false);
+    b.addEventListener('click', () => set(b.getAttribute('aria-expanded') !== 'true'));
+  });
+
+  // ---- zoomable screens in a lightbox
+  const zooms = [...document.querySelectorAll('.zoom')], lb = document.getElementById('lightbox');
+  if (lb && zooms.length) {
+    const img = lb.querySelector('img'), cap = lb.querySelector('p');
+    let cur = 0, opener = null;
+    const show = i => { cur = (i + zooms.length) % zooms.length; const z = zooms[cur], src = z.querySelector('img');
+      img.src = z.dataset.full || src.currentSrc || src.src; img.alt = src.alt; cap.textContent = src.alt; };
+    zooms.forEach((z, i) => z.addEventListener('click', () => { opener = z; show(i); lb.showModal(); }));
+    lb.querySelector('.lb-close').addEventListener('click', () => lb.close());
+    lb.querySelector('.lb-prev').addEventListener('click', () => show(cur - 1));
+    lb.querySelector('.lb-next').addEventListener('click', () => show(cur + 1));
+    lb.addEventListener('click', e => { if (e.target === lb) lb.close(); });
+    lb.addEventListener('keydown', e => { if (e.key === 'ArrowRight') show(cur + 1); if (e.key === 'ArrowLeft') show(cur - 1); });
+    lb.addEventListener('close', () => opener && opener.focus());
+    if (zooms.length < 2) lb.querySelectorAll('.lb-prev,.lb-next').forEach(b => b.hidden = true);
+  }
+
   // ---- reveal on scroll
   const items = document.querySelectorAll('.cs-reveal');
   if (!('IntersectionObserver' in window)) { items.forEach(n => n.classList.add('in')); return; }

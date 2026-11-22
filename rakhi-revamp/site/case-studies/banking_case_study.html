@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>QIIB Mobile Banking Onboarding | Rakhi Das</title>
-<meta name="description" content="UI/UX case study: onboarding for QIIB's mobile banking app, designed on a shared design system.">
+<title>QIIB banking · Case study · Rakhi Das</title>
+<meta name="description" content="A skippable three-screen onboarding into QIIB’s mobile banking app, opening onto accounts, partner services, an ATM locator and a live currency converter.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310141B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='40' fill='%23fff' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/banking_case_study.html">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Rakhi Das">
-<meta property="og:title" content="QIIB Mobile Banking Onboarding | Rakhi Das">
-<meta property="og:description" content="UI/UX case study: onboarding for QIIB's mobile banking app, designed on a shared design system.">
+<meta property="og:title" content="Banking onboarding in three screens. — QIIB banking case study">
+<meta property="og:description" content="A skippable three-screen onboarding into QIIB’s mobile banking app, opening onto accounts, partner services, an ATM locator and a live currency converter.">
 <meta property="og:url" content="https://rakhidas25.github.io/rakhi-das-portfolio/case-studies/banking_case_study.html">
 <meta property="og:image" content="https://rakhidas25.github.io/rakhi-das-portfolio/assets/og-banking.jpg">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="case.css">
-<script>try{var t=localStorage.getItem('rk-theme');var h=new Date().getHours();document.documentElement.dataset.theme=t||(h>=6&&h<18?'light':'dark')}catch(e){}</script>
+<script>try{var t=localStorage.getItem('rk-theme');var h=new Date().getHours();document.documentElement.dataset.theme=t||(h>=6&&h<18?'light':'dark')}catch(e){}document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -29,18 +29,18 @@
 
 <aside class="side" id="side" aria-label="Case study sections">
   <a class="home" href="../index.html#work"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg> Home</a>
-  <p class="side-title">QIIB Mobile Banking Onboarding</p>
-  <p class="side-sub">Banking · UX/UI case study</p>
+  <p class="side-title">QIIB banking</p>
+  <p class="side-sub">Fintech · Product design</p>
   <nav class="toc">
-<a href="#overview"><i>01</i>Overview</a>
-<a href="#challenge"><i>02</i>The challenge</a>
-<a href="#process"><i>03</i>Design process</a>
-<a href="#solution"><i>04</i>The onboarding flow</a>
-<a href="#visual"><i>05</i>Visual language</a>
+<a href="#glance"><i>01</i>At a glance</a>
+<a href="#problem"><i>02</i>The problem</a>
+<a href="#process"><i>03</i>Process</a>
+<a href="#insights"><i>04</i>Insights → decisions</a>
+<a href="#solution"><i>05</i>The solution</a>
 <a href="#outcome"><i>06</i>Outcome</a>
   </nav>
   <div class="side-foot">
-    <a href="healthcare_case_study.html">Next case study →</a>
+    <a href="healthcare_case_study.html">Next: Healthcare platform →</a>
     <a href="mailto:dasrakhi303@gmail.com">dasrakhi303@gmail.com</a>
   </div>
 </aside>
@@ -50,336 +50,70 @@
 <div class="topbar" role="region" aria-label="Display settings"><div class="dn-wrap glass"><button class="dn" id="dn" role="switch" aria-checked="true" aria-label="Day. Switch to night"><span class="stars"></span><span class="knob"></span></button></div></div>
 
 <main id="main" class="cs-page">
-
-  
   <header class="cs-shell cs-hero">
-    <div class="cs-grid">
-      <div class="sp-8">
-        <p class="cs-kicker cs-reveal">Banking · UX/UI case study</p>
-        <h1 class="cs-hero-title cs-reveal">Redefining the <span class="cs-em">digital banking</span> experience.</h1>
-        <p class="cs-hero-sub cs-reveal">Designed for speed, security and simplicity — a three-screen onboarding into QIIB's mobile banking app, opening onto four destinations: accounts, partner services, ATM locator and a live currency converter.</p>
-      </div>
-    </div>
-
-    <dl class="cs-meta cs-reveal">
-      <div>
-        <dt>
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          Client
-        </dt>
-        <dd>QIIB · via Sundew Solutions</dd>
-      </div>
-      <div>
-        <dt>
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          Timeline
-        </dt>
-        <dd>Nov 2025</dd>
-      </div>
-      <div>
-        <dt>
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5.5" y="2.5" width="13" height="19" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 18.6h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          Platform
-        </dt>
-        <dd>Mobile app</dd>
-      </div>
-      <div>
-        <dt>
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6-5.6-1.9 5.6-1.9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-          My contribution
-        </dt>
-        <dd>Research · UX/UI · Design system</dd>
-      </div>
-    </dl>
-
-    <div class="cs-hero-actions cs-reveal">
-      <a class="btn btn-primary" href="#solution">
-        <span>See the final designs</span>
-        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="btn btn-outline" href="https://www.figma.com/deck/H9bCGMIJ1tQf27i2qyglc7/Mobile-Banking-Onboarding?node-id=1-152" target="_blank" rel="noopener" aria-label="View the original deck on Figma (opens in a new tab)">
-        <span>View the deck</span>
-        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
-
-    <figure class="cs-hero-figure cs-reveal">
-      <picture><source srcset="../public/MobileBanking/qiib-devices.webp" type="image/webp"><img src="../public/MobileBanking/qiib-devices.png"
-           alt="Two iPhones showing the QIIB app: the currency converter with a live USD to QAR rate, and the home screen with a QAR 24,000 balance, a Visa card and recent transactions."
-           width="2680" height="2160" fetchpriority="high" decoding="async"></picture>
-    </figure>
+    <p class="cs-kicker cs-reveal">Fintech · Product design</p>
+    <h1 class="cs-hero-title cs-reveal">Banking onboarding in <span class="cs-em">three screens</span>.</h1>
+    <p class="cs-hero-sub cs-reveal">A skippable three-screen onboarding into QIIB’s mobile banking app, opening onto accounts, partner services, an ATM locator and a live currency converter.</p>
+    <dl class="cs-meta cs-reveal"><div><dt>Client</dt><dd>QIIB · via Sundew Solutions</dd></div><div><dt>Timeline</dt><dd>Nov 2025</dd></div><div><dt>Platform</dt><dd>Mobile app</dd></div><div><dt>I did</dt><dd>Research · UX/UI · Design system</dd></div></dl>
+    <div class="cs-hero-actions cs-reveal"><a class="btn btn-primary" href="#solution">See the screens <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><span class="read">2 min read</span></div>
+    <figure class="cs-hero-figure cs-reveal"><picture><source srcset="../public/MobileBanking/qiib-devices.webp" type="image/webp"><img src="../public/MobileBanking/qiib-devices.png" alt="Two iPhones showing the QIIB currency converter with a live USD to QAR rate, and the home screen" width="2680" height="2160" fetchpriority="high" decoding="async"></picture></figure>
   </header>
 
-
-  
-  <section class="cs-sec cs-shell" id="overview" aria-labelledby="overviewHead">
-    <div class="cs-grid">
-      <div class="sp-8">
-        <p class="cs-sec-label cs-reveal">01 — Project overview</p>
-        <h2 class="cs-h2 cs-reveal" id="overviewHead">A mobile banking app redefined for speed, security and simplicity.</h2>
-        <p class="cs-lead cs-reveal"><strong>QIIB</strong> — Qatar International Islamic Bank — needed its mobile banking app redefined for speed, security and simplicity, delivered at Sundew Solutions.</p>
-      </div>
-    </div>
-
-    <dl class="cs-cards">
-      <div class="cs-card cs-reveal">
-        <dt><span class="cs-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10 12 4l9 6M5 10v9M19 10v9M9 10v9M15 10v9M3 20h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Client</dt>
-        <dd>QIIB — Qatar International Islamic Bank</dd>
-      </div>
-      <div class="cs-card cs-reveal">
-        <dt><span class="cs-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 19.5a6.5 6.5 0 0 1 13 0M16 5.4a3.2 3.2 0 0 1 0 5.2M17.5 14.2a6.5 6.5 0 0 1 4 5.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>Delivered at</dt>
-        <dd>Sundew Solutions</dd>
-      </div>
-      <div class="cs-card cs-reveal">
-        <dt><span class="cs-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5.5" y="2.5" width="13" height="19" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 18.6h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>Scope</dt>
-        <dd>Three onboarding screens into four destinations: Home, Partners, Locate and Converter.</dd>
-      </div>
-      <div class="cs-card cs-reveal">
-        <dt><span class="cs-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L20 8a2.83 2.83 0 0 0-4-4L4 16z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>Topics</dt>
-        <dd>Research · UX/UI Design · Design System</dd>
-      </div>
-    </dl>
-
-    
+  <section class="cs-sec cs-shell" id="glance" aria-labelledby="h-glance">
+    <div class="cs-reveal"><p class="cs-sec-label">01 — At a glance</p><h2 class="cs-h2" id="h-glance">The project in thirty seconds.</h2></div>
+    <dl class="glance cs-reveal"><div><dt><i>1</i>Problem</dt><dd>QIIB needed its mobile banking redefined for speed, security and simplicity.</dd></div><div><dt><i>2</i>Users</dt><dd>QIIB customers in Qatar — new ones, and existing ones reinstalling the app.</dd></div><div><dt><i>3</i>Solution</dt><dd>A three-step onboarding with a way out at every step, into four destinations.</dd></div><div><dt><i>4</i>Outcome</dt><dd>Onboarding, home and a live converter, built on one shared design system.</dd></div></dl>
   </section>
 
-
-  
-  <section class="cs-sec cs-shell" id="challenge" aria-labelledby="challengeHead">
-    <div class="cs-grid">
-      <div class="sp-7">
-        <p class="cs-sec-label cs-reveal">02 — The challenge</p>
-        <h2 class="cs-h2 cs-reveal" id="challengeHead">What was breaking, and what fixed it.</h2>
-      </div>
-    </div>
-
-    
-
-    <figure class="cs-figure cs-figure-shot cs-reveal">
-      <div class="cs-pan">
-        <img src="../public/Banking/bankingOnboarding.png" alt="The QIIB app home screen in use." width="1314" height="580" loading="lazy" decoding="async">
-      </div>
-    </figure>
+  <section class="cs-sec cs-shell" id="problem" aria-labelledby="h-problem">
+    <div class="cs-reveal"><p class="cs-sec-label">02 — The problem</p><h2 class="cs-h2" id="h-problem">What was getting in the way.</h2><p class="intro-p">Qatar International Islamic Bank needed its mobile banking app redefined for speed, security and simplicity — delivered at Sundew Solutions.</p></div>
+    <div class="cs-reveal"></div>
   </section>
 
-
-  
-  
-
-
-  
-  <section class="cs-sec cs-shell" id="process" aria-labelledby="processHead">
-    <div class="cs-grid">
-      <div class="sp-7">
-        <p class="cs-sec-label cs-reveal">03 — Design process</p>
-        <h2 class="cs-h2 cs-reveal" id="processHead">How the work ran.</h2>
-      </div>
-    </div>
-
-    <div class="cs-steps">
-      <div class="cs-step cs-reveal">
-        <p class="cs-step-num">01</p>
-        <h3>Research</h3>
-        <p>Discovery · Benchmarking · Flows</p>
-      </div>
-      <div class="cs-step cs-reveal">
-        <p class="cs-step-num">02</p>
-        <h3>Design</h3>
-        <p>Wireframing · Design system · Final UI</p>
-      </div>
-      <div class="cs-step cs-reveal">
-        <p class="cs-step-num">03</p>
-        <h3>Delivery</h3>
-        <p>Prototyping · Handoff</p>
-      </div>
-    </div>
-
-    
-  </section>
-
-
-  
-  <section class="cs-sec cs-shell" id="solution" aria-labelledby="solutionHead">
-    <div class="cs-grid">
-      <div class="sp-8">
-        <p class="cs-sec-label cs-reveal">04 — The onboarding flow</p>
-        <h2 class="cs-h2 cs-reveal" id="solutionHead">Three screens before the first tap.</h2>
-        <p class="cs-lead cs-reveal">Onboarding runs three screens deep and never traps anyone in it: <strong>Skip</strong> sits under every step, <strong>Back</strong> replaces it once you have moved, and the third screen swaps Continue for <strong>Get Started</strong>. Every headline and line of body copy below is the app's own.</p>
-      </div>
-    </div>
-
-    <div class="cs-insights">
-      <article class="cs-insight cs-reveal">
-        <div class="cs-insight-rail">
-          <p class="cs-insight-num">Step 01</p>
-          <p class="cs-insight-method">Continue / Skip</p>
-        </div>
-        <div>
-          <h3 class="cs-insight-claim">Welcome to QIIB Mobile Banking App</h3>
-          <p class="cs-insight-evidence">"Experience secure and convenient banking designed for your everyday needs in Qatar."</p>
-        </div>
-        <div class="cs-implication">
-          <p class="cs-implication-label">
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Design decision
-          </p>
-          <p>The opening screen names the bank and the country and asks for nothing. Skip is offered immediately — an existing customer reinstalling the app should not have to read an introduction to it.</p>
-        </div>
-      </article>
-
-      <article class="cs-insight cs-reveal">
-        <div class="cs-insight-rail">
-          <p class="cs-insight-num">Step 02</p>
-          <p class="cs-insight-method">Get Started / Back</p>
-        </div>
-        <div>
-          <h3 class="cs-insight-claim">Bank Anytime, Anywhere with Confidence</h3>
-          <p class="cs-insight-evidence">"Manage accounts, locate ATMs, and explore partner services across Qatar right from your mobile."</p>
-        </div>
-        <div class="cs-implication">
-          <p class="cs-implication-label">
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Design decision
-          </p>
-          <p>The middle screen introduces the app's destinations — accounts, ATM locator and partner services are three of the four tabs the person will land on. Skip has become Back, because there is now somewhere to go back to.</p>
-        </div>
-      </article>
-
-      <article class="cs-insight cs-reveal">
-        <div class="cs-insight-rail">
-          <p class="cs-insight-num">Step 03</p>
-          <p class="cs-insight-method">Continue / Skip</p>
-        </div>
-        <div>
-          <h3 class="cs-insight-claim">Fast &amp; Easy Everyday Secure Payments</h3>
-          <p class="cs-insight-evidence">"…money, pay merchants, and complete transactions instantly with secure digital banking."</p>
-        </div>
-        <div class="cs-implication">
-          <p class="cs-implication-label">
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Design decision
-          </p>
-          <p>The last screen is about doing rather than seeing — sending, paying, completing. It is the closest of the three to the home screen that follows it.</p>
-        </div>
-      </article>
-    </div>
-
-    
-    <article class="cs-feature" style="margin-top:clamp(48px,5vw,72px)">
-      <div class="cs-feature-aside">
-        <p class="cs-feature-num">01 · 02</p>
-        <h3>Home &amp; currency converter</h3>
-        <p class="cs-feature-purpose">The two screens a customer lands on once onboarding ends.</p>
-        <dl class="cs-notes">
-          <div class="cs-note">
-            <dt>Home</dt>
-            <dd>Leads with the balance and card, then Request and Transfer as the two primary actions, then a transaction list where credits and debits are separated by arrow direction as well as by sign.</dd>
-          </div>
-          <div class="cs-note is-decision">
-            <dt>Currency converter</dt>
-            <dd>A live USD–QAR rate with its trend and last-updated time, transfer and cash rates split into tabs, and a searchable list beneath.</dd>
-          </div>
-        </dl>
-      </div>
-      <div>
-        <figure class="cs-figure cs-reveal">
-          <picture><source srcset="../public/MobileBanking/qiib-devices.webp" type="image/webp"><img src="../public/MobileBanking/qiib-devices.png"
-               alt="The QIIB currency converter and home screen side by side."
-               width="2680" height="2160" loading="lazy" decoding="async"></picture>
-        </figure>
-      </div>
-    </article>
-
-    
-  </section>
-
-
-  
-  <section class="cs-sec cs-shell" id="visual" aria-labelledby="visualHead">
-    <div class="cs-grid">
-      <div class="sp-7">
-        <p class="cs-sec-label cs-reveal">05 — Visual language</p>
-        <h2 class="cs-h2 cs-reveal" id="visualHead">Colour, sampled from the artwork.</h2>
-        <p class="cs-lead cs-reveal">Read off the project's own artwork rather than chosen — the percentages are that image's measured composition.</p>
-      </div>
-    </div>
-
-    <div class="cs-swatches">
-      <div class="cs-swatch cs-reveal">
-        <i style="background:#d30222"></i>
-        <div><b>QIIB Red</b><code>#D30222</code><p>6.9% of the artwork.</p></div>
-      </div>
-      <div class="cs-swatch cs-reveal">
-        <i style="background:#c00320"></i>
-        <div><b>Deep Red</b><code>#C00320</code><p>0.9%.</p></div>
-      </div>
-      <div class="cs-swatch cs-reveal">
-        <i style="background:#ffe9d1"></i>
-        <div><b>Cream</b><code>#FFE9D1</code><p>62.3% — the dominant ground.</p></div>
-      </div>
-      <div class="cs-swatch cs-reveal">
-        <i style="background:#ffffff"></i>
-        <div><b>White</b><code>#FFFFFF</code><p>12.5%.</p></div>
-      </div>
-      <div class="cs-swatch cs-reveal">
-        <i style="background:#010101"></i>
-        <div><b>Ink</b><code>#010101</code><p>1.8%.</p></div>
-      </div>
-    </div>
-
-    
-  </section>
-
-
-  
-  <section class="cs-sec cs-shell" id="outcome" aria-labelledby="outcomeHead">
-    <div class="cs-outcome cs-reveal">
-      <p class="cs-sec-label">06 — The outcome</p>
-      <h2 id="outcomeHead">What shipped, and what it changed.</h2>
-
-      <ol class="cs-outcome-list">
-        <li>
-          <span>01</span>
-          <p>A three-screen onboarding with a way out — Skip or Back — at every step.</p>
-        </li>
-        <li>
-          <span>02</span>
-          <p>Four destinations behind it: Home, Partners, Locate and Converter.</p>
-        </li>
-        <li>
-          <span>03</span>
-          <p>A live currency converter with rate trend and last-updated time.</p>
-        </li>
-        <li>
-          <span>04</span>
-          <p>All of it designed on one shared design system.</p>
-        </li>
-      </ol>
-    </div>
-
-    
-  </section>
-
-
-  
-  <section class="cs-shell cs-end" id="connect" aria-labelledby="endHead">
-    <div>
-      <h2 id="endHead" class="cs-reveal">Thank you for reading.</h2>
-      <p class="cs-reveal">Interested in the thinking behind this project? I'd be glad to walk through it.</p>
-    </div>
-    <div class="cs-end-actions cs-reveal">
-      <a class="btn btn-primary" href="../index.html#work">
-        <span>Back to all work</span>
-        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="btn btn-outline" href="healthcare_case_study.html">
-        <span>Next: Healthcare Diagnostic Platform</span>
-        <svg viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M0 5h12M7 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+  <section class="cs-sec cs-shell" id="process" aria-labelledby="h-process">
+    <div class="cs-reveal"><p class="cs-sec-label">03 — Process</p><h2 class="cs-h2" id="h-process">How the work ran.</h2></div>
+    <div class="stepper cs-reveal" data-tabs style="--n:3">
+      <div class="step-tabs" role="tablist" aria-label="Process steps"><button role="tab" id="st-0" aria-controls="sp-0" aria-selected="true"><i>STEP 01</i><b>Research</b></button><button role="tab" id="st-1" aria-controls="sp-1" aria-selected="false" tabindex="-1"><i>STEP 02</i><b>Design</b></button><button role="tab" id="st-2" aria-controls="sp-2" aria-selected="false" tabindex="-1"><i>STEP 03</i><b>Deliver</b></button></div>
+      <div class="step-meter" aria-hidden="true"><span></span></div>
+      <p class="step-panel" role="tabpanel" id="sp-0" aria-labelledby="st-0">Discovery, benchmarking and user flows.</p><p class="step-panel" role="tabpanel" id="sp-1" aria-labelledby="st-1" hidden>Wireframes, a design system and the final UI.</p><p class="step-panel" role="tabpanel" id="sp-2" aria-labelledby="st-2" hidden>Prototyping and handoff.</p>
     </div>
   </section>
 
+  <section class="cs-sec cs-shell" id="insights" aria-labelledby="h-insights">
+    <div class="cs-reveal"><p class="cs-sec-label">04 — Insights → decisions</p><h2 class="cs-h2" id="h-insights">What I learned, and what it changed.</h2></div>
+    <div class="flips cs-reveal"><div class="flip"><button class="flip-btn" type="button" aria-expanded="false">
+        <span class="face front"><small>Insight 01</small><p>An existing customer reinstalling the app shouldn’t have to read an introduction to it.</p><em>What I designed <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></em></span>
+        <span class="face back"><small>Design decision</small><p>The first screen names the bank and the country, asks for nothing, and offers Skip immediately.</p><em><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 0 1 9.4-3.9M13.5 8a5.5 5.5 0 0 1-9.4 3.9M12 1.8v2.6H9.4M4 14.2v-2.6h2.6"/></svg> Back to the insight</em></span></button></div><div class="flip"><button class="flip-btn" type="button" aria-expanded="false">
+        <span class="face front"><small>Insight 02</small><p>People should see where the app will take them before they arrive.</p><em>What I designed <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></em></span>
+        <span class="face back"><small>Design decision</small><p>The second screen introduces accounts, the ATM locator and partner services — three of the four tabs they land on. Skip becomes Back.</p><em><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 0 1 9.4-3.9M13.5 8a5.5 5.5 0 0 1-9.4 3.9M12 1.8v2.6H9.4M4 14.2v-2.6h2.6"/></svg> Back to the insight</em></span></button></div><div class="flip"><button class="flip-btn" type="button" aria-expanded="false">
+        <span class="face front"><small>Insight 03</small><p>Onboarding should end on doing, not seeing.</p><em>What I designed <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></em></span>
+        <span class="face back"><small>Design decision</small><p>The last screen is about sending, paying and completing — the closest of the three to the home screen that follows.</p><em><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 0 1 9.4-3.9M13.5 8a5.5 5.5 0 0 1-9.4 3.9M12 1.8v2.6H9.4M4 14.2v-2.6h2.6"/></svg> Back to the insight</em></span></button></div></div>
+    <p class="flip-hint cs-reveal">Tap a card to see the design decision.</p>
+  </section>
+
+  <section class="cs-sec cs-shell" id="solution" aria-labelledby="h-solution">
+    <div class="cs-reveal"><p class="cs-sec-label">05 — The solution</p><h2 class="cs-h2" id="h-solution">The key screens.</h2></div>
+    <div class="cs-reveal"><div class="gallery" data-tabs><div class="g-tabs" role="tablist" aria-label="Screens"><button role="tab" id="gt-0" aria-controls="gp-0" aria-selected="true"><i>01</i>Home & converter</button><button role="tab" id="gt-1" aria-controls="gp-1" aria-selected="false" tabindex="-1"><i>02</i>Home in use</button></div><div class="g-panel" role="tabpanel" id="gp-0" aria-labelledby="gt-0"><button class="zoom" type="button" data-full="../public/MobileBanking/qiib-devices.png" aria-label="Enlarge: QIIB currency converter and home screen side by side"><picture><source srcset="../public/MobileBanking/qiib-devices.webp" type="image/webp"><img src="../public/MobileBanking/qiib-devices.png" alt="QIIB currency converter and home screen side by side" width="2680" height="2160" loading="lazy" decoding="async"></picture></button><div><h3>Home & converter</h3><p class="g-sub">The two screens a customer lands on after onboarding.</p><ol class="callouts"><li>Home leads with balance and card, then Request and Transfer.</li><li>Credits and debits differ by arrow direction as well as sign.</li><li>A live USD–QAR rate with trend and last-updated time.</li></ol></div></div><div class="g-panel" role="tabpanel" id="gp-1" aria-labelledby="gt-1" hidden><button class="zoom" type="button" data-full="../public/Banking/bankingOnboarding.png" aria-label="Enlarge: The QIIB app home screen held in a hand"><img src="../public/Banking/bankingOnboarding.png" alt="The QIIB app home screen held in a hand" width="629" height="580" loading="lazy" decoding="async"></button><div><h3>Home in use</h3><p class="g-sub">The home screen in a customer’s hand.</p><ol class="callouts"><li>Balance, card and recent transactions on one screen.</li><li>Four destinations in the tab bar: Home, Partners, Locate, Converter.</li></ol></div></div></div></div>
+    <div class="cs-reveal"></div>
+  </section>
+
+  <section class="cs-sec cs-shell" id="outcome" aria-labelledby="h-outcome">
+    <div class="cs-outcome cs-reveal"><p class="cs-sec-label">06 — Outcome</p><h2 id="h-outcome">What shipped.</h2>
+      <ol class="cs-outcome-list"><li><span>01</span><p>A three-screen onboarding with Skip or Back at every step.</p></li><li><span>02</span><p>Four destinations behind it: Home, Partners, Locate and Converter.</p></li><li><span>03</span><p>A live currency converter with rate trend and last-updated time.</p></li><li><span>04</span><p>All of it designed on one shared design system.</p></li></ol></div>
+    
+    <a class="next cs-reveal" href="healthcare_case_study.html">
+      <div><small>Next case study</small><b>One connected system for faster, simpler diagnostics.</b><span class="go">Read Healthcare platform <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></div>
+      <img src="../assets/og-healthcare.jpg" alt="" width="1200" height="630" loading="lazy">
+    </a>
+  </section>
 </main>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged screen">
+  <img src="" alt="">
+  <p></p>
+  <button class="lb-btn lb-close" type="button" aria-label="Close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+  <button class="lb-btn lb-prev" type="button" aria-label="Previous screen"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg></button>
+  <button class="lb-btn lb-next" type="button" aria-label="Next screen"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
+</dialog>
 
 <footer class="foot">
   <div class="cs-shell foot-in">

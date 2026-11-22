@@ -28,7 +28,10 @@ and the two links in `404.html`. Update those if the address changes (for exampl
 
 ## Editing
 
-- Text lives directly in the HTML files; edit it there.
+- Homepage text lives in `site/index.html`.
+- The four case studies share one template. Their content lives in `tools/build_case_studies.py`
+  (the `CONTENT` block); edit it there and run `python3 tools/build_case_studies.py` to rebuild
+  `site/case-studies/*.html`. Keep each page to about a three-minute read.
 - Previewing a time of day on the homepage: `index.html?t=21` (night), `?t=17.3` (golden hour).
 - Day/night choice is remembered across pages (`localStorage` key `rk-theme`).
 
