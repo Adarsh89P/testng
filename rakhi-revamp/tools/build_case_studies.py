@@ -26,7 +26,11 @@ CONTENT = {
           ('Solution', 'Five interfaces sharing one record, one status vocabulary and one component set.'),
           ('Outcome', 'Less manual re-entry, and a test patients can follow from booking to report.')],
   problem='Patients couldn’t see what happened after booking, so they phoned the desk. Internally, the same journey was stitched together by hand across front desk, admin and home collection — which is where the delays and errors came from.',
-  pains=['Fragmented information', 'Manual handoffs between roles', 'No visibility of a test’s status'],
+  pairs=[('Information was scattered across systems, so no one saw the full picture of a test.', 'One shared record that all five products read and write.'),
+         ('The front desk re-keyed the same patient details between roles.', 'One quick registration path, with tests and appointments on a single screen.'),
+         ('Patients and staff couldn’t see where a test was.', 'One visible status from booking through collection to report, for everyone.')],
+  skills=['User research', 'Workflow mapping', 'B2B dashboards', 'Mobile apps', 'Design systems', 'Accessibility', 'Prototyping'],
+  tradeoff='Five roles each had a confident opinion about their own screen. The hard call was holding off on screens until the shared workflow underneath was settled — and testing feasibility with the teams on the floor before release.',
   process=[('Discover', 'Contextual inquiry with the teams running the service, research across all five roles, and a map of the existing workflow.'),
            ('Define', 'Findings documented and the user journey prioritised, so the MVP had a defensible scope rather than a wish list.'),
            ('Ideate', 'Directions explored in low fidelity first, then high-fidelity prototypes once the structure was agreed.'),
@@ -44,7 +48,11 @@ CONTENT = {
             ['Each task carries its own visit details.', 'The visit order is given, not worked out by the collector.', 'Status updates flow back to the desk and admin.']),
            ('Website', 'Finding a test, booking it, and trusting the clinic.', 'Healthcare/Frame 1000005311.png', 'Clinic website with a direct path to test discovery and booking',
             ['Test discovery and booking is the primary path.', 'Same components and colours as the internal tools, so the brand holds end to end.'])],
-  features=[],
+  features=[('Status is never colour alone', 'Every state has a label too — a misread status has clinical consequences.'),
+            ('One shared component set', 'Tables, cards and status indicators reused across all five products.'),
+            ('Sized for real conditions', 'One-handed touch targets in the field; scanning density at the desk.'),
+            ('Built to scale', 'New test types, roles and screens without re-authoring.')],
+  features_title='Accessibility & system decisions',
   outcome_title='A unified diagnostic ecosystem.',
   outcomes=[('01', 'One connected system serving all five kinds of user.'), ('02', 'Less manual work, and fewer errors from re-entering data.'),
             ('03', 'A test patients can follow from booking to report.'), ('04', 'A design system that scales across web and mobile.')],
@@ -63,7 +71,12 @@ CONTENT = {
           ('Solution', 'One app with five connected areas and a single wellness dashboard.'),
           ('Outcome', '40+ screens delivered to handoff in about 80 hours.')],
   problem='Eight user interviews surfaced the same four pain points again and again.',
-  pains=['Not enough time', 'No sense of progress', 'Practice and nutrition lived apart', 'Hard to start as a beginner'],
+  pairs=[('Not enough time for long sessions around work.', 'Short on-demand sessions — five-minute meditations and preloaded videos — beside the live timetable.'),
+         ('No sense of progress, and little meditation content.', 'A wellness dashboard tracking yoga, sleep, mood, water and steps together.'),
+         ('Practice and nutrition lived in separate apps.', 'Recipes in the tab bar, right next to the practice.'),
+         ('Beginners felt overwhelmed by complex poses and thin guidance.', 'A graded beginner series, a curated library, and four intro screens before sign-up.')],
+  skills=['User interviews', 'Affinity mapping', 'Personas', 'Information architecture', 'Mobile UI', 'Design systems', 'Prototyping'],
+  tradeoff='Users asked for more content; what they needed was less. The design favours a curated selection and a clear beginner path over a bigger catalogue.',
   process=[('Discover', 'Client goals, idea validation and eight user interviews.'),
            ('Structure', 'Affinity mapping, a persona, and one site map across mindfulness, yoga, home, shop and recipes.'),
            ('Design', 'Wireframes into 40+ final screens on a calm, consistent design system.'),
@@ -98,7 +111,11 @@ CONTENT = {
           ('Solution', 'One booking sequence: location, live map, fare-first booking and tours.'),
           ('Outcome', 'A complete iOS and Android app design, from onboarding to tour exploration.')],
   problem='No clear pricing, no real-time tracking and a slow booking flow aren’t three separate complaints. Together they make one broken first ride — so the fix had to be one sequence, not three features bolted on.',
-  pains=['No clear pricing', 'No real-time tracking', 'A slow booking flow'],
+  pairs=[('No clear price, so the wait felt risky.', 'The fare is shown before confirming, while cancelling is still free.'),
+         ('No way to see the car, so the price felt like a gamble.', 'A live map of nearby taxis, so the wait can be watched.'),
+         ('A slow flow gave both doubts time to become a cancelled ride.', 'Location set once up front, then a short search-and-confirm flow.')],
+  skills=['Journey sequencing', 'Mobile UX', 'iOS & Android', 'Trust & transparency', 'Visual design'],
+  tradeoff='Three complaints, but not three features. Instead of bolting fixes on, the flow was re-sequenced so each answer arrives just before the doubt it settles.',
   process=[('Rider needs', 'Five needs from the brief that every screen was held against: quick booking, clear pricing, tracking, easy navigation and guidance.'),
            ('Sequence', 'The journey ordered by when a rider meets each doubt, not listed by feature.'),
            ('Design', 'Onboarding, live map, destination search and booking, and tour exploration.'),
@@ -126,7 +143,11 @@ CONTENT = {
           ('Solution', 'A three-step onboarding with a way out at every step, into four destinations.'),
           ('Outcome', 'Onboarding, home and a live converter, built on one shared design system.')],
   problem='Qatar International Islamic Bank needed its mobile banking app redefined for speed, security and simplicity — delivered at Sundew Solutions.',
-  pains=[],
+  pairs=[('Returning customers reinstalling the app shouldn’t have to sit through an introduction.', 'Skip on the very first screen; Back replaces it once you’ve moved.'),
+         ('New customers don’t know what the app can do for them yet.', 'Screen two previews accounts, the ATM locator and partner services — the tabs they’ll land on.'),
+         ('Credits and debits are easy to misread at a glance.', 'The home list separates them by arrow direction as well as by sign.')],
+  skills=['Onboarding', 'Benchmarking', 'User flows', 'Fintech UX', 'Design systems', 'Prototyping'],
+  tradeoff='Guide new customers without slowing down returning ones: every onboarding step can be skipped, and the last step ends on doing — paying and sending — not reading.',
   process=[('Research', 'Discovery, benchmarking and user flows.'),
            ('Design', 'Wireframes, a design system and the final UI.'),
            ('Deliver', 'Prototyping and handoff.')],
@@ -153,7 +174,7 @@ X = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.
 L = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>'
 R = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>'
 FLIP = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 0 1 9.4-3.9M13.5 8a5.5 5.5 0 0 1-9.4 3.9M12 1.8v2.6H9.4M4 14.2v-2.6h2.6"/></svg>'
-SECTIONS = [('glance', 'At a glance'), ('problem', 'The problem'), ('process', 'Process'), ('insights', 'Insights → decisions'), ('solution', 'The solution'), ('outcome', 'Outcome')]
+SECTIONS = [('glance', 'At a glance'), ('problem', 'Problems → solutions'), ('process', 'Process'), ('insights', 'Insights → decisions'), ('solution', 'The solution'), ('outcome', 'Outcome')]
 
 def img_size(rel):
     from PIL import Image
@@ -184,7 +205,12 @@ def render(key):
         hero = f'<figure class="cs-hero-figure cs-reveal">{picture(c["hero"][0], c["hero"][1], eager=True)}</figure>'
     facts = ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in c['facts'])
     glance = ''.join(f'<div><dt><i>{j+1}</i>{k}</dt><dd>{v}</dd></div>' for j, (k, v) in enumerate(c['glance']))
-    pains = ('<ul class="pains">' + ''.join(f'<li><b>{j+1:02d}</b>{p}</li>' for j, p in enumerate(c['pains'])) + '</ul>') if c['pains'] else ''
+    pairs = '<ol class="pairs">' + ''.join(
+        f'<li class="pair cs-reveal" style="--i:{j}"><div class="pr"><small>Problem {j+1:02d}</small><p>{a}</p></div>'
+        f'<span class="link" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h36M31 2l6 6-6 6"/></svg></span>'
+        f'<div class="sl"><small>Solution</small><p>{b}</p></div></li>' for j, (a, b) in enumerate(c['pairs'])) + '</ol>'
+    skills = '<ul class="skills" aria-label="Skills shown">' + ''.join(f'<li>{x}</li>' for x in c['skills']) + '</ul>'
+    tradeoff = f'<div class="tradeoff cs-reveal"><small>The hard part</small><p>{c["tradeoff"]}</p></div>'
     steps = c['process']
     step_tabs = ''.join(f'<button role="tab" id="st-{j}" aria-controls="sp-{j}" aria-selected="{"true" if j == 0 else "false"}"{"" if j == 0 else " tabindex=" + chr(34) + "-1" + chr(34)}><i>STEP {j+1:02d}</i><b>{t}</b></button>' for j, (t, _) in enumerate(steps))
     step_panels = ''.join(f'<p class="step-panel" role="tabpanel" id="sp-{j}" aria-labelledby="st-{j}"{"" if j == 0 else " hidden"}>{d}</p>' for j, (_, d) in enumerate(steps))
@@ -200,7 +226,8 @@ def render(key):
                      f'<button class="zoom" type="button" data-full="../public/{quote(rel)}" aria-label="Enlarge: {html.escape(alt)}">{picture(rel, alt)}</button>'
                      f'<div><h3>{t}</h3><p class="g-sub">{sub}</p><ol class="callouts">' + ''.join(f'<li>{x}</li>' for x in calls) + '</ol></div></div>')
     gallery = (f'<div class="gallery"{" data-tabs" if len(scr) > 1 else ""}>' + (f'<div class="g-tabs" role="tablist" aria-label="Screens">{g_tabs}</div>' if g_tabs else '') + g_panels + '</div>')
-    feats = (f'<ul class="features" style="--n:{len(c["features"])}">' + ''.join(f'<li><b>{a}</b><span>{b}</span></li>' for a, b in c['features']) + '</ul>') if c['features'] else ''
+    ftitle = f'<h3 class="f-title">{c.get("features_title", "What the app does")}</h3>' if c['features'] else ''
+    feats = ftitle + (f'<ul class="features" style="--n:{len(c["features"])}">' + ''.join(f'<li><b>{a}</b><span>{b}</span></li>' for a, b in c['features']) + '</ul>') if c['features'] else ''
     outs = ''.join(f'<li><span>{a}</span><p>{b}</p></li>' for a, b in c['outcomes'])
     note = f'<p class="cs-outcome-note">{c["outcome_note"]}</p>' if c['outcome_note'] else ''
     learned = (f'<div class="learned cs-reveal"><p class="cs-sec-label">What I learned</p><div><blockquote>{c["learned"][0]}</blockquote>'
@@ -211,6 +238,7 @@ def render(key):
     <h1 class="cs-hero-title cs-reveal">{c["title"].replace("<em>", '<span class="cs-em">').replace("</em>", "</span>")}</h1>
     <p class="cs-hero-sub cs-reveal">{c["sub"]}</p>
     <dl class="cs-meta cs-reveal">{facts}</dl>
+    <div class="cs-reveal skills-row"><span>Skills shown</span>{skills}</div>
     <div class="cs-hero-actions cs-reveal"><a class="btn btn-primary" href="#solution">See the screens {ARROW}</a><span class="read">{{READ}} min read</span></div>
     {hero}
   </header>
@@ -221,8 +249,8 @@ def render(key):
   </section>
 
   <section class="cs-sec cs-shell" id="problem" aria-labelledby="h-problem">
-    <div class="cs-reveal">{label(2, "The problem")}<h2 class="cs-h2" id="h-problem">What was getting in the way.</h2><p class="intro-p">{c["problem"]}</p></div>
-    <div class="cs-reveal">{pains}</div>
+    <div class="cs-reveal">{label(2, "Problems → solutions")}<h2 class="cs-h2" id="h-problem">Problems, and how each was solved.</h2><p class="intro-p">{c["problem"]}</p></div>
+    {pairs}
   </section>
 
   <section class="cs-sec cs-shell" id="process" aria-labelledby="h-process">
@@ -232,6 +260,7 @@ def render(key):
       <div class="step-meter" aria-hidden="true"><span></span></div>
       {step_panels}
     </div>
+    {tradeoff}
   </section>
 
   <section class="cs-sec cs-shell" id="insights" aria-labelledby="h-insights">

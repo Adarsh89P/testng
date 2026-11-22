@@ -33,7 +33,7 @@
   <p class="side-sub">Mobility · Product design</p>
   <nav class="toc">
 <a href="#glance"><i>01</i>At a glance</a>
-<a href="#problem"><i>02</i>The problem</a>
+<a href="#problem"><i>02</i>Problems → solutions</a>
 <a href="#process"><i>03</i>Process</a>
 <a href="#insights"><i>04</i>Insights → decisions</a>
 <a href="#solution"><i>05</i>The solution</a>
@@ -55,6 +55,7 @@
     <h1 class="cs-hero-title cs-reveal">Booking a ride in a place <span class="cs-em">you don’t know</span>.</h1>
     <p class="cs-hero-sub cs-reveal">A taxi app for Malta, where most riders are tourists: the fare before you commit, the car on a live map, and a flow short enough to finish on the kerb.</p>
     <dl class="cs-meta cs-reveal"><div><dt>Role</dt><dd>UI/UX designer</dd></div><div><dt>Timeline</dt><dd>Jan – Jul 2024</dd></div><div><dt>Platform</dt><dd>iOS & Android</dd></div><div><dt>Deliverable</dt><dd>Mobile app design</dd></div></dl>
+    <div class="cs-reveal skills-row"><span>Skills shown</span><ul class="skills" aria-label="Skills shown"><li>Journey sequencing</li><li>Mobile UX</li><li>iOS & Android</li><li>Trust & transparency</li><li>Visual design</li></ul></div>
     <div class="cs-hero-actions cs-reveal"><a class="btn btn-primary" href="#solution">See the screens <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><span class="read">3 min read</span></div>
     <figure class="cs-hero-figure cs-reveal"><picture><source srcset="../public/MaltaTaxi/malta-devices.webp" type="image/webp"><img src="../public/MaltaTaxi/malta-devices.png" alt="Two iPhones showing the Malta Taxi onboarding screen and the location permission screen" width="1600" height="1200" fetchpriority="high" decoding="async"></picture></figure>
   </header>
@@ -65,8 +66,8 @@
   </section>
 
   <section class="cs-sec cs-shell" id="problem" aria-labelledby="h-problem">
-    <div class="cs-reveal"><p class="cs-sec-label">02 — The problem</p><h2 class="cs-h2" id="h-problem">What was getting in the way.</h2><p class="intro-p">No clear pricing, no real-time tracking and a slow booking flow aren’t three separate complaints. Together they make one broken first ride — so the fix had to be one sequence, not three features bolted on.</p></div>
-    <div class="cs-reveal"><ul class="pains"><li><b>01</b>No clear pricing</li><li><b>02</b>No real-time tracking</li><li><b>03</b>A slow booking flow</li></ul></div>
+    <div class="cs-reveal"><p class="cs-sec-label">02 — Problems → solutions</p><h2 class="cs-h2" id="h-problem">Problems, and how each was solved.</h2><p class="intro-p">No clear pricing, no real-time tracking and a slow booking flow aren’t three separate complaints. Together they make one broken first ride — so the fix had to be one sequence, not three features bolted on.</p></div>
+    <ol class="pairs"><li class="pair cs-reveal" style="--i:0"><div class="pr"><small>Problem 01</small><p>No clear price, so the wait felt risky.</p></div><span class="link" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h36M31 2l6 6-6 6"/></svg></span><div class="sl"><small>Solution</small><p>The fare is shown before confirming, while cancelling is still free.</p></div></li><li class="pair cs-reveal" style="--i:1"><div class="pr"><small>Problem 02</small><p>No way to see the car, so the price felt like a gamble.</p></div><span class="link" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h36M31 2l6 6-6 6"/></svg></span><div class="sl"><small>Solution</small><p>A live map of nearby taxis, so the wait can be watched.</p></div></li><li class="pair cs-reveal" style="--i:2"><div class="pr"><small>Problem 03</small><p>A slow flow gave both doubts time to become a cancelled ride.</p></div><span class="link" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h36M31 2l6 6-6 6"/></svg></span><div class="sl"><small>Solution</small><p>Location set once up front, then a short search-and-confirm flow.</p></div></li></ol>
   </section>
 
   <section class="cs-sec cs-shell" id="process" aria-labelledby="h-process">
@@ -76,6 +77,7 @@
       <div class="step-meter" aria-hidden="true"><span></span></div>
       <p class="step-panel" role="tabpanel" id="sp-0" aria-labelledby="st-0">Five needs from the brief that every screen was held against: quick booking, clear pricing, tracking, easy navigation and guidance.</p><p class="step-panel" role="tabpanel" id="sp-1" aria-labelledby="st-1" hidden>The journey ordered by when a rider meets each doubt, not listed by feature.</p><p class="step-panel" role="tabpanel" id="sp-2" aria-labelledby="st-2" hidden>Onboarding, live map, destination search and booking, and tour exploration.</p><p class="step-panel" role="tabpanel" id="sp-3" aria-labelledby="st-3" hidden>A mobile app design for iOS and Android.</p>
     </div>
+    <div class="tradeoff cs-reveal"><small>The hard part</small><p>Three complaints, but not three features. Instead of bolting fixes on, the flow was re-sequenced so each answer arrives just before the doubt it settles.</p></div>
   </section>
 
   <section class="cs-sec cs-shell" id="insights" aria-labelledby="h-insights">
@@ -93,7 +95,7 @@
   <section class="cs-sec cs-shell" id="solution" aria-labelledby="h-solution">
     <div class="cs-reveal"><p class="cs-sec-label">05 — The solution</p><h2 class="cs-h2" id="h-solution">The key screens.</h2></div>
     <div class="cs-reveal"><div class="gallery"><div class="g-panel"><button class="zoom" type="button" data-full="../public/MaltaTaxi/malta-devices.png" aria-label="Enlarge: Malta Taxi onboarding screen and the location permission screen"><picture><source srcset="../public/MaltaTaxi/malta-devices.webp" type="image/webp"><img src="../public/MaltaTaxi/malta-devices.png" alt="Malta Taxi onboarding screen and the location permission screen" width="1600" height="1200" loading="lazy" decoding="async"></picture></button><div><h3>Onboarding & location</h3><p class="g-sub">Two screens that make the app useful the moment onboarding ends.</p><ol class="callouts"><li>Onboarding states the promise and offers one action.</li><li>Location is asked for once, with the reason attached — not as a bare system prompt.</li></ol></div></div></div></div>
-    <div class="cs-reveal"><ul class="features" style="--n:4"><li><b>Quick onboarding</b><span>Location set up front, so no later screen stops to ask.</span></li><li><b>Live map</b><span>Nearby taxis answer “is one actually coming?”.</span></li><li><b>Fare-first booking</b><span>Search and a confirmation that shows the price while cancelling is free.</span></li><li><b>Tour exploration</b><span>Places to go for travellers, not just a field to fill.</span></li></ul></div>
+    <div class="cs-reveal"><h3 class="f-title">What the app does</h3><ul class="features" style="--n:4"><li><b>Quick onboarding</b><span>Location set up front, so no later screen stops to ask.</span></li><li><b>Live map</b><span>Nearby taxis answer “is one actually coming?”.</span></li><li><b>Fare-first booking</b><span>Search and a confirmation that shows the price while cancelling is free.</span></li><li><b>Tour exploration</b><span>Places to go for travellers, not just a field to fill.</span></li></ul></div>
   </section>
 
   <section class="cs-sec cs-shell" id="outcome" aria-labelledby="h-outcome">
