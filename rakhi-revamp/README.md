@@ -15,6 +15,16 @@
 | `assets/` | Homepage images, résumé PDF, social-share images, touch icon |
 | `robots.txt`, `sitemap.xml`, `.nojekyll` | Search and GitHub Pages housekeeping |
 
+## Hero photos
+
+The homepage hero is a real photo of Key Monastery with the Langza Buddha cut out of a second
+photo and placed on the left. Both are from Unsplash (Unsplash License: free for commercial use,
+no attribution required):
+- Key Monastery: https://images.unsplash.com/photo-1723575409854-b8bd40109081
+- Langza Buddha: https://images.unsplash.com/photo-1746036837163-4050ff8743fc
+
+`assets/sky-mask.png` is the traced skyline; the sun, moon and stars are clipped to it.
+
 ## Deploying
 
 1. In the portfolio repo, delete the old `index.html`, `css/`, `js/`, `case-studies/` and `public/` (keep `.git`).
