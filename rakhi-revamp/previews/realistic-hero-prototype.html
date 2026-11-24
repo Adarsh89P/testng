@@ -13,39 +13,83 @@ p{margin:14px auto 0;max-width:720px;font:300 19px/1.6 Geist;color:#5B6474}.nigh
 <div class="intro"><h1>Hi, I’m Rakhi.</h1><p>I design products that feel simple, even when they are not.</p></div></div>
 <script id="fs" type="x-shader">
 precision highp float;
-uniform vec2 R; uniform float T; uniform float HR; uniform float NOLM;
+uniform vec2 R; uniform float T; uniform float HR;
 float h21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
 float n2(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
  return mix(mix(h21(i),h21(i+vec2(1,0)),u.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),u.x),u.y);}
-float fbm(vec2 p){float a=.5,s=0.;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<6;i++){s+=a*n2(p);p=m*p;a*=.5;}return s;}
+float fbm(vec2 p){float a=.5,s=0.;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<5;i++){s+=a*n2(p);p=m*p;a*=.5;}return s;}
 float ridged(vec2 p){float a=.5,s=0.,w=1.;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<7;i++){float n=1.-abs(n2(p)*2.-1.);n*=n;s+=n*a*w;w=clamp(n*1.6,0.,1.);p=m*p;a*=.5;}return s;}
+const vec2 MC=vec2(1.05,.2); const float MTOP=1.22;      // Key Monastery hill
+const vec3 SP=vec3(-.70,.80,-.30); const float K=.95;                       // statue base
+float coneH(vec2 p){vec2 q=p-MC;return MTOP-1.25*pow(length(q*vec2(1.,1.15)),1.05)+.04*fbm(p*7.);}
 float terrain(vec2 p){
  float rc=0.9*sin(p.y*.18)+.4*sin(p.y*.07+1.);
  float d=abs(p.x-rc);
  float valley=smoothstep(.6,5.5,d);
  float far=smoothstep(3.,26.,p.y);
- float m=ridged(p*.22+vec2(3.1,1.7));
  float h=.02+.35*fbm(p*.6)*smoothstep(.3,2.5,d);
- h+=valley*(1.2+3.6*far)*m;
- h+=far*far*2.2*ridged(p*.09+vec2(7.,2.));
- vec2 q=p-vec2(1.55,.75); float cone=NOLM>0.5?-9.:.86-1.25*pow(length(q*vec2(1.,1.25)),1.15)+.10*fbm(p*3.5)-.05; h=max(h,cone);
- vec2 l=p-vec2(-1.45,.7); float lr=NOLM>0.5?-9.:.80-.75*length(l*vec2(.8,1.3))+.05*fbm(p*5.); h=max(h,lr);
+ if(p.y>-1.){h+=valley*(1.2+3.6*far)*ridged(p*.22+vec2(3.1,1.7));h+=far*far*2.2*ridged(p*.09+vec2(7.,2.));}
+ h=max(h,coneH(p));
+ vec2 l=p-SP.xz; h=max(h,SP.y-.015-.7*pow(length(l*vec2(.8,1.2)),1.25)+.04*fbm(p*6.));
  return h;}
-vec3 sunDir(){float a=(HR-6.)/12.*3.14159; if(HR<6.||HR>=18.) a=mod(HR-18.+24.,24.)/12.*3.14159; return normalize(vec3(-cos(a)*.9,max(sin(a),.02)*.75+.02,.6));}
+float sdBox(vec3 p,vec3 b){vec3 q=abs(p)-b;return length(max(q,0.))+min(max(q.x,max(q.y,q.z)),0.);}
+float sdEll(vec3 p,vec3 r){float k0=length(p/r);float k1=length(p/(r*r));return k0*(k0-1.)/k1;}
+// returns distance; m = material id
+float monastery(vec3 p,out float m,out vec3 cellInfo){
+ m=0.;cellInfo=vec3(0.);
+ vec2 q=p.xz-MC; float rr=length(q);
+ if(rr>.5||p.y<.7||p.y>MTOP+.15) return max(rr-.46,.03);
+ float c=.055; vec2 cid=floor(p.xz/c); float best=1e3;
+ for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){
+  vec2 id=cid+vec2(i,j); vec2 cc=(id+.5)*c; float hs=h21(id);
+  float g=coneH(cc); vec2 cq=cc-MC;
+  if(g<.82||cq.y>.06||hs<.1) continue;
+  vec3 hb=vec3(.019+.008*h21(id+7.),.018+.022*h21(id+3.),.02);
+  vec3 ctr=vec3(cc.x+(hs-.5)*.02,g+hb.y*.8,cc.y);
+  float d=sdBox(p-ctr,hb);
+  if(d<best){best=d;m=1.;cellInfo=vec3(id,ctr.y+hb.y);}
+ }
+ // golden roof at the summit
+ float top=min(sdBox(p-vec3(MC.x,MTOP+.04,MC.y-.02),vec3(.035,.035,.03)), sdEll(p-vec3(MC.x,MTOP+.09,MC.y-.02),vec3(.018,.022,.018)));
+ if(top<best){best=top;m=p.y>MTOP+.072?2.:1.;cellInfo=vec3(9.,9.,MTOP+.075);}
+ return best;}
+float statue(vec3 p,out float m){
+ vec3 q=(p-SP)/K; m=3.; float d=sdBox(q-vec3(0,.055,0),vec3(.12,.055,.12));
+ float t1=sdBox(q-vec3(0,.135,0),vec3(.105,.026,.105)); if(t1<d){d=t1;m=4.;}
+ float t2=sdBox(q-vec3(0,.185,0),vec3(.095,.025,.095)); if(t2<d){d=t2;m=5.;}
+ float lo=sdEll(q-vec3(0,.222,0),vec3(.10,.026,.10)); if(lo<d){d=lo;m=6.;}
+ float g=sdEll(q-vec3(0,.262,.0),vec3(.088,.034,.07));                       // crossed legs
+ g=min(g,sdEll(q-vec3(0,.33,.008),vec3(.047,.062,.036)));                     // belly
+ g=min(g,sdEll(q-vec3(0,.395,.01),vec3(.056,.042,.036)));                     // chest/shoulders
+ g=min(g,sdEll(vec3(abs(q.x),q.y,q.z)-vec3(.058,.35,.0),vec3(.017,.055,.02))); // arms
+ g=min(g,sdEll(q-vec3(0,.29,-.035),vec3(.04,.016,.022)));                     // hands in lap
+ g=min(g,sdEll(q-vec3(0,.44,.01),vec3(.017,.02,.017)));                       // neck
+ g=min(g,sdEll(q-vec3(0,.468,.006),vec3(.029,.034,.03)));                     // head
+ if(g<d){d=g;m=7.;}
+ float hr=sdEll(q-vec3(0,.484,.012),vec3(.03,.022,.03)); if(hr<d&&q.y>.482){d=hr;m=8.;}
+ float us=length(q-vec3(0,.51,.012))-.012; if(us<d){d=us;m=8.;}
+ float bw=length(q-vec3(0,.296,-.05))-.016; if(bw<d){d=bw;m=8.;}
+ return d*K;}
+float map(vec3 p,out float m,out vec3 ci){
+ float dt=(p.y-terrain(p.xz))*.5; m=0.;
+ float mm; vec3 c2; float dm=monastery(p,mm,c2); if(dm<dt){dt=dm;m=mm;ci=c2;}
+ float ms; float ds=statue(p,ms); if(ds<dt){dt=ds;m=ms;}
+ return dt;}
 bool isNight(){return HR<6.||HR>=18.;}
+vec3 sunDir(){float a=(HR-6.)/12.*3.14159; if(isNight()) a=mod(HR-18.+24.,24.)/12.*3.14159; return normalize(vec3(-cos(a)*.9,max(sin(a),.02)*.75+.02,.6));}
 vec3 skyCol(vec3 rd,vec3 sd){
  float e=sin(clamp((isNight()?mod(HR-18.+24.,24.):HR-6.)/12.,0.,1.)*3.14159);
  float day=isNight()?0.:smoothstep(.0,.35,e);
  float gold=isNight()?0.:(1.-smoothstep(.05,.45,e));
  vec3 zen=mix(vec3(.02,.03,.09),vec3(.10,.30,.62),day); zen=mix(zen,vec3(.16,.18,.38),gold*.6);
  vec3 hor=mix(vec3(.08,.10,.20),vec3(.62,.76,.90),day); hor=mix(hor,vec3(1.,.58,.36),gold);
- float y=clamp(rd.y,0.,1.);
- vec3 c=mix(hor,zen,pow(y,.55));
+ float y=clamp(rd.y,0.,1.); vec3 c=mix(hor,zen,pow(y,.55));
  float sdot=max(dot(rd,sd),0.);
  if(!isNight()){c+=vec3(1.,.75,.45)*pow(sdot,8.)*(.25+.6*gold)+vec3(1.,.95,.85)*pow(sdot,600.)*6.;}
  else{c+=vec3(.6,.7,1.)*pow(sdot,40.)*.25+vec3(.9,.92,1.)*smoothstep(.9994,.9997,sdot)*1.5;
-  vec2 sp=rd.xz/(rd.y+.15)*60.; float st=h21(floor(sp)); float tw=.6+.4*sin(T*2.+st*40.);float st2=h21(floor(sp*1.7)+3.);c+=vec3(.8,.85,1.)*step(.993,st2)*smoothstep(.45,0.,length(fract(sp*1.7)-.5))*.6*smoothstep(0.,.25,rd.y);
+  vec2 sp=rd.xz/(rd.y+.15)*60.; float st=h21(floor(sp)); float tw=.6+.4*sin(T*2.+st*40.);
   c+=vec3(1.)*step(.985,st)*smoothstep(.5,0.,length(fract(sp)-.5))*tw*smoothstep(0.,.25,rd.y);
+  float st2=h21(floor(sp*1.7)+3.);c+=vec3(.8,.85,1.)*step(.993,st2)*smoothstep(.45,0.,length(fract(sp*1.7)-.5))*.6*smoothstep(0.,.25,rd.y);
   float mw=exp(-pow((rd.y-.35-.25*rd.x)*5.,2.))*fbm(rd.xy*9.);c+=vec3(.32,.33,.48)*mw*.9;}
  return c;}
 void main(){
@@ -55,40 +99,55 @@ void main(){
  float e=sin(clamp((nt?mod(HR-18.+24.,24.):HR-6.)/12.,0.,1.)*3.14159);
  float gold=nt?0.:(1.-smoothstep(.05,.45,e));
  vec3 sky=skyCol(rd,sd);
- float t=.1,hit=0.;vec3 p;
- for(int i=0;i<150;i++){p=ro+rd*t;float h=terrain(p.xz);float d=p.y-h;if(d<.002*t){hit=1.;break;}t+=max(d*.45,.01);if(t>70.)break;}
+ float t=.1,hit=0.,m=0.;vec3 p,ci;
+ for(int i=0;i<220;i++){p=ro+rd*t;float d=map(p,m,ci);if(d<.0006*t){hit=1.;break;}t+=max(d,.0015);if(t>70.)break;}
  vec3 col=sky;
  if(hit>0.){
-  vec2 eps=vec2(.01*t*.1+.003,0.);
-  vec3 n=normalize(vec3(terrain(p.xz-eps.xy)-terrain(p.xz+eps.xy),2.*eps.x,terrain(p.xz-eps.yx)-terrain(p.xz+eps.yx)));
-  float slope=n.y;
-  vec3 rock=mix(vec3(.36,.24,.17),vec3(.52,.40,.30),fbm(p.xz*3.));
-  rock=mix(rock,vec3(.47,.27,.17),smoothstep(.4,.9,fbm(p.xz*.8+3.))*.5);
-  float snowLine=1.55+.4*fbm(p.xz*1.3);
-  float snow=smoothstep(snowLine-.2,snowLine+.15,p.y)*smoothstep(.45,.8,slope);
-  vec3 alb=mix(rock,vec3(.93,.95,1.),snow);
-  float river=0.; float rc=0.9*sin(p.z*.18)+.4*sin(p.z*.07+1.);
-  float rd2=abs(p.x-rc-.15*sin(p.z*1.3));
-  river=(1.-smoothstep(.05,.14,rd2))*step(p.y,.25)*smoothstep(1.,6.,p.z);
+  vec3 n; float e2=.0008+.0012*t; vec3 dum;float md;
+  n=normalize(vec3(map(p+vec3(e2,0,0),md,dum)-map(p-vec3(e2,0,0),md,dum),map(p+vec3(0,e2,0),md,dum)-map(p-vec3(0,e2,0),md,dum),map(p+vec3(0,0,e2),md,dum)-map(p-vec3(0,0,e2),md,dum)));
+  vec3 alb; float spec=0.; vec3 emis=vec3(0.);
+  if(m<.5){
+   vec3 rock=mix(vec3(.36,.24,.17),vec3(.52,.40,.30),fbm(p.xz*3.));
+   rock=mix(rock,vec3(.47,.27,.17),smoothstep(.4,.9,fbm(p.xz*.8+3.))*.5);
+   float snow=smoothstep(1.35,1.6,p.y+.3*fbm(p.xz*1.3))*smoothstep(.45,.8,n.y)*step(-.2,p.z);
+   alb=mix(rock,vec3(.93,.95,1.),snow);
+   float rc=0.9*sin(p.z*.18)+.4*sin(p.z*.07+1.);
+   float rv=(1.-smoothstep(.05,.14,abs(p.x-rc-.15*sin(p.z*1.3))))*step(p.y,.25)*smoothstep(1.,6.,p.z);
+   if(rv>0.){alb=mix(alb,skyCol(reflect(rd,vec3(0,1,0)),sd)*.9+.05,rv);}
+  } else if(m<1.5){ // monastery walls
+   alb=vec3(.92,.90,.86);
+   float topBand=smoothstep(ci.z-.008,ci.z-.005,p.y); alb=mix(alb,vec3(.42,.14,.10),topBand);
+   vec2 wp=vec2(abs(n.x)>.5?p.z:p.x,p.y)*vec2(80.,70.);
+   float win=step(.62,fract(wp.x))*step(.35,fract(wp.y))*step(fract(wp.y),.75)*step(p.y,ci.z-.01)*(1.-step(.5,n.y));
+   float lit=step(.5,h21(floor(wp)+ci.xy));
+   alb=mix(alb,vec3(.12,.08,.06),win);
+   if(nt) emis=vec3(1.,.7,.35)*win*lit*1.6;
+  } else if(m<2.5){alb=vec3(1.,.72,.25);spec=1.;}
+  else if(m<3.5){alb=vec3(.10,.62,.80);}
+  else if(m<4.5){alb=mix(vec3(.96,.93,.86),vec3(.92,.42,.15),step(.5,fract(atan(p.x-SP.x,p.z-SP.z)*6.)));}
+  else if(m<5.5){alb=mix(vec3(.12,.22,.58),vec3(.95,.72,.2),step(.82,fract(atan(p.x-SP.x,p.z-SP.z)*4.)));}
+  else if(m<6.5){alb=mix(vec3(.95,.45,.15),vec3(.18,.68,.55),step(SP.y+.226*K,p.y));}
+  else if(m<7.5){alb=vec3(1.,.70,.22);spec=1.; vec3 q=(p-SP)/K; if(q.y>.31&&q.y<.43&&abs(q.y-.37-q.x*.9)<.02) {alb=vec3(.72,.16,.12);spec=0.;}}
+  else {alb=vec3(.12,.25,.62);}
   float dif=max(dot(n,sd),0.);
-  float sh=1.;float st=.05;for(int j=0;j<24;j++){vec3 q=p+sd*st;float dh=q.y-terrain(q.xz);sh=min(sh,10.*dh/st);st+=clamp(dh,.05,.6);if(sh<0.)break;}
+  float sh=1.;float st=.02;for(int j=0;j<32;j++){vec3 q=p+n*.002+sd*st;float mm;vec3 cc;float dh=map(q,mm,cc);sh=min(sh,12.*dh/st);st+=clamp(dh,.01,.4);if(sh<0.||st>8.)break;}
   sh=clamp(sh,0.,1.);
   vec3 sunC=nt?vec3(.4,.48,.75)*.8:mix(vec3(1.,.95,.88),vec3(1.,.62,.38),gold)*1.6;
   vec3 amb=nt?vec3(.09,.11,.2):mix(vec3(.30,.38,.52),vec3(.40,.30,.40),gold);
   col=alb*(sunC*dif*sh+amb*(.5+.5*n.y));
-  if(river>0.){vec3 rf=skyCol(reflect(rd,vec3(0,1,0)),sd);col=mix(col,rf*.9+.05,river);}
+  if(spec>0.){vec3 hv=normalize(sd-rd);col+=sunC*vec3(1.,.8,.45)*pow(max(dot(n,hv),0.),40.)*sh*1.2; col+=alb*amb*.4;}
+  if(nt&&m>2.5){col+=alb*vec3(1.,.72,.4)*.22;}       // warm floodlight on the statue at night
+  col+=emis;
   float fog=1.-exp(-t*(nt?.03:.032));
   col=mix(col,mix(sky,skyCol(vec3(rd.x,.02,rd.z),sd),.7),fog);
  }
- // clouds layer
- if(rd.y>0.){vec2 cp=rd.xz/(rd.y+.05)*1.2+vec2(T*.01,0.);float cl=smoothstep(.55,.85,fbm(cp*1.3));
-  vec3 cc=nt?vec3(.12,.14,.22):mix(vec3(1.),vec3(1.,.72,.60),gold);cc*=.8+.25*max(dot(sd,vec3(0,1,0)),0.);
+ if(rd.y>0.&&hit<.5){vec2 cp=rd.xz/(rd.y+.05)*1.2+vec2(T*.01,0.);float cl=smoothstep(.55,.85,fbm(cp*1.3));
+  vec3 cc=nt?vec3(.12,.14,.22):mix(vec3(1.),vec3(1.,.72,.60),gold);cc*=.8+.25*max(sd.y,0.);
   col=mix(col,cc,cl*.75*smoothstep(0.,.15,rd.y));}
- // valley mist
- float mist=exp(-max(p.y,0.)*3.)*(hit>0.?1.:0.)*smoothstep(4.,15.,t);
+ float mist=exp(-max(p.y,0.)*3.)*hit*smoothstep(4.,15.,t);
  col=mix(col,nt?vec3(.10,.12,.2):mix(vec3(.9,.93,.98),vec3(1.,.78,.66),gold),mist*.35);
  col=1.-exp(-col*1.25); col=pow(col,vec3(.95));
- col+= (h21(gl_FragCoord.xy+T)-.5)*.025;
+ col+=(h21(gl_FragCoord.xy+T)-.5)*.02;
  gl_FragColor=vec4(col,1.);}
 </script>
 <script>
@@ -102,60 +161,7 @@ function sh(t,s){const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShade
 const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,document.getElementById('fs').text));gl.linkProgram(pr);gl.useProgram(pr);
 const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
 const la=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(la);gl.vertexAttribPointer(la,2,gl.FLOAT,false,0,0);
-size();gl.uniform2f(gl.getUniformLocation(pr,'R'),cv.width,cv.height);gl.uniform1f(gl.getUniformLocation(pr,'HR'),HR);gl.uniform1f(gl.getUniformLocation(pr,'T'),0);gl.uniform1f(gl.getUniformLocation(pr,'NOLM'),Q.get('nolm')?1:0);
+size();gl.uniform2f(gl.getUniformLocation(pr,'R'),cv.width,cv.height);gl.uniform1f(gl.getUniformLocation(pr,'HR'),HR);gl.uniform1f(gl.getUniformLocation(pr,'T'),0);
 gl.drawArrays(gl.TRIANGLES,0,3);
-if(!Q.get('nolm')){} 
-// ---- landmarks, projected with the shader's camera
-const fg=document.getElementById('fg'),x=fg.getContext('2d'),D=2;fg.width=innerWidth*D;fg.height=innerHeight*D;x.scale(D,D);
-const W=innerWidth,H=innerHeight,CAM=[0,1.15,-2],OFF=.04,F=1.25;
-const proj=(X,Y,Z)=>{const dx=X-CAM[0],dy=Y-CAM[1],dz=Z-CAM[2];return [dx/dz*F*H+W/2, H/2-(dy/dz*F-OFF)*H, F*H/dz];};
-const night=HR<6||HR>=18, gold=!night&&(HR<8||HR>16.5);
-const sunLeft=night?false:HR<12;
-let seed=5;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
-if(!Q.get('nolm')){
-// Key Monastery on the cone
-{const [cx,cy,k]=proj(1.55,.84,.75); const u=k/290;
- const wall=night?[176,184,210]:gold?[245,214,186]:[236,232,224];
- const shade=night?[92,98,132]:gold?[168,128,112]:[150,148,152];
- const haze=night?[30,36,62]:gold?[214,160,140]:[186,196,210];
- const mixc=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t));
- const rows=11;let y=cy;
- for(let ri=0;ri<rows;ri++){const rad=(4+ri*7.2)*u, bh=(9-ri*.25)*u; const n=Math.max(1,Math.round(rad*2/(13*u)));
-  for(let j=0;j<n;j++){if(ri>2&&rnd()<.18)continue;const bw=(9+rnd()*9)*u, bx=cx-rad+(j+.5)*(2*rad/n)-bw/2+(rnd()-.5)*5*u, hh=bh*(.75+rnd()*.6), yy=y-hh;
-   const hz=.18+ri*.012; const w=mixc(wall,haze,hz), sh=mixc(shade,haze,hz);
-   x.fillStyle='rgba(20,15,10,.28)';x.fillRect(bx+(sunLeft?bw*.15:-bw*.15),y-1,bw,2*u+1);
-   const g=x.createLinearGradient(bx,0,bx+bw,0);g.addColorStop(0,`rgb(${sunLeft?w:sh})`);g.addColorStop(.55,`rgb(${sunLeft?w:sh})`);g.addColorStop(.56,`rgb(${sunLeft?sh:w})`);g.addColorStop(1,`rgb(${sunLeft?sh:w})`);x.fillStyle=g;x.fillRect(bx,yy,bw,hh);
-   x.fillStyle=`rgba(${night?'70,40,40':'92,40,32'},.9)`;x.fillRect(bx-.5,yy-1.2*u,bw+1,1.4*u);
-   const nw=Math.max(1,Math.floor(bw/(5*u)));for(let wi=0;wi<nw;wi++){x.fillStyle=night&&rnd()<.5?'rgba(255,200,120,.95)':'rgba(45,32,26,.7)';x.fillRect(bx+2*u+wi*(bw-4*u)/nw,yy+hh*.4,1.4*u,2*u)}
-  } y+=bh*.62;}
- x.fillStyle=night?'#a88438':'#d9a83a';x.beginPath();x.moveTo(cx-4*u,cy-8*u);x.lineTo(cx,cy-14*u);x.lineTo(cx+4*u,cy-8*u);x.fill();
- if(night){const g=x.createRadialGradient(cx,cy+40*u,0,cx,cy+40*u,110*u);g.addColorStop(0,'rgba(255,180,100,.16)');g.addColorStop(1,'rgba(255,180,100,0)');x.fillStyle=g;x.fillRect(cx-120*u,cy-80*u,240*u,240*u);}
- x.strokeStyle=night?'rgba(220,220,240,.25)':'rgba(40,30,25,.35)';x.lineWidth=.6;x.beginPath();x.moveTo(cx+2,cy-8*u);x.quadraticCurveTo(cx+50*u,cy+10*u,cx+95*u,cy+70*u);x.stroke();
- for(let i=0;i<18;i++){const t=i/18,px=cx+2+(95*u-2)*t,py=(cy-8*u)+(78*u)*t-Math.sin(t*Math.PI)*8*u;x.fillStyle=['#2f6fd1','#f3f3f3','#d23a2c','#2f9a5c','#f2c230'][i%5];x.globalAlpha=night?.4:.8;x.fillRect(px,py,2.2*u,3*u)}x.globalAlpha=1;
-}
-// Buddha on the left ridge (top .80 at -1.45,.7)
-{const [bx,by,k]=proj(-1.45,.79,.7); const s=k/950;
- x.save();x.translate(bx,by);x.scale(s,s);x.filter=night?'saturate(.7) brightness(.85)':gold?'saturate(.85) sepia(.15)':'saturate(.82) contrast(.95)';
- x.fillStyle='rgba(0,0,0,.25)';x.beginPath();x.ellipse(sunLeft?10:-10,2,62,6,0,0,7);x.fill();
- let g=x.createLinearGradient(-50,0,50,0);g.addColorStop(0,sunLeft?'#3cc0e6':'#1c86ad');g.addColorStop(1,sunLeft?'#1c86ad':'#3cc0e6');if(night){g=x.createLinearGradient(0,0,1,0);g.addColorStop(0,'#2a5f78');g.addColorStop(1,'#1d4456');}
- x.fillStyle=g;x.fillRect(-50,-30,100,30);x.fillStyle='rgba(0,0,0,.12)';for(let i=0;i<6;i++)x.fillRect(-50,-30+i*5,100,1);
- x.fillStyle=night?'#cfc8bb':'#fbf5ea';x.fillRect(-44,-46,88,16);x.fillStyle=night?'#8e5428':'#e8742a';for(let i=0;i<9;i++)x.fillRect(-42+i*9.6,-44,5,12);
- x.fillStyle=night?'#1a2850':'#1f3f92';x.fillRect(-40,-62,80,16);x.fillStyle=night?'#a98838':'#f2c230';[-22,0,22].forEach(a=>{x.beginPath();x.arc(a,-54,4.5,0,7);x.fill()});
- x.fillStyle=night?'#cfc8bb':'#fbf5ea';x.fillRect(-42,-66,84,5);
- x.fillStyle=night?'#8a5a32':'#e8742a';x.beginPath();x.ellipse(0,-70,38,8,0,0,7);x.fill();x.fillStyle=night?'#2f7466':'#2fb59a';x.beginPath();x.ellipse(0,-73,33,4.5,0,0,7);x.fill();
- g=x.createLinearGradient(sunLeft?-30:30,-150,sunLeft?30:-30,-75);g.addColorStop(0,night?'#d2ad5a':'#ffe38a');g.addColorStop(.5,night?'#9c7728':'#e8b134');g.addColorStop(1,night?'#5e4515':'#a8740f');
- x.fillStyle=g;x.beginPath();x.ellipse(0,-84,34,12,0,0,7);x.fill();
- x.beginPath();x.moveTo(-23,-86);x.bezierCurveTo(-27,-118,-14,-126,0,-126);x.bezierCurveTo(14,-126,27,-118,23,-86);x.fill();
- x.fillStyle=night?'#6b2424':'#b3302a';x.beginPath();x.moveTo(-20,-112);x.lineTo(16,-124);x.lineTo(21,-108);x.lineTo(-16,-97);x.fill();
- x.fillStyle=g;x.beginPath();x.arc(0,-137,11.5,0,7);x.fill();
- x.fillStyle=night?'#1d2c55':'#22408f';x.beginPath();x.arc(0,-141,10.5,Math.PI,0);x.fill();x.beginPath();x.arc(0,-151,4.5,0,7);x.fill();
- x.fillStyle=night?'#22356b':'#2a4ea8';x.beginPath();x.arc(11,-90,6.5,0,7);x.fill();
- if(night){g=x.createRadialGradient(0,-90,0,0,-90,130);g.addColorStop(0,'rgba(255,200,120,.25)');g.addColorStop(1,'rgba(255,200,120,0)');x.fillStyle=g;x.fillRect(-130,-220,260,260)}
- // flags from statue down the ridge
- x.strokeStyle=night?'rgba(220,220,240,.4)':'rgba(40,30,25,.5)';x.lineWidth=1.2;
- [[1,150,30],[-1,-150,40]].forEach(([d,ex,ey])=>{x.beginPath();x.moveTo(d*14,-140);x.quadraticCurveTo(ex*.5,-90,ex,ey);x.stroke();
-  for(let i=0;i<12;i++){const t=i/12,px=d*14+(ex-d*14)*t,py=-140+(ey+140)*t-Math.sin(t*Math.PI)*-28;x.fillStyle=['#2f6fd1','#f3f3f3','#d23a2c','#2f9a5c','#f2c230'][i%5];x.globalAlpha=night?.5:.95;x.fillRect(px,py,8,10)}x.globalAlpha=1});
- x.restore();}
-}
 window.glDone=true;
 </script></body></html>
