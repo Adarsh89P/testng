@@ -34,7 +34,18 @@
 
   let seed = 13; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const stars = Array.from({length: 520}, () => ({x: rnd(), y: rnd() * .62, r: rnd() < .05 ? 1.3 + rnd() : .3 + rnd() * .65, p: rnd() * 6.28, s: .6 + rnd() * 2}));
-  let milky = null;
+  let milky = null, meteors = [];
+  // a shower of shooting stars streaking down-left across the sky, staggered over ~3s
+  function starShower() {
+    const count = reduce ? 8 : 60;
+    for (let i = 0; i < count; i++) {
+      const len = (.35 + Math.random() * .35) * Math.min(W, 900);
+      const ang = Math.PI * (.72 + Math.random() * .08);            // heading down-left
+      meteors.push({x: W * (.15 + Math.random() * .95), y: H * Math.random() * .35, vx: Math.cos(ang) * len, vy: Math.sin(ang) * len,
+        d: Math.pow(Math.random(), 1.4) * (reduce ? .6 : 2.6), life: .7 + Math.random() * .7, t: 0, a: .7 + Math.random() * .3, w: 1 + Math.random() * 1.8});
+    }
+    start();
+  }
   function makeMilky() {
     milky = document.createElement('canvas'); milky.width = 1800; milky.height = 520; const g = milky.getContext('2d');
     const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
@@ -75,6 +86,19 @@
     ctx.shadowColor = `rgb(${col})`; ctx.shadowBlur = night ? 26 : 42; ctx.fillStyle = night ? '#f4f6fb' : `rgb(${col})`;
     ctx.beginPath(); ctx.arc(b.x, b.y, night ? 14 : 18, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
     if (night) { ctx.fillStyle = 'rgba(150,160,185,.28)'; [[-4, -3, 3.4], [4, 3, 2.6], [-1, 6, 2]].forEach(([a, c, r]) => { ctx.beginPath(); ctx.arc(b.x + a, b.y + c, r, 0, 7); ctx.fill(); }); }
+    // meteor shower
+    if (meteors.length) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+      meteors = meteors.filter(m => (m.t += dt) < m.d + m.life);
+      for (const m of meteors) {
+        const k = (m.t - m.d) / m.life; if (k < 0) continue;
+        const px = m.x + m.vx * k, py = m.y + m.vy * k, tx = px - m.vx * .32, ty = py - m.vy * .32, a = Math.sin(Math.PI * k) * m.a;
+        const gr = ctx.createLinearGradient(px, py, tx, ty); gr.addColorStop(0, `rgba(255,255,255,${a})`); gr.addColorStop(.25, `rgba(200,215,255,${a * .55})`); gr.addColorStop(1, 'rgba(180,200,255,0)');
+        ctx.strokeStyle = gr; ctx.lineWidth = m.w; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke();
+        ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.shadowColor = 'rgba(210,225,255,.9)'; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(px, py, m.w * .9, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+      }
+      ctx.restore();
+    }
     // keep everything inside the real sky
     if (mask.complete && mask.naturalWidth) { const [x, y, w, h] = cover(); ctx.globalCompositeOperation = 'destination-in'; ctx.drawImage(mask, x, y, w, h); ctx.globalCompositeOperation = 'source-over'; }
     // hints follow their targets
@@ -82,7 +106,7 @@
       dragNote.style.transform = `translate(${Math.round(flip ? b.x - 118 : b.x + 22)}px, ${Math.round(Math.max(6, b.y - 40))}px)`; }
     if (clickNote) { const r = bud.getBoundingClientRect(), sr = scene.getBoundingClientRect();
       clickNote.style.transform = `translate(${Math.round(r.right - sr.left - 10)}px, ${Math.round(r.top - sr.top + 10)}px)`; }
-    if (visible && !reduce && n > .02) raf = requestAnimationFrame(draw);
+    if (visible && ((!reduce && n > .02) || meteors.length)) raf = requestAnimationFrame(draw);
   }
   function start() { cancelAnimationFrame(raf); last = performance.now(); raf = requestAnimationFrame(draw); }
   function resize() {
@@ -100,7 +124,7 @@
     root.dataset.theme = day ? 'light' : 'dark';
     clock.textContent = fmt(hour); when.classList.toggle('manual', !live);
     document.getElementById('whenTxt').textContent = live ? '· your local sky' : '· drag to change';
-    scene.setAttribute('aria-label', `Key Monastery in Spiti at ${fmt(hour)}. Drag the ${day ? 'sun' : 'moon'}, or use the arrow keys, to change the time of day.`);
+    scene.setAttribute('aria-label', `Key Monastery in Spiti at ${fmt(hour)}. Drag the ${day ? 'sun' : 'moon'}, or use the arrow keys, to change the time of day. Press Enter for shooting stars.`);
     document.querySelector('meta[name=theme-color]')?.setAttribute('content', day ? '#ffffff' : '#0E0F11');
     grade(); start();
   }
@@ -109,7 +133,9 @@
   const local = e => { const r = scene.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
   const onBuddha = e => { const r = bud.getBoundingClientRect(); return e.clientX > r.left + r.width * .2 && e.clientX < r.right - r.width * .2 && e.clientY > r.top && e.clientY < r.bottom; };
   function hourFromX(x) { const t = clamp((x / W - .08) / .84, 0, .999); return isDay(hour) ? 6 + t * 12 : (18 + t * 12) % 24; }
-  function toggleLamps() { lampOn = !lampOn; bud.classList.add('blessed'); setTimeout(() => bud.classList.remove('blessed'), 900); clickNote?.classList.add('gone'); grade(); }
+  function toggleLamps() {
+    if (isDay(hour)) { live = false; hour = 21.5; sync(); try { localStorage.setItem('rk-theme', 'dark'); } catch (e) {} }   // the shower needs a night sky
+    starShower(); lampOn = true; bud.classList.add('blessed'); setTimeout(() => bud.classList.remove('blessed'), 900); clickNote?.classList.add('gone'); grade(); }
   scene.addEventListener('pointerdown', e => {
     if (onBuddha(e)) { toggleLamps(); return; }
     const [x, y] = local(e), b = bodyPos(hour);
