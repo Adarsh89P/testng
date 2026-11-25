@@ -63,21 +63,23 @@ a{color:inherit;text-decoration:none}
   linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px);
   background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:center top}
 
+.paper::after{content:"";position:absolute;inset:0 0 auto 0;height:220px;background:linear-gradient(var(--bg) 35%,transparent);pointer-events:none;z-index:0}
 /* ---------- hero scene ---------- */
 .scene{position:relative;height:clamp(440px,78vh,820px);background:#0b0f1a;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .scene canvas{position:absolute;inset:0;width:100%;height:100%;display:block;mix-blend-mode:screen;pointer-events:none}
 .scene .hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 42%;transition:filter .35s ease}
 .scene .grade{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .35s ease}
 .scene .grade.gold{background:linear-gradient(rgba(255,140,70,.6),rgba(190,90,110,.3));mix-blend-mode:soft-light}
-.scene .grade.night{background:linear-gradient(rgba(20,32,80,.45),rgba(10,16,40,.35)),radial-gradient(34% 28% at 72% 50%,rgba(255,180,100,.24),transparent 70%)}
-.scene .buddha{position:absolute;left:5%;bottom:13%;height:48%;width:auto;transition:filter .35s ease,transform .6s cubic-bezier(.3,1.4,.5,1)}
+.scene .grade.night{background:linear-gradient(#4f63a8,#3a4b86 55%,#2a3766);mix-blend-mode:multiply}
+.scene .grade.night::after{content:"";position:absolute;inset:0;background:radial-gradient(16% 22% at 70% 50%,rgba(255,168,88,.42),rgba(255,160,80,.12) 55%,transparent 75%);mix-blend-mode:screen}
+.scene .buddha{position:absolute;left:5%;bottom:19%;height:48%;width:auto;transition:filter .35s ease,transform .6s cubic-bezier(.3,1.4,.5,1)}
 .scene .buddha.blessed{transform:translateY(-4px)}
-.scene .bud-shadow{position:absolute;left:4%;bottom:11.5%;width:24%;height:5%;border-radius:50%;background:radial-gradient(closest-side,rgba(20,15,10,.45),rgba(20,15,10,0));filter:blur(6px);pointer-events:none}
-.scene .lamps{position:absolute;left:0;bottom:8%;width:34%;height:62%;pointer-events:none;opacity:0;transition:opacity .6s ease;
-  background:radial-gradient(40% 46% at 50% 55%,rgba(255,190,110,.42),rgba(255,170,90,.12) 55%,transparent 75%);mix-blend-mode:screen}
-.scene .fade{position:absolute;inset:auto 0 0 0;height:46%;pointer-events:none;
-  background:linear-gradient(rgba(255,255,255,0) 0%,rgba(255,255,255,.09) 20%,rgba(255,255,255,.3) 40%,rgba(255,255,255,.61) 60%,rgba(255,255,255,.88) 80%,#fff 100%);transition:opacity .6s}
-:root[data-theme="dark"] .scene .fade{background:linear-gradient(rgba(14,15,17,0) 0%,rgba(14,15,17,.09) 20%,rgba(14,15,17,.3) 40%,rgba(14,15,17,.61) 60%,rgba(14,15,17,.88) 80%,#0E0F11 100%)}
+.scene .bud-shadow{position:absolute;left:4%;bottom:17.5%;width:24%;height:5%;border-radius:50%;background:radial-gradient(closest-side,rgba(20,15,10,.45),rgba(20,15,10,0));filter:blur(6px);pointer-events:none}
+.scene .lamps{position:absolute;left:3%;bottom:16%;width:26%;height:46%;pointer-events:none;opacity:0;transition:opacity .6s ease;
+  background:radial-gradient(34% 26% at 50% 78%,rgba(255,190,110,.5),rgba(255,170,90,.1) 60%,transparent 80%);mix-blend-mode:screen}
+.scene .fade{position:absolute;inset:auto 0 0 0;height:56%;pointer-events:none;
+  background:linear-gradient(rgba(255,255,255,0) 0%,rgba(255,255,255,.12) 22%,rgba(255,255,255,.42) 44%,rgba(255,255,255,.78) 66%,#fff 86%);transition:opacity .6s}
+:root[data-theme="dark"] .scene .fade{background:linear-gradient(rgba(14,15,17,0) 0%,rgba(14,15,17,.12) 22%,rgba(14,15,17,.45) 44%,rgba(14,15,17,.82) 66%,#0E0F11 86%)}
 .note{position:absolute;left:0;top:0;z-index:3;display:flex;align-items:flex-start;gap:2px;font:600 22px/1 Caveat,"Segoe Print",cursive;color:#fff;
   text-shadow:0 1px 8px rgba(0,0,0,.35);pointer-events:none;white-space:nowrap;transition:opacity .6s;will-change:transform}
 .note svg{width:30px;height:20px;margin-top:10px}
@@ -97,8 +99,10 @@ a{color:inherit;text-decoration:none}
 @keyframes drift{to{transform:translate(30px,-18px) scale(1.08)}}
 :root[data-theme="dark"] .pool{opacity:.7}
 
-.intro{position:relative;z-index:2;text-align:center;margin-top:clamp(-150px,-14vh,-90px);padding-bottom:8px}
-.intro h1{font:400 clamp(51px,7.4vw,81px)/.95 var(--serif);letter-spacing:-.02em;display:inline-flex;align-items:center;gap:.22em;flex-wrap:wrap;justify-content:center}
+.intro{position:relative;z-index:2;text-align:center;isolation:isolate;margin-top:clamp(-150px,-14vh,-90px);padding-bottom:8px}
+.intro::before{content:"";position:absolute;left:50%;top:-30px;width:min(980px,110%);height:calc(100% + 60px);transform:translateX(-50%);z-index:-1;pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 45%,var(--bg) 0%,color-mix(in srgb,var(--bg) 70%,transparent) 45%,transparent 75%);opacity:.92}
+.intro h1{text-shadow:0 1px 18px color-mix(in srgb,var(--bg) 85%,transparent),0 0 2px color-mix(in srgb,var(--bg) 60%,transparent);font:400 clamp(51px,7.4vw,81px)/.95 var(--serif);letter-spacing:-.02em;display:inline-flex;align-items:center;gap:.22em;flex-wrap:wrap;justify-content:center}
 .avatar{width:.92em;height:.92em;border-radius:24%;overflow:hidden;flex:none;background:linear-gradient(160deg,#F1E6D2,#E6CF93);
   box-shadow:rgba(16,20,27,.09) 0 0 0 1px,rgba(50,35,15,.18) 0 4px 9px,rgba(50,35,15,.22) 0 22px 50px -8px;transform:rotate(4deg);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
 .avatar:hover{transform:rotate(-3deg) translateY(-6px)}
@@ -670,18 +674,23 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
   const stars = Array.from({length: 520}, () => ({x: rnd(), y: rnd() * .62, r: rnd() < .05 ? 1.3 + rnd() : .3 + rnd() * .65, p: rnd() * 6.28, s: .6 + rnd() * 2}));
   let milky = null;
   function makeMilky() {
-    milky = document.createElement('canvas'); milky.width = 900; milky.height = 260; const g = milky.getContext('2d');
-    for (let i = 0; i < 700; i++) { const u = Math.random() * 900, v = 130 + (Math.random() - .5) * 110 * Math.random(), R = 8 + Math.random() * 30;
-      const gr = g.createRadialGradient(u, v, 0, u, v, R); gr.addColorStop(0, 'rgba(190,200,255,.06)'); gr.addColorStop(1, 'rgba(190,200,255,0)'); g.fillStyle = gr; g.fillRect(u - R, v - R, 2 * R, 2 * R); }
+    milky = document.createElement('canvas'); milky.width = 1800; milky.height = 520; const g = milky.getContext('2d');
+    const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
+    for (let i = 0; i < 260; i++) { const u = Math.random() * 1800, v = 260 + gauss() * 70, R = 40 + Math.random() * 70;   // faint core light
+      const gr = g.createRadialGradient(u, v, 0, u, v, R); gr.addColorStop(0, 'rgba(200,205,255,.018)'); gr.addColorStop(1, 'rgba(200,205,255,0)'); g.fillStyle = gr; g.fillRect(u - R, v - R, 2 * R, 2 * R); }
+    for (let i = 0; i < 260; i++) { const u = Math.random() * 1800, v = 260 + gauss() * 40, R = 18 + Math.random() * 30;   // dark dust lanes
+      const gr = g.createRadialGradient(u, v, 0, u, v, R); gr.addColorStop(0, 'rgba(0,0,0,.05)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(u - R, v - R, 2 * R, 2 * R); }
+    for (let i = 0; i < 5200; i++) { const u = Math.random() * 1800, v = 260 + gauss() * 120, a = .15 + Math.random() * .55, r = Math.random() < .03 ? 1.1 : .45 + Math.random() * .35;
+      g.fillStyle = Math.random() < .15 ? `rgba(255,225,200,${a})` : `rgba(225,232,255,${a})`; g.fillRect(u, v, r * 1.6, r * 1.6); }
   }
 
   function grade() {
     const n = nightAmt(hour), g = goldAmt(hour);
-    const f = `brightness(${(1 - .2 * g - .64 * n).toFixed(3)}) contrast(${(1 + .1 * g + .14 * n).toFixed(3)}) saturate(${(1 + .32 * g - .45 * n).toFixed(3)}) sepia(${(.42 * g).toFixed(3)}) hue-rotate(${(8 * n).toFixed(1)}deg)`;
+    const f = `brightness(${(1 - .2 * g - .22 * n).toFixed(3)}) contrast(${(1 + .1 * g + .22 * n).toFixed(3)}) saturate(${(1 + .32 * g - .6 * n).toFixed(3)}) sepia(${(.42 * g).toFixed(3)})`;
     photo.style.filter = f;
-    bud.style.filter = f + ` saturate(${(.8 + .2 * n).toFixed(2)}) contrast(.93) drop-shadow(10px 14px 18px rgba(0,0,0,.3))`;
+    bud.style.filter = f + ` saturate(${(.8 - .25 * n).toFixed(2)}) contrast(.93) brightness(${(1 - .55 * n).toFixed(2)}) sepia(${(.25 * n).toFixed(2)}) drop-shadow(10px 14px 18px rgba(0,0,0,.3))`;
     gGold.style.opacity = g.toFixed(3); gNight.style.opacity = n.toFixed(3);
-    lamps.style.opacity = Math.max(lampOn ? 1 : 0, n * .85).toFixed(2);
+    lamps.style.opacity = Math.max(lampOn ? 1 : 0, n * .55).toFixed(2);
     root.style.setProperty('--pool', n > .5 ? '120,140,230' : g > .3 ? '255,170,110' : '255,236,200');
   }
 
@@ -691,7 +700,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
     ctx.clearRect(0, 0, W, H);
     // stars + milky way
     if (n > .02) {
-      ctx.globalAlpha = n * .9; ctx.save(); ctx.translate(W * .5, H * .22); ctx.rotate(-.42); ctx.drawImage(milky, -W * .7, -H * .22, W * 1.4, H * .44); ctx.restore();
+      ctx.globalAlpha = n; ctx.save(); ctx.translate(W * .52, H * .2); ctx.rotate(-.42); ctx.drawImage(milky, -W * .75, -H * .2, W * 1.5, H * .4); ctx.restore();
       for (const s of stars) { const a = n * (.4 + .6 * Math.sin(time * s.s + s.p) ** 2); ctx.globalAlpha = a; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(s.x * W, s.y * H, s.r, 0, 7); ctx.fill(); }
       ctx.globalAlpha = 1;
     }

@@ -36,18 +36,23 @@
   const stars = Array.from({length: 520}, () => ({x: rnd(), y: rnd() * .62, r: rnd() < .05 ? 1.3 + rnd() : .3 + rnd() * .65, p: rnd() * 6.28, s: .6 + rnd() * 2}));
   let milky = null;
   function makeMilky() {
-    milky = document.createElement('canvas'); milky.width = 900; milky.height = 260; const g = milky.getContext('2d');
-    for (let i = 0; i < 700; i++) { const u = Math.random() * 900, v = 130 + (Math.random() - .5) * 110 * Math.random(), R = 8 + Math.random() * 30;
-      const gr = g.createRadialGradient(u, v, 0, u, v, R); gr.addColorStop(0, 'rgba(190,200,255,.06)'); gr.addColorStop(1, 'rgba(190,200,255,0)'); g.fillStyle = gr; g.fillRect(u - R, v - R, 2 * R, 2 * R); }
+    milky = document.createElement('canvas'); milky.width = 1800; milky.height = 520; const g = milky.getContext('2d');
+    const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
+    for (let i = 0; i < 260; i++) { const u = Math.random() * 1800, v = 260 + gauss() * 70, R = 40 + Math.random() * 70;   // faint core light
+      const gr = g.createRadialGradient(u, v, 0, u, v, R); gr.addColorStop(0, 'rgba(200,205,255,.018)'); gr.addColorStop(1, 'rgba(200,205,255,0)'); g.fillStyle = gr; g.fillRect(u - R, v - R, 2 * R, 2 * R); }
+    for (let i = 0; i < 260; i++) { const u = Math.random() * 1800, v = 260 + gauss() * 40, R = 18 + Math.random() * 30;   // dark dust lanes
+      const gr = g.createRadialGradient(u, v, 0, u, v, R); gr.addColorStop(0, 'rgba(0,0,0,.05)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(u - R, v - R, 2 * R, 2 * R); }
+    for (let i = 0; i < 5200; i++) { const u = Math.random() * 1800, v = 260 + gauss() * 120, a = .15 + Math.random() * .55, r = Math.random() < .03 ? 1.1 : .45 + Math.random() * .35;
+      g.fillStyle = Math.random() < .15 ? `rgba(255,225,200,${a})` : `rgba(225,232,255,${a})`; g.fillRect(u, v, r * 1.6, r * 1.6); }
   }
 
   function grade() {
     const n = nightAmt(hour), g = goldAmt(hour);
-    const f = `brightness(${(1 - .2 * g - .64 * n).toFixed(3)}) contrast(${(1 + .1 * g + .14 * n).toFixed(3)}) saturate(${(1 + .32 * g - .45 * n).toFixed(3)}) sepia(${(.42 * g).toFixed(3)}) hue-rotate(${(8 * n).toFixed(1)}deg)`;
+    const f = `brightness(${(1 - .2 * g - .22 * n).toFixed(3)}) contrast(${(1 + .1 * g + .22 * n).toFixed(3)}) saturate(${(1 + .32 * g - .6 * n).toFixed(3)}) sepia(${(.42 * g).toFixed(3)})`;
     photo.style.filter = f;
-    bud.style.filter = f + ` saturate(${(.8 + .2 * n).toFixed(2)}) contrast(.93) drop-shadow(10px 14px 18px rgba(0,0,0,.3))`;
+    bud.style.filter = f + ` saturate(${(.8 - .25 * n).toFixed(2)}) contrast(.93) brightness(${(1 - .55 * n).toFixed(2)}) sepia(${(.25 * n).toFixed(2)}) drop-shadow(10px 14px 18px rgba(0,0,0,.3))`;
     gGold.style.opacity = g.toFixed(3); gNight.style.opacity = n.toFixed(3);
-    lamps.style.opacity = Math.max(lampOn ? 1 : 0, n * .85).toFixed(2);
+    lamps.style.opacity = Math.max(lampOn ? 1 : 0, n * .55).toFixed(2);
     root.style.setProperty('--pool', n > .5 ? '120,140,230' : g > .3 ? '255,170,110' : '255,236,200');
   }
 
@@ -57,7 +62,7 @@
     ctx.clearRect(0, 0, W, H);
     // stars + milky way
     if (n > .02) {
-      ctx.globalAlpha = n * .9; ctx.save(); ctx.translate(W * .5, H * .22); ctx.rotate(-.42); ctx.drawImage(milky, -W * .7, -H * .22, W * 1.4, H * .44); ctx.restore();
+      ctx.globalAlpha = n; ctx.save(); ctx.translate(W * .52, H * .2); ctx.rotate(-.42); ctx.drawImage(milky, -W * .75, -H * .2, W * 1.5, H * .4); ctx.restore();
       for (const s of stars) { const a = n * (.4 + .6 * Math.sin(time * s.s + s.p) ** 2); ctx.globalAlpha = a; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(s.x * W, s.y * H, s.r, 0, 7); ctx.fill(); }
       ctx.globalAlpha = 1;
     }
