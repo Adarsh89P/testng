@@ -200,7 +200,7 @@ SCENES = [
           min_dur=5.6, whoosh=True, clicks=[2.6], sfx=[(2.62, "chime")]),
 ]
 
-VO_CUTS = "auto"
+VO_CUTS = [7.87, 19.61, 28.07, 37.17, 44.37, 52.61, 62.39]
 
 if __name__ == "__main__":
     import daily
