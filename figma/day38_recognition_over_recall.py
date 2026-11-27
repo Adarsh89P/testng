@@ -92,7 +92,7 @@ def s3(cv, t, d, st):                                     # order history → "a
             c.font(SANS, 24, True); c.text(X0 + 50, Y0 + 790, "pehchaanna", DOT)
             c.fill_rrect(X0 + 210, Y0 + 712, 200, 22, 11, RED); c.fill_rrect(X0 + 210, Y0 + 772, 24, 22, 11, GREEN)
             c.font(MONO, 22, True); c.text(X0 + 244, Y0 + 791, "1 sec", GREEN)
-    stage.compose(cv, t, d, world, K((0, (PX, Y0 + 380), 1.15), (2.8, (PX, Y0 + 600), 1.1), (d - 0.4, (PX, Y0 + 640), 1.08)),
+    stage.compose(cv, t, d, world, K((0, (PX, Y0 + 420), 1.1), (2.8, (PX, Y0 + 520), 1.0), (d - 0.4, (PX, Y0 + 530), 1.0)),
                   punch=0.05 * max(0, 1 - abs(t - 1.6) / 0.12), seed=4)
     hud(cv); flash(cv, t, 1.6, 0.08)
 
